@@ -7,13 +7,11 @@ namespace CraftMan_WebApi.ExtendedModels
         public static CountyMaster GetCountyDetailByCountyId(int CountyId)
         {
             return CountyMaster.GetCountyDetail(CountyId);
-
-
         }
-        
+
         public static ArrayList GetCountyList()
         {
-            return CountyMaster.GetCountyList(); 21331
+            return CountyMaster.GetCountyList();
         }
 
         public static Response NewCounty(CountyMaster _CountyMaster)
@@ -77,9 +75,9 @@ namespace CraftMan_WebApi.ExtendedModels
                     }
                 }
             }
-            catch (Exception ex) 
-            { 
-                throw ; 
+            catch (Exception ex)
+            {
+                throw;
             }
 
             return strReturn;
