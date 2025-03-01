@@ -42,11 +42,12 @@ namespace CraftMan_WebApi.Controllers
         {
             return IssueTicketExtended.GetTicketdetailsByUser(Username);
         }
+
         [HttpGet]
         [Route("GetTicket")]
         public IssueTicket GetTicketByUser(int TicketId)
         {
-            return IssueTicketExtended.GetTicketdetailByUser(TicketId);
+            return IssueTicketExtended.GetTicketdetailByTicketId(TicketId);
         }
 
     }

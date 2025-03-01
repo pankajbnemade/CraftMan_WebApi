@@ -63,6 +63,32 @@ namespace CraftMan_WebApi.Models
             return CountyList;
         }
 
+        //public static ArrayList GetCountyListByCompanyId(int CompanyId)
+        //{
+        //    ArrayList CountyList = new ArrayList();
+
+        //    DBAccess db = new DBAccess();
+        //    Response strReturn = new Response();
+
+        //    string qstr = " SELECT  CountyId, CountyName FROM  dbo.tblCountyMaster";
+
+        //    SqlDataReader reader = db.ReadDB(qstr);
+
+        //    while (reader.Read())
+        //    {
+        //        var pCountyMaster = new CountyMaster();
+
+        //        pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+        //        pCountyMaster.CountyName = (string)reader["CountyName"];
+
+        //        CountyList.Add(pCountyMaster);
+        //    }
+
+        //    reader.Close();
+
+        //    return CountyList;
+        //}
+
         public Response ValidateCounty(CountyMaster _County)
         {
             string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "')";

@@ -15,13 +15,17 @@ namespace CraftMan_WebApi.Models
         public string Address { get; set; }
         public string City { get; set; }
         public string Pincode { get; set; }
+        public int CountyId { get; set; }
+        public int MunicipalityId { get; set; }
+        public string CountyName { get; set; }
+        public string MunicipalityName { get; set; }
 
         // public List<IFormFile> ImageData { get; set; } //new imgs to add in folder of webapi solution
         public static Boolean validateticket(IssueTicket _IssueTicket) {
 
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode from dbo.tblIssueTicketMaster where   ToCraftmanType ='"+ _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
+            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from dbo.tblIssueTicketMaster where   ToCraftmanType ='"+ _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
             while (reader.Read())
@@ -47,7 +51,7 @@ namespace CraftMan_WebApi.Models
 
             if (!validateticket(_IssueTicket))
             {
-                string qstr = " INSERT INTO [Craftman].[dbo].[tblIssueTicketMaster]     (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode) VALUES     ( '" + _IssueTicket.ReportingPerson + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "')";
+                string qstr = " INSERT INTO [Craftman].[dbo].[tblIssueTicketMaster]     (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId) VALUES     ( '" + _IssueTicket.ReportingPerson + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ")";
 
                 DBAccess db = new DBAccess();
 
@@ -55,14 +59,21 @@ namespace CraftMan_WebApi.Models
             }
             return 0;
         }
-        public static IssueTicket GetTicketByUser(int TicketId)
+        public static IssueTicket GetTicketByTicketId(int TicketId)
         {
             
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode from dbo.tblIssueTicketMaster where  TicketId=" + TicketId + "   ";
+
+            string qstr = "select TicketId, ReportingPerson, Address, City, ReportingDescription,Status,ToCraftmanType,Pincode, dbo.tblIssueTicketMaster.CountyId, dbo.tblIssueTicketMaster.MunicipalityId, dbo.tblCountyMaster.CountyName, dbo.tblMunicipalityMaster.MunicipalityName " +
+                            " FROM dbo.tblIssueTicketMaster " +
+                            " LEFT OUTER JOIN DBO.tblCountyMaster ON DBO.tblCountyMaster.CountyId = dbo.tblIssueTicketMaster.CountyId " +
+                            " LEFT OUTER JOIN DBO.tblMunicipalityMaster ON DBO.tblMunicipalityMaster.MunicipalityId = dbo.tblIssueTicketMaster.MunicipalityId" +
+                        " where  TicketId=" + TicketId + "   ";
+
             SqlDataReader reader = db.ReadDB(qstr);
             var pIssueTicket = new IssueTicket();
+
             while (reader.Read())
             {
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
@@ -72,7 +83,11 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
                 pIssueTicket.Address = (string)reader["Address"];
                 pIssueTicket.City = (string)reader["City"];
-                pIssueTicket.Pincode = reader["Pincode"].ToString();                 
+                pIssueTicket.Pincode = reader["Pincode"].ToString();
+                pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                pIssueTicket.CountyName = reader["CountyName"].ToString();                 
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();                 
             }
 
             reader.Close();
@@ -86,7 +101,11 @@ namespace CraftMan_WebApi.Models
             ArrayList IssueTicketList = new ArrayList();
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode from dbo.tblIssueTicketMaster where  ReportingPerson='" + _User +"'   ";
+            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, dbo.tblIssueTicketMaster.CountyId, dbo.tblIssueTicketMaster.MunicipalityId, dbo.tblCountyMaster.CountyName, dbo.tblMunicipalityMaster.MunicipalityName " +
+                            " FROM dbo.tblIssueTicketMaster " +
+                            " LEFT OUTER JOIN DBO.tblCountyMaster ON DBO.tblCountyMaster.CountyId = dbo.tblIssueTicketMaster.CountyId " +
+                            " LEFT OUTER JOIN DBO.tblMunicipalityMaster ON DBO.tblMunicipalityMaster.MunicipalityId = dbo.tblIssueTicketMaster.MunicipalityId" +
+                            " where  ReportingPerson='" + _User +"'   ";
             SqlDataReader reader = db.ReadDB(qstr);
           
             while (reader.Read())
@@ -100,6 +119,11 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.City = (string)reader["City"];
                 pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
                 pIssueTicket.Pincode =  reader["Pincode"].ToString();
+                pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                pIssueTicket.CountyName = reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+
                 IssueTicketList.Add(pIssueTicket);
             }
 

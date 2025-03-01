@@ -10,9 +10,9 @@ namespace CraftMan_WebApi.ExtendedModels
 
 
         }
-        public static IssueTicket GetTicketdetailByUser(int Ticket)
+        public static IssueTicket GetTicketdetailByTicketId(int TicketId)
         {
-            return IssueTicket.GetTicketByUser(Ticket);
+            return IssueTicket.GetTicketByTicketId(TicketId);
 
 
         }
