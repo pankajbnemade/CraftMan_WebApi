@@ -14,6 +14,11 @@ namespace CraftMan_WebApi.ExtendedModels
             return MunicipalityMaster.GetMunicipalityList(CountyId);
         }
 
+        public static ArrayList GetMunicipalityListByCompanyId(int CountyId, int CompanyId)
+        {
+            return MunicipalityMaster.GetMunicipalityListByCompanyId(CountyId, CompanyId);
+        }
+
         public static Response NewMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
             Response strReturn = new Response();

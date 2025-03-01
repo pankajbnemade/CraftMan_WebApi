@@ -13,6 +13,10 @@ namespace CraftMan_WebApi.ExtendedModels
         {
             return CountyMaster.GetCountyList();
         }
+        public static ArrayList GetCountyListByCompanyId(int CompanyId)
+        {
+            return CountyMaster.GetCountyListByCompanyId(CompanyId);
+        }
 
         public static Response NewCounty(CountyMaster _CountyMaster)
         {

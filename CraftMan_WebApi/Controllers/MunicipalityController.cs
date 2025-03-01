@@ -39,6 +39,12 @@ namespace CraftMan_WebApi.Controllers
         {
             return MunicipalityMasterExtended.GetMunicipalityList(CountyId);
         }
+        [HttpGet]
+        [Route("GetMunicipalityListByCompany")]
+        public ArrayList GetMunicipalityListByCompany(int CountyId, int CompanyId)
+        {
+            return MunicipalityMasterExtended.GetMunicipalityListByCompanyId(CountyId,CompanyId);
+        }
 
     }
 }

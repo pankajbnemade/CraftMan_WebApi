@@ -61,6 +61,37 @@ namespace CraftMan_WebApi.Models
             return MunicipalityList;
         }
 
+        public static ArrayList GetMunicipalityListByCompanyId(int CountyId, int CompanyId)
+        {
+            ArrayList MunicipalityList = new ArrayList();
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.MunicipalityName, tblMunicipalityMaster.CountyId, tblCompanyCountyRel.pCompId " +
+                        " FROM  tblMunicipalityMaster " +
+                        " INNER JOIN tblCompanyCountyRel ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
+                        " where (tblMunicipalityMaster.CountyId=" + CountyId.ToString() + " or  0 = " + CountyId.ToString() + ") " +
+                        " and tblCompanyCountyRel.pCompId = " + CompanyId + " ";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                var pMunicipalityMaster = new MunicipalityMaster();
+
+                pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                pMunicipalityMaster.MunicipalityName = (string)reader["MunicipalityName"];
+                pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+
+                MunicipalityList.Add(pMunicipalityMaster);
+            }
+
+            reader.Close();
+
+            return MunicipalityList;
+        }
+
         public Response ValidateMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
             string qstr = " select MunicipalityName, CountyId from dbo.tblMunicipalityMaster where upper(MunicipalityName) = upper('" + _MunicipalityMaster.MunicipalityName + "')  and CountyId = " + _MunicipalityMaster.CountyId.ToString() + "";

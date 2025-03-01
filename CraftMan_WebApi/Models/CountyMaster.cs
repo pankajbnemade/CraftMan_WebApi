@@ -19,7 +19,7 @@ namespace CraftMan_WebApi.Models
             Response strReturn = new Response();
 
             string qstr = " SELECT  CountyId, CountyName FROM  dbo.tblCountyMaster where CountyId="
-                        +  CountyId.ToString() + "  ";
+                        + CountyId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -63,31 +63,34 @@ namespace CraftMan_WebApi.Models
             return CountyList;
         }
 
-        //public static ArrayList GetCountyListByCompanyId(int CompanyId)
-        //{
-        //    ArrayList CountyList = new ArrayList();
+        public static ArrayList GetCountyListByCompanyId(int CompanyId)
+        {
+            ArrayList CountyList = new ArrayList();
 
-        //    DBAccess db = new DBAccess();
-        //    Response strReturn = new Response();
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
 
-        //    string qstr = " SELECT  CountyId, CountyName FROM  dbo.tblCountyMaster";
+            string qstr = " SELECT tblCountyMaster.CountyId, tblCountyMaster.CountyName, tblCompanyCountyRel.pCompId " +
+                        " FROM   tblCompanyCountyRel  " +
+                        " INNER JOIN  tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId " +
+                        " WHERE tblCompanyCountyRel.pCompId = " + CompanyId + " ";
 
-        //    SqlDataReader reader = db.ReadDB(qstr);
+            SqlDataReader reader = db.ReadDB(qstr);
 
-        //    while (reader.Read())
-        //    {
-        //        var pCountyMaster = new CountyMaster();
+            while (reader.Read())
+            {
+                var pCountyMaster = new CountyMaster();
 
-        //        pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
-        //        pCountyMaster.CountyName = (string)reader["CountyName"];
+                pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pCountyMaster.CountyName = (string)reader["CountyName"];
 
-        //        CountyList.Add(pCountyMaster);
-        //    }
+                CountyList.Add(pCountyMaster);
+            }
 
-        //    reader.Close();
+            reader.Close();
 
-        //    return CountyList;
-        //}
+            return CountyList;
+        }
 
         public Response ValidateCounty(CountyMaster _County)
         {
@@ -98,7 +101,7 @@ namespace CraftMan_WebApi.Models
 
         public Response ValidateUpdateCounty(CountyMaster _County)
         {
-            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "') and CountyId != " + _County.CountyId.ToString() + ""; 
+            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "') and CountyId != " + _County.CountyId.ToString() + "";
             DBAccess db = new DBAccess();
             return db.validate(qstr);
         }
