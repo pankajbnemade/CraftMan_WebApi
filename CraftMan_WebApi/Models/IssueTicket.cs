@@ -20,7 +20,6 @@ namespace CraftMan_WebApi.Models
         public string CountyName { get; set; }
         public string MunicipalityName { get; set; }
 
-        // public List<IFormFile> ImageData { get; set; } //new imgs to add in folder of webapi solution
         public static Boolean validateticket(IssueTicket _IssueTicket) {
 
             DBAccess db = new DBAccess();
@@ -33,12 +32,9 @@ namespace CraftMan_WebApi.Models
                 var pIssueTicket = new IssueTicket();
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
                 if (pIssueTicket.TicketId > 0)
-
                 {
                     return true;
                 }
-
-
             }
 
             reader.Close();
@@ -132,6 +128,48 @@ namespace CraftMan_WebApi.Models
             return IssueTicketList;
 
         }
+
+
+        //public static ArrayList GetTicketsByCompany(int CompanyId)
+        //{
+        //    ArrayList IssueTicketList = new ArrayList();
+        //    DBAccess db = new DBAccess();
+        //    Response strReturn = new Response();
+        //    string qstr = "SELECT * FROM tblIssueTicketMaster
+//        INNER JOIN(
+//        SELECT tblCompanyCountyRel.pCompId, tblCompanyCountyRel.MunicipalityId, tblCompanyCountyRel.CountyId
+//        FROM   tblCompanyCountyRel
+//        INNER JOIN tblCompanyMaster ON tblCompanyCountyRel.pCompId = tblCompanyMaster.pCompId
+//        LEFT OUTER JOIN tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId
+//        LEFT OUTER JOIN tblMunicipalityMaster ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId
+//        WHERE tblCompanyCountyRel.pCompId = 1) AS tRel
+//ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId";
+        //    SqlDataReader reader = db.ReadDB(qstr);
+
+        //    while (reader.Read())
+        //    {
+        //        var pIssueTicket = new IssueTicket();
+        //        pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
+        //        pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
+        //        pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
+        //        pIssueTicket.Status = (string)reader["Status"];
+        //        pIssueTicket.Address = (string)reader["Address"];
+        //        pIssueTicket.City = (string)reader["City"];
+        //        pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
+        //        pIssueTicket.Pincode = reader["Pincode"].ToString();
+        //        pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
+        //        pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+        //        pIssueTicket.CountyName = reader["CountyName"].ToString();
+        //        pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+
+        //        IssueTicketList.Add(pIssueTicket);
+        //    }
+
+        //    reader.Close();
+
+        //    return IssueTicketList;
+        //}
+
 
     }
 }

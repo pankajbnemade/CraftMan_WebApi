@@ -1,0 +1,101 @@
+﻿using CraftMan_WebApi.DataAccessLayer;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Collections.Generic;
+using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.Data.SqlClient;
+using System.Collections;
+
+namespace CraftMan_WebApi.Models
+{
+    public class ServiceMaster
+    {
+        public int ServiceId { get; set; }
+        public string ServiceName { get; set; }
+
+        public static ServiceMaster GetServiceDetail(int? ServiceId)
+        {
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = " SELECT  ServiceId, ServiceName FROM  dbo.tblServiceMaster where ServiceId="
+                        + ServiceId.ToString() + "  ";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            var pServiceMaster = new ServiceMaster();
+
+            while (reader.Read())
+            {
+                pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
+                pServiceMaster.ServiceName = (string)reader["ServiceName"];
+            }
+
+            reader.Close();
+
+            return pServiceMaster;
+        }
+        public static ArrayList GetServiceList()
+        {
+            ArrayList ServiceList = new ArrayList();
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = " SELECT  ServiceId, ServiceName FROM  dbo.tblServiceMaster";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                var pServiceMaster = new ServiceMaster();
+
+                pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
+                pServiceMaster.ServiceName = (string)reader["ServiceName"];
+
+                ServiceList.Add(pServiceMaster);
+            }
+
+            reader.Close();
+
+            return ServiceList;
+        }
+
+        public Response ValidateService(ServiceMaster _Service)
+        {
+            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "')";
+            DBAccess db = new DBAccess();
+            return db.validate(qstr);
+        }
+
+        public Response ValidateUpdateService(ServiceMaster _Service)
+        {
+            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "') and ServiceId != " + _Service.ServiceId.ToString() + "";
+            DBAccess db = new DBAccess();
+            return db.validate(qstr);
+        }
+
+        public static int InsertService(ServiceMaster _Service)
+        {
+            string qstr = " INSERT into dbo.tblServiceMaster(ServiceName)  VALUES('" + _Service.ServiceName + "') ";
+
+            DBAccess db = new DBAccess();
+            int i = db.ExecuteNonQuery(qstr);
+
+            return i;
+        }
+
+        public static int UpdateService(ServiceMaster _Service)
+        {
+            string qstr = " UPDATE dbo.tblServiceMaster " +
+                            " SET  " +
+                            "   ServiceName = '" + _Service.ServiceName + "'" +
+                            "   WHERE " +
+                            "   ServiceId = " + _Service.ServiceId + "  ";
+
+            DBAccess db = new DBAccess();
+            return db.ExecuteNonQuery(qstr);
+        }
+
+    }
+}

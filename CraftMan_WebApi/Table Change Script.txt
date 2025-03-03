@@ -1,0 +1,118 @@
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE tblServiceMaster(
+	ServiceId [int] IDENTITY(1,1) NOT NULL,
+	ServiceName [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ServiceId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+--------------------------------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE tblCountyMaster(
+	CountyId [int] IDENTITY(1,1) NOT NULL,
+	CountyName [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[CountyId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+-------------------------------------------------------
+
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblMunicipalityMaster](
+	[MunicipalityId] [int] IDENTITY(1,1) NOT NULL,
+	[MunicipalityName] [varchar](255) NULL,
+	[CountyId] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MunicipalityId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+---------------------------------------------------------------------
+
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblCompanyCountyRel](
+	[pCompId] [int],
+	[CountyId] [int],
+	[MunicipalityId] [int],
+) ON [PRIMARY]
+GO
+
+
+--------------------------------------------------------
+
+ALTER TABLE [tblUserMaster]
+ADD [CountyId] [int] NULL;
+
+Go
+
+ALTER TABLE [tblUserMaster]
+ADD MunicipalityId [int] NULL
+
+
+------------------------------------------------
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[tblCompanyCountyRel](
+	[pCompId] [int],
+	[CountyId] [int],
+	[MunicipalityId] [int],
+) ON [PRIMARY]
+GO
+
+
+-------------------------------------------------
+
+ALTER TABLE [tblIssueTicketMaster]
+ADD [CountyId] [int] NULL;
+
+Go
+
+ALTER TABLE [tblIssueTicketMaster]
+ADD MunicipalityId [int] NULL;
+
+
+-------------------------------------------------------
+
+
+
+
+
+

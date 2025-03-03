@@ -23,8 +23,8 @@ namespace CraftMan_WebApi.Models
             string qstr = " SELECT tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName, tblCompanyMaster.CompanyName, tblCompanyCountyRel.pCompId, tblCompanyCountyRel.MunicipalityId, tblCompanyCountyRel.CountyId " +
                 " FROM   tblCompanyCountyRel " +
                 " INNER JOIN  tblCompanyMaster ON tblCompanyCountyRel.pCompId = tblCompanyMaster.pCompId " +
-                " INNER JOIN  tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId " +
-                " INNER JOIN  tblMunicipalityMaster ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
+                " LEFT OUTER JOIN  tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId " +
+                " LEFT OUTER JOIN  tblMunicipalityMaster ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
                 " WHERE tblCompanyCountyRel.pCompId = " + CompanyId + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
