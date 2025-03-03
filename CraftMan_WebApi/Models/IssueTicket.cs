@@ -20,11 +20,12 @@ namespace CraftMan_WebApi.Models
         public string CountyName { get; set; }
         public string MunicipalityName { get; set; }
 
-        public static Boolean validateticket(IssueTicket _IssueTicket) {
+        public static Boolean validateticket(IssueTicket _IssueTicket)
+        {
 
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from dbo.tblIssueTicketMaster where   ToCraftmanType ='"+ _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
+            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from dbo.tblIssueTicketMaster where   ToCraftmanType ='" + _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
             while (reader.Read())
@@ -57,7 +58,7 @@ namespace CraftMan_WebApi.Models
         }
         public static IssueTicket GetTicketByTicketId(int TicketId)
         {
-            
+
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
@@ -82,8 +83,8 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.Pincode = reader["Pincode"].ToString();
                 pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
                 pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pIssueTicket.CountyName = reader["CountyName"].ToString();                 
-                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();                 
+                pIssueTicket.CountyName = reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
             }
 
             reader.Close();
@@ -92,7 +93,7 @@ namespace CraftMan_WebApi.Models
 
         }
 
-        public static ArrayList GetTicketsByUser(string _User )
+        public static ArrayList GetTicketsByUser(string _User)
         {
             ArrayList IssueTicketList = new ArrayList();
             DBAccess db = new DBAccess();
@@ -101,20 +102,20 @@ namespace CraftMan_WebApi.Models
                             " FROM dbo.tblIssueTicketMaster " +
                             " LEFT OUTER JOIN DBO.tblCountyMaster ON DBO.tblCountyMaster.CountyId = dbo.tblIssueTicketMaster.CountyId " +
                             " LEFT OUTER JOIN DBO.tblMunicipalityMaster ON DBO.tblMunicipalityMaster.MunicipalityId = dbo.tblIssueTicketMaster.MunicipalityId" +
-                            " where  ReportingPerson='" + _User +"'   ";
+                            " where  ReportingPerson='" + _User + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
-          
+
             while (reader.Read())
             {
                 var pIssueTicket = new IssueTicket();
-                pIssueTicket.TicketId =Convert.ToInt32( reader["TicketId"]);
+                pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
                 pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
-                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"] ;
+                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
                 pIssueTicket.Status = (string)reader["Status"];
                 pIssueTicket.Address = (string)reader["Address"];
                 pIssueTicket.City = (string)reader["City"];
                 pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
-                pIssueTicket.Pincode =  reader["Pincode"].ToString();
+                pIssueTicket.Pincode = reader["Pincode"].ToString();
                 pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
                 pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
                 pIssueTicket.CountyName = reader["CountyName"].ToString();
@@ -130,45 +131,49 @@ namespace CraftMan_WebApi.Models
         }
 
 
-        //public static ArrayList GetTicketsByCompany(int CompanyId)
-        //{
-        //    ArrayList IssueTicketList = new ArrayList();
-        //    DBAccess db = new DBAccess();
-        //    Response strReturn = new Response();
-        //    string qstr = "SELECT * FROM tblIssueTicketMaster
-//        INNER JOIN(
-//        SELECT tblCompanyCountyRel.pCompId, tblCompanyCountyRel.MunicipalityId, tblCompanyCountyRel.CountyId
-//        FROM   tblCompanyCountyRel
-//        INNER JOIN tblCompanyMaster ON tblCompanyCountyRel.pCompId = tblCompanyMaster.pCompId
-//        LEFT OUTER JOIN tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId
-//        LEFT OUTER JOIN tblMunicipalityMaster ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId
-//        WHERE tblCompanyCountyRel.pCompId = 1) AS tRel
-//ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId";
-        //    SqlDataReader reader = db.ReadDB(qstr);
+        public static ArrayList GetTicketsByCompany(int CompanyId)
+        {
+            ArrayList IssueTicketList = new ArrayList();
 
-        //    while (reader.Read())
-        //    {
-        //        var pIssueTicket = new IssueTicket();
-        //        pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-        //        pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
-        //        pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
-        //        pIssueTicket.Status = (string)reader["Status"];
-        //        pIssueTicket.Address = (string)reader["Address"];
-        //        pIssueTicket.City = (string)reader["City"];
-        //        pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
-        //        pIssueTicket.Pincode = reader["Pincode"].ToString();
-        //        pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
-        //        pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-        //        pIssueTicket.CountyName = reader["CountyName"].ToString();
-        //        pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
 
-        //        IssueTicketList.Add(pIssueTicket);
-        //    }
+            string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
+                " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblCountyMaster.CountyName,  " +
+                " tblMunicipalityMaster.MunicipalityName " +
+                " FROM tblIssueTicketMaster " +
+                " INNER JOIN( " +
+                " SELECT CountyId, MunicipalityId " +
+                " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + CompanyId + " ) AS tRel " +
+                " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
+                " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
+                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  ";
 
-        //    reader.Close();
+            SqlDataReader reader = db.ReadDB(qstr);
 
-        //    return IssueTicketList;
-        //}
+            while (reader.Read())
+            {
+                var pIssueTicket = new IssueTicket();
+                pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
+                pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
+                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
+                pIssueTicket.Status = (string)reader["Status"];
+                pIssueTicket.Address = (string)reader["Address"];
+                pIssueTicket.City = (string)reader["City"];
+                pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
+                pIssueTicket.Pincode = reader["Pincode"].ToString();
+                pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                pIssueTicket.CountyName = reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+
+                IssueTicketList.Add(pIssueTicket);
+            }
+
+            reader.Close();
+
+            return IssueTicketList;
+        }
 
 
     }

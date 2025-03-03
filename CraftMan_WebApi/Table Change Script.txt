@@ -112,7 +112,9 @@ ADD MunicipalityId [int] NULL;
 -------------------------------------------------------
 
 
+ALTER TABLE tblIssueTicketMaster
+ALTER COLUMN ReportingDescription VARCHAR(MAX);
 
-
+--------------------------------------------------------------------------
 
 
