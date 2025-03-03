@@ -1,4 +1,5 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -19,7 +20,6 @@ namespace CraftMan_WebApi.Models
         public int MunicipalityId { get; set; }
         public string CountyName { get; set; }
         public string MunicipalityName { get; set; }
-
         public static Boolean validateticket(IssueTicket _IssueTicket)
         {
 

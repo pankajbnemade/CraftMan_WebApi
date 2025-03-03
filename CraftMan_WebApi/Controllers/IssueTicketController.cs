@@ -50,5 +50,12 @@ namespace CraftMan_WebApi.Controllers
             return IssueTicketExtended.GetTicketdetailByTicketId(TicketId);
         }
 
+        [HttpGet]
+        [Route("GetTicketsByCompany")]
+        public ArrayList GetTicketsByCompany(int CompanyId)
+        {
+            return IssueTicketExtended.GetTicketsByCompany(CompanyId);
+        }
+
     }
 }
