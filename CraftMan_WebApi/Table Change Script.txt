@@ -151,3 +151,27 @@ CREATE TABLE tblErrorLogs (
 
 
 ---------------------------------------------
+
+CREATE TABLE tblIssueTicketChat (
+    ChatId INT IDENTITY(1,1) PRIMARY KEY,
+    ChatDateTime DATETIME DEFAULT GETDATE(),
+    TicketId INT NOT NULL,
+	CompanyId INT ,
+	UserId INT ,
+    Message NVARCHAR(MAX) ,
+);
+
+
+
+---------------------------
+
+
+ALTER TABLE tblIssueTicketMaster
+Add ReviewComment VARCHAR(MAX);
+
+ALTER TABLE tblIssueTicketMaster
+Add ReviewStarRating int;
+
+
+ALTER TABLE tblIssueTicketMaster
+Add CompanyComment VARCHAR(MAX);
