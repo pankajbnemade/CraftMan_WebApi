@@ -21,6 +21,7 @@ namespace CraftMan_WebApi.Models
         public string? CountyName { get; set; }
         public string? MunicipalityName { get; set; }
         public List<IFormFile>? Images { get; set; }
+        public List<IssueTicketImage>? IssueTicketImages { get; set; }
 
         public static Boolean validateticket(IssueTicket _IssueTicket)
         {
@@ -105,6 +106,31 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+
+
+            qstr = "select ImageId, TicketId, ImageName, ImagePath " +
+                    " FROM tblIssueTicketImages " +
+                    " where  TicketId=" + TicketId + "   ";
+
+            reader = db.ReadDB(qstr);
+
+
+            pIssueTicket.IssueTicketImages = new List<IssueTicketImage>();
+
+            while (reader.Read())
+            {
+                var pIssueTicketImage = new IssueTicketImage();
+
+                pIssueTicketImage.TicketId = pIssueTicket.TicketId;
+                pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
+                pIssueTicketImage.ImageName = (string)reader["ImageName"];
+                pIssueTicketImage.ImagePath = (string)reader["ImagePath"];
+
+                pIssueTicket.IssueTicketImages.Add(pIssueTicketImage);
+            }
+
+            reader.Close();
+
 
             return pIssueTicket;
 

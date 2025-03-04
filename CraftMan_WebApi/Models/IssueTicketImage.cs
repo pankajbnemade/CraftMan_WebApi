@@ -7,9 +7,9 @@ namespace CraftMan_WebApi.Models
 {
     public class IssueTicketImage
     {
-        public int TicketId { get; set; }
         public int ImageId { get; set; }
-        public string ImageName { get; set; }
-        public string ImagePath { get; set; }
+        public int TicketId { get; set; }
+        public string? ImageName { get; set; }
+        public string? ImagePath { get; set; }
     }
 }
