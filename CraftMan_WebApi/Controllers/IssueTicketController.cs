@@ -52,9 +52,9 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpGet]
         [Route("GetTicketsByCompany")]
-        public ArrayList GetTicketsByCompany(int CompanyId)
+        public ArrayList GetTicketsByCompany(int CompanyId, int CountyId, int MunicipalityId)
         {
-            return IssueTicketExtended.GetTicketsByCompany(CompanyId);
+            return IssueTicketExtended.GetTicketsByCompany(CompanyId, CountyId, MunicipalityId);
         }
 
     }

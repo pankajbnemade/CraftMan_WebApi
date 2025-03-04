@@ -16,8 +16,8 @@ namespace CraftMan_WebApi.Models
         public DateTime UpdatedOn { get; set; }
         public int CountyId { get; set; }
         public int MunicipalityId { get; set; }
-        //public string CountyName { get; set; }
-        //public string MunicipalityName { get; set; }
+        public string? CountyName { get; set; }
+        public string? MunicipalityName { get; set; }
 
         public static Response LoginValidateForUser(LoginUser _User)
         {

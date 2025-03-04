@@ -12,13 +12,14 @@ namespace CraftMan_WebApi.Models
     {
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
+        public byte[]? ImageData { get; set; }
 
         public static ServiceMaster GetServiceDetail(int? ServiceId)
         {
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT  ServiceId, ServiceName FROM  dbo.tblServiceMaster where ServiceId="
+            string qstr = " SELECT  ServiceId, ServiceName, ImageData FROM  dbo.tblServiceMaster where ServiceId="
                         + ServiceId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -29,6 +30,7 @@ namespace CraftMan_WebApi.Models
             {
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
                 pServiceMaster.ServiceName = (string)reader["ServiceName"];
+                pServiceMaster.ImageData = reader["ImageData"] as byte[];
             }
 
             reader.Close();
@@ -42,7 +44,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT  ServiceId, ServiceName FROM  dbo.tblServiceMaster";
+            string qstr = " SELECT  ServiceId, ServiceName, ImageData FROM  dbo.tblServiceMaster";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -77,7 +79,7 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertService(ServiceMaster _Service)
         {
-            string qstr = " INSERT into dbo.tblServiceMaster(ServiceName)  VALUES('" + _Service.ServiceName + "') ";
+            string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ImageData)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ImageData + "') ";
 
             DBAccess db = new DBAccess();
             int i = db.ExecuteNonQuery(qstr);

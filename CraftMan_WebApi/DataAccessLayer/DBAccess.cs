@@ -1,36 +1,35 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.IO;
-using Microsoft.Data.SqlClient; 
+using Microsoft.Data.SqlClient;
 using System.Data;
 using CraftMan_WebApi.Models;
 namespace CraftMan_WebApi.DataAccessLayer
 {
     public class DBAccess
     {
-        private String strConnection ;
-        private SqlConnection strConnectionString;        
+        private String strConnection;
+        private SqlConnection strConnectionString;
         private SqlCommand sqlCmd;
         private SqlTransaction sqlTransaction;
 
         public DBAccess()
         {
-
             var builder = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             IConfigurationRoot configuration = builder.Build();
+
             strConnection = configuration.GetConnectionString("dbconn");
 
 
-          //  strConnection = ConfigurationManager.AppSettings["DBConnectionString1"];
-            strConnectionString = new SqlConnection(strConnection);  
+            strConnectionString = new SqlConnection(strConnection);
             sqlCmd = new SqlCommand();
             sqlCmd.Connection = strConnectionString;
             sqlCmd.CommandType = CommandType.Text;
         }
-        
-        public SqlDataReader  ReadDB(string SQLstr)
+
+        public SqlDataReader ReadDB(string SQLstr)
         {
             if (strConnectionString.State == ConnectionState.Closed)
                 strConnectionString.Open();
@@ -39,7 +38,7 @@ namespace CraftMan_WebApi.DataAccessLayer
             sqlCmd.CommandText = SQLstr;
             // ''---------------------
             if (!(this.sqlTransaction == null))
-                // User has invoked a transaction. So add the Transaction to the command object
+               
                 this.sqlCmd.Transaction = this.sqlTransaction;
             // ''---------------------
             return sqlCmd.ExecuteReader();
@@ -63,19 +62,46 @@ namespace CraftMan_WebApi.DataAccessLayer
             return strReturn;
 
         }
-        
 
 
-        public int ExecuteNonQuery(string qstr) {
-           
-            if (strConnectionString.State == ConnectionState.Closed )
+        public int ExecuteNonQuery(string qstr)
+        {
+
+            if (strConnectionString.State == ConnectionState.Closed)
             {
                 strConnectionString.Open();
             }
-              sqlCmd = strConnectionString.CreateCommand();
+            sqlCmd = strConnectionString.CreateCommand();
             sqlCmd = new SqlCommand(qstr, strConnectionString);
-           sqlCmd.CommandType = CommandType.Text; 
+            sqlCmd.CommandType = CommandType.Text;
             return sqlCmd.ExecuteNonQuery();
+        }
+
+
+        public int ExecuteScalar(string qstr)
+        {
+            int insertedId = 0;
+
+            if (strConnectionString.State == ConnectionState.Closed)
+            {
+                strConnectionString.Open();
+            }
+
+            qstr += "; SELECT SCOPE_IDENTITY();";
+
+
+            sqlCmd = strConnectionString.CreateCommand();
+            sqlCmd = new SqlCommand(qstr, strConnectionString);
+            sqlCmd.CommandType = CommandType.Text;
+
+            object result = sqlCmd.ExecuteScalar();
+
+            if (result != null)
+            {
+                insertedId = Convert.ToInt32(result);
+            }
+
+            return insertedId;
         }
     }
 }

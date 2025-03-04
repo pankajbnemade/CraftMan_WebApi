@@ -28,8 +28,8 @@ namespace CraftMan_WebApi.Models
 
         public string[] JobList { get; set; }
         public string[] CompanyEmplist { get; set; }
-        public string[] CountyList { get; set; }
-        public string[] MunicipalityList { get; set; }
+        public string[]? CountyList { get; set; }
+        public string[]? MunicipalityList { get; set; }
 
         public static CompanyMaster GetCompanyDetail(string user)
         {

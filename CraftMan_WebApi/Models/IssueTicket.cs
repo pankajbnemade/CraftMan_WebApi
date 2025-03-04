@@ -18,13 +18,16 @@ namespace CraftMan_WebApi.Models
         public string Pincode { get; set; }
         public int CountyId { get; set; }
         public int MunicipalityId { get; set; }
-        public string CountyName { get; set; }
-        public string MunicipalityName { get; set; }
+        public string? CountyName { get; set; }
+        public string? MunicipalityName { get; set; }
+        public List<IFormFile>? Images { get; set; }
+
         public static Boolean validateticket(IssueTicket _IssueTicket)
         {
-
             DBAccess db = new DBAccess();
+
             Response strReturn = new Response();
+
             string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from dbo.tblIssueTicketMaster where   ToCraftmanType ='" + _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -45,10 +48,24 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertTicket(IssueTicket _IssueTicket)
         {
-
             if (!validateticket(_IssueTicket))
             {
-                string qstr = " INSERT INTO [Craftman].[dbo].[tblIssueTicketMaster]     (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId) VALUES     ( '" + _IssueTicket.ReportingPerson + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ")";
+                string qstr = " INSERT INTO tblIssueTicketMaster   (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId) " +
+                    " VALUES ( '" + _IssueTicket.ReportingPerson + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ")";
+
+                DBAccess db = new DBAccess();
+
+                return db.ExecuteScalar(qstr);
+            }
+            return 0;
+        }
+
+        public static int InsertTicketImage(IssueTicketImage _IssueTicketImage)
+        {
+            if (_IssueTicketImage != null)
+            {
+                string qstr = " INSERT INTO tblIssueTicketImages (TicketId, ImageName, ImagePath) VALUES    " +
+                    " ( '" + _IssueTicketImage.TicketId + "', '" + _IssueTicketImage.ImageName + "', '" + _IssueTicketImage.ImagePath + "')";
 
                 DBAccess db = new DBAccess();
 
@@ -56,9 +73,9 @@ namespace CraftMan_WebApi.Models
             }
             return 0;
         }
+
         public static IssueTicket GetTicketByTicketId(int TicketId)
         {
-
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
@@ -96,8 +113,10 @@ namespace CraftMan_WebApi.Models
         public static ArrayList GetTicketsByUser(string _User)
         {
             ArrayList IssueTicketList = new ArrayList();
+
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
+
             string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, dbo.tblIssueTicketMaster.CountyId, dbo.tblIssueTicketMaster.MunicipalityId, dbo.tblCountyMaster.CountyName, dbo.tblMunicipalityMaster.MunicipalityName " +
                             " FROM dbo.tblIssueTicketMaster " +
                             " LEFT OUTER JOIN DBO.tblCountyMaster ON DBO.tblCountyMaster.CountyId = dbo.tblIssueTicketMaster.CountyId " +
@@ -127,11 +146,9 @@ namespace CraftMan_WebApi.Models
             reader.Close();
 
             return IssueTicketList;
-
         }
 
-
-        public static ArrayList GetTicketsByCompany(int CompanyId)
+        public static ArrayList GetTicketsByCompany(int CompanyId, int CountyId, int MunicipalityId)
         {
             ArrayList IssueTicketList = new ArrayList();
 
@@ -147,7 +164,10 @@ namespace CraftMan_WebApi.Models
                 " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + CompanyId + " ) AS tRel " +
                 " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
                 " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
-                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  ";
+                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  " +
+                " WHERE (" + CountyId + " == 0 OR tblIssueTicketMaster.CountyId = " + CountyId + " )" +
+                    " AND (" + MunicipalityId + " == 0 OR tblIssueTicketMaster.MunicipalityId = " + MunicipalityId + " )";
+
 
             SqlDataReader reader = db.ReadDB(qstr);
 
