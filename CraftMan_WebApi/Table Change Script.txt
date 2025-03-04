@@ -139,3 +139,15 @@ GO
 
 
 --------------------------------------------------
+
+
+CREATE TABLE tblErrorLogs (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    MethodName NVARCHAR(255),
+    ErrorMessage NVARCHAR(MAX),
+    StackTrace NVARCHAR(MAX),
+    LogDate DATETIME DEFAULT GETDATE()
+);
+
+
+---------------------------------------------

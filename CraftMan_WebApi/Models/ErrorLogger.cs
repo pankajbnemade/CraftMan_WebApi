@@ -9,13 +9,12 @@ namespace CraftMan_WebApi.Models
 {
     public static class ErrorLogger
     {
-        private static IWebHostEnvironment _webHostEnvironment;
+        //private static IWebHostEnvironment _webHostEnvironment;
 
-        public static void Configure(IWebHostEnvironment env)
-        {
-            _webHostEnvironment = env;
-        }
-
+        //public static void Configure(IWebHostEnvironment env)
+        //{
+        //    _webHostEnvironment = env;
+        //}
 
         public static void LogError(Exception ex, [CallerMemberName] string methodName = "")
         {
@@ -23,20 +22,25 @@ namespace CraftMan_WebApi.Models
             {
                 DBAccess db = new DBAccess();
 
-                string qstr = @"INSERT INTO ErrorLogs (MethodName, ErrorMessage, StackTrace, LogDate) 
-                                 VALUES ('" + methodName + "', '" + ex.Message + "' , '" + ex.StackTrace + "', GETDATE())";
+                string qstr = @"INSERT INTO tblErrorLogs (MethodName, ErrorMessage, StackTrace, LogDate) 
+                                 VALUES ('" + methodName + "', '" + ex.Message.Replace("'","") + "' , '" + ex.StackTrace.Replace("'", "") + "', GETDATE())";
 
                 db.ExecuteNonQuery(qstr);
             }
             catch (Exception logEx)
             {
-                string logFilePath = _webHostEnvironment != null
-                ? Path.Combine(_webHostEnvironment.WebRootPath, "logs", "error_log.txt")
-                : "error_log.txt";
+                //string logFilePath = _webHostEnvironment != null
+                //? Path.Combine(_webHostEnvironment.WebRootPath, "logs", "error_log.txt")
+                //: "error_log.txt";
 
-                Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
+                //Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
 
-                File.AppendAllText(logFilePath,
+                //File.AppendAllText(logFilePath,
+                //$"{DateTime.Now}: Error in LogError Method - {logEx.Message}{Environment.NewLine}");
+
+                Directory.CreateDirectory(Path.GetDirectoryName(@"C:\ErrorLogs\"));
+
+                System.IO.File.AppendAllText(@"C:\ErrorLogs\error_log.txt",
                 $"{DateTime.Now}: Error in LogError Method - {logEx.Message}{Environment.NewLine}");
             }
         }
