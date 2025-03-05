@@ -7,8 +7,8 @@ namespace CraftMan_WebApi.Models
     public class CompanyCountyRelation
     {
         public int pCompId { get; set; }
-        public int MunicipalityId { get; set; }
         public int CountyId { get; set; }
+        public int MunicipalityId { get; set; }
         public string? CompanyName { get; set; }
         public string? CountyName { get; set; }
         public string? MunicipalityName { get; set; }
