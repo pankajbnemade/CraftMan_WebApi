@@ -24,7 +24,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                if (_CountyMaster.ValidateCounty(_CountyMaster).StatusCode > 0)
+                if (CountyMaster.ValidateCounty(_CountyMaster) == true)
                 {
                     strReturn.StatusMessage = "County name already exists...";
                     strReturn.StatusCode = 1;
@@ -59,7 +59,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusMessage = "County details not exists for update...";
                     strReturn.StatusCode = 1;
                 }
-                else if (_CountyMaster.ValidateUpdateCounty(_CountyMaster).StatusCode > 0)
+                else if (CountyMaster.ValidateUpdateCounty(_CountyMaster) == true)
                 {
                     strReturn.StatusMessage = "County name already exists...";
                     strReturn.StatusCode = 1;

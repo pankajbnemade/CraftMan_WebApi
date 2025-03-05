@@ -25,7 +25,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                if (_MunicipalityMaster.ValidateMunicipality(_MunicipalityMaster).StatusCode > 0)
+                if (MunicipalityMaster.ValidateMunicipality(_MunicipalityMaster)==true)
                 {
                     strReturn.StatusMessage = "Municipality name already exists...";
                     strReturn.StatusCode = 1;
@@ -59,7 +59,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusMessage = "Municipality details not exists for update...";
                     strReturn.StatusCode = 1;
                 }
-                else if (_MunicipalityMaster.ValidateUpdateMunicipality(_MunicipalityMaster).StatusCode > 0)
+                else if (MunicipalityMaster.ValidateUpdateMunicipality(_MunicipalityMaster) == true)
                 {
                     strReturn.StatusMessage = "Municipality name already exists...";
                     strReturn.StatusCode = 1;

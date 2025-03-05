@@ -37,6 +37,7 @@ namespace CraftMan_WebApi.Models
             Response strReturn = new Response();
 
             string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from tblIssueTicketMaster where   ToCraftmanType ='" + _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
+            
             SqlDataReader reader = db.ReadDB(qstr);
 
             while (reader.Read())

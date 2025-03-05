@@ -63,18 +63,44 @@ namespace CraftMan_WebApi.Models
             return ServiceList;
         }
 
-        public Response ValidateService(ServiceMaster _Service)
+        public static Boolean ValidateService(ServiceMaster _Service)
         {
-            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "')";
             DBAccess db = new DBAccess();
-            return db.validate(qstr);
+
+            Response strReturn = new Response();
+
+            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "')";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
         }
 
-        public Response ValidateUpdateService(ServiceMaster _Service)
+        public static Boolean ValidateUpdateService(ServiceMaster _Service)
         {
-            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "') and ServiceId != " + _Service.ServiceId.ToString() + "";
             DBAccess db = new DBAccess();
-            return db.validate(qstr);
+
+            Response strReturn = new Response();
+
+            string qstr = " select ServiceName from dbo.tblServiceMaster where upper(ServiceName) = upper('" + _Service.ServiceName + "') and ServiceId != " + _Service.ServiceId.ToString() + "";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
         }
 
         public static int InsertService(ServiceMaster _Service)

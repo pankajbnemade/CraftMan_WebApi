@@ -92,20 +92,45 @@ namespace CraftMan_WebApi.Models
             return MunicipalityList;
         }
 
-        public Response ValidateMunicipality(MunicipalityMaster _MunicipalityMaster)
+        public static Boolean ValidateMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
+             DBAccess db = new DBAccess();
+
+            Response strReturn = new Response();
+
             string qstr = " select MunicipalityName, CountyId from dbo.tblMunicipalityMaster where upper(MunicipalityName) = upper('" + _MunicipalityMaster.MunicipalityName + "')  and CountyId = " + _MunicipalityMaster.CountyId.ToString() + "";
-            DBAccess db = new DBAccess();
-            return db.validate(qstr);
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
         }
 
-        public Response ValidateUpdateMunicipality(MunicipalityMaster _MunicipalityMaster)
+        public static Boolean ValidateUpdateMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
-            string qstr = " select MunicipalityName, CountyId from dbo.tblMunicipalityMaster where upper(MunicipalityName) = upper('" + _MunicipalityMaster.MunicipalityName + "')  and MunicipalityId != " + _MunicipalityMaster.MunicipalityId.ToString() + " and CountyId = " + _MunicipalityMaster.CountyId.ToString() + "";
-            DBAccess db = new DBAccess();
-            return db.validate(qstr);
-        }
+             DBAccess db = new DBAccess();
 
+            Response strReturn = new Response();
+
+            string qstr = " select MunicipalityName, CountyId from dbo.tblMunicipalityMaster where upper(MunicipalityName) = upper('" + _MunicipalityMaster.MunicipalityName + "')  and MunicipalityId != " + _MunicipalityMaster.MunicipalityId.ToString() + " and CountyId = " + _MunicipalityMaster.CountyId.ToString() + "";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
+        }
 
         public static int InsertMunicipality(MunicipalityMaster _MunicipalityMaster)
         {

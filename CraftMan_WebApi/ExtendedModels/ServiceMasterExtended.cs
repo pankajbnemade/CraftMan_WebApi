@@ -20,7 +20,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                if (_ServiceMaster.ValidateService(_ServiceMaster).StatusCode > 0)
+                if (ServiceMaster.ValidateService(_ServiceMaster) == true)
                 {
                     strReturn.StatusMessage = "Service name already exists...";
                     strReturn.StatusCode = 1;
@@ -55,7 +55,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusMessage = "Service details not exists for update...";
                     strReturn.StatusCode = 1;
                 }
-                else if (_ServiceMaster.ValidateUpdateService(_ServiceMaster).StatusCode > 0)
+                else if (ServiceMaster.ValidateUpdateService(_ServiceMaster) == true)
                 {
                     strReturn.StatusMessage = "Service name already exists...";
                     strReturn.StatusCode = 1;

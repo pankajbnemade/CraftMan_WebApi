@@ -92,18 +92,44 @@ namespace CraftMan_WebApi.Models
             return CountyList;
         }
 
-        public Response ValidateCounty(CountyMaster _County)
+        public static Boolean ValidateCounty(CountyMaster _County)
         {
-            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "')";
             DBAccess db = new DBAccess();
-            return db.validate(qstr);
+
+            Response strReturn = new Response();
+
+            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "')";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
         }
 
-        public Response ValidateUpdateCounty(CountyMaster _County)
+        public static Boolean ValidateUpdateCounty(CountyMaster _County)
         {
-            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "') and CountyId != " + _County.CountyId.ToString() + "";
             DBAccess db = new DBAccess();
-            return db.validate(qstr);
+
+            Response strReturn = new Response();
+            
+            string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "') and CountyId != " + _County.CountyId.ToString() + "";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                return true;
+            }
+
+            reader.Close();
+
+            return false;
         }
 
         public static int InsertCounty(CountyMaster _County)
