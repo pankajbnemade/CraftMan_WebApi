@@ -6,17 +6,41 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static MunicipalityMaster GetMunicipalityDetailByMunicipalityId(int MunicipalityId)
         {
-            return MunicipalityMaster.GetMunicipalityDetail(MunicipalityId);
+            try
+            {
+                return MunicipalityMaster.GetMunicipalityDetail(MunicipalityId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static ArrayList GetMunicipalityList(int CountyId)
         {
-            return MunicipalityMaster.GetMunicipalityList(CountyId);
+            try
+            {
+                return MunicipalityMaster.GetMunicipalityList(CountyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static ArrayList GetMunicipalityListByCompanyId(int CountyId, int CompanyId)
         {
-            return MunicipalityMaster.GetMunicipalityListByCompanyId(CountyId, CompanyId);
+            try
+            {
+                return MunicipalityMaster.GetMunicipalityListByCompanyId(CountyId, CompanyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response NewMunicipality(MunicipalityMaster _MunicipalityMaster)
@@ -43,7 +67,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     { strReturn.StatusMessage = "Municipality not added."; }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
 
             return strReturn;
         }
@@ -81,7 +109,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;

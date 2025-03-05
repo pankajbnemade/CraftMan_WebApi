@@ -4,41 +4,64 @@ using System.Collections;
 
 namespace CraftMan_WebApi.ExtendedModels
 {
-    public class Companymasterextended   
+    public class Companymasterextended
     {
         public static CompanyMaster GetCompanyDetail(string Username)
         {
-            return CompanyMaster.GetCompanyDetail(Username);
-
-
+            try
+            {
+                return CompanyMaster.GetCompanyDetail(Username);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
-        public  static int GetTotalcnt(string Username)
+        public static int GetTotalcnt(string Username)
         {
-            return CompanyMaster.GetTotalcnt(Username);
-
-
+            try
+            {
+                return CompanyMaster.GetTotalcnt(Username);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
         public static int GetActivecountnoofcraftsman(string Username)
         {
-            return CompanyMaster.GetTotalcnt(Username);
-
-
-         
-    }
+            try
+            {
+                return CompanyMaster.GetTotalcnt(Username);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
 
 
         public static ArrayList GetCompEmployeeList(string _user)
         {
-            return CompanyEmp.GetCompEmplist(_user);
-
-
+            try
+            {
+                return CompanyEmp.GetCompEmplist(_user);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
-        public static Response RegistrationCompany(CompanyMaster _Company )
+        public static Response RegistrationCompany(CompanyMaster _Company)
         {
             Response strReturn = new Response();
             try
-            {                
+            {
                 if (_Company.ValidateCompany(_Company).StatusCode > 0)
                 {
                     strReturn.StatusMessage = "Company already exists...";
@@ -57,16 +80,20 @@ namespace CraftMan_WebApi.ExtendedModels
                     { strReturn.StatusMessage = "Company not registered"; }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
             return strReturn;
         }
-         public static Response LoginValidateForCompany(LoginComp _comp ) {
+        public static Response LoginValidateForCompany(LoginComp _comp)
+        {
             try
             {
-
                 Response strReturn = new Response();
                 CompanyMaster objCM = new CompanyMaster();
-                objCM.Password= _comp.Password;
+                objCM.Password = _comp.Password;
                 objCM.EmailId = _comp.EmailId;
                 if (objCM.ValidateCompany(objCM).StatusCode > 0)
                 {
@@ -79,11 +106,12 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusCode = 0;
                 }
                 return strReturn;
-                
-
-                }
-            
-            catch (Exception ex) { throw;  }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
     }
 }

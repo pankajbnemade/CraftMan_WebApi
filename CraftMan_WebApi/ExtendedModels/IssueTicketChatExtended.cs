@@ -7,7 +7,15 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static ArrayList GetChatMessagesByTicketId(int TicketId)
         {
-            return IssueTicketChat.GetChatMessagesByTicketId(TicketId);
+            try
+            {
+                return IssueTicketChat.GetChatMessagesByTicketId(TicketId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response InsertIssueTicketChat(IssueTicketChat _IssueTicketChat)
@@ -29,11 +37,10 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ErrorLogger.LogError(ex);
-
-                strReturn.StatusCode = 0;
-                strReturn.StatusMessage = "An error occurred while processing the request.";
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;

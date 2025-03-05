@@ -6,12 +6,28 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static ServiceMaster GetServiceDetailByServiceId(int ServiceId)
         {
-            return ServiceMaster.GetServiceDetail(ServiceId);
+            try
+            {
+                return ServiceMaster.GetServiceDetail(ServiceId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static ArrayList GetServiceList()
         {
-            return ServiceMaster.GetServiceList();
+            try
+            {
+                return ServiceMaster.GetServiceList();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response NewService(ServiceMaster _ServiceMaster)
@@ -38,7 +54,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     { strReturn.StatusMessage = "Service not added."; }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
 
             return strReturn;
         }
@@ -77,7 +97,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;

@@ -6,16 +6,40 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static CountyMaster GetCountyDetailByCountyId(int CountyId)
         {
-            return CountyMaster.GetCountyDetail(CountyId);
+            try
+            {
+                return CountyMaster.GetCountyDetail(CountyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static ArrayList GetCountyList()
         {
-            return CountyMaster.GetCountyList();
+            try
+            {
+                return CountyMaster.GetCountyList();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
         public static ArrayList GetCountyListByCompanyId(int CompanyId)
         {
-            return CountyMaster.GetCountyListByCompanyId(CompanyId);
+            try
+            {
+                return CountyMaster.GetCountyListByCompanyId(CompanyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response NewCounty(CountyMaster _CountyMaster)
@@ -42,7 +66,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     { strReturn.StatusMessage = "County not added."; }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
 
             return strReturn;
         }
@@ -81,7 +109,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;

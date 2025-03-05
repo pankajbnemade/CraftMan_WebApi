@@ -9,17 +9,41 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static ArrayList GetTicketdetailsByUser(string _user)
         {
-            return IssueTicket.GetTicketsByUser(_user);
+            try
+            {
+                return IssueTicket.GetTicketsByUser(_user);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static IssueTicket GetTicketdetailByTicketId(int TicketId)
         {
-            return IssueTicket.GetTicketByTicketId(TicketId);
+            try
+            {
+                return IssueTicket.GetTicketByTicketId(TicketId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static ArrayList GetTicketsForCompany(int CompanyId, int? CountyId, int? MunicipalityId)
         {
-            return IssueTicket.GetTicketsForCompany(CompanyId, CountyId, MunicipalityId);
+            try
+            {
+                return IssueTicket.GetTicketsForCompany(CompanyId, CountyId, MunicipalityId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response IssueNewTicket(IssueTicket _IssueTicket)
@@ -87,9 +111,7 @@ namespace CraftMan_WebApi.ExtendedModels
             catch (Exception ex)
             {
                 ErrorLogger.LogError(ex);
-
-                strReturn.StatusCode = 0;
-                strReturn.StatusMessage = "An error occurred while processing the request.";
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;
@@ -115,7 +137,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;
@@ -183,7 +206,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;
@@ -217,7 +241,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;

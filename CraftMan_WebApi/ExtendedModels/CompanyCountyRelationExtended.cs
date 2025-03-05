@@ -6,7 +6,15 @@ namespace CraftMan_WebApi.ExtendedModels
     {
         public static ArrayList GetRelationDetailByCompany(int CompanyId)
         {
-            return CompanyCountyRelation.GetRelationDetailByCompany(CompanyId);
+            try
+            {
+                return CompanyCountyRelation.GetRelationDetailByCompany(CompanyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static Response NewRelation(CompanyCountyRelation _CompanyCountyRelation)
@@ -33,7 +41,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     { strReturn.StatusMessage = "Company relation not added."; }
                 }
             }
-            catch (Exception ex) { throw; }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
 
             return strReturn;
         }
@@ -58,7 +70,8 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             catch (Exception ex)
             {
-                throw;
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
             }
 
             return strReturn;
