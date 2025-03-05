@@ -86,18 +86,6 @@ ADD MunicipalityId [int] NULL
 
 ------------------------------------------------
 
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[tblCompanyCountyRel](
-	[pCompId] [int],
-	[CountyId] [int],
-	[MunicipalityId] [int],
-) ON [PRIMARY]
-GO
 
 
 -------------------------------------------------
