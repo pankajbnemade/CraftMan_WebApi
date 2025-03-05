@@ -1,4 +1,6 @@
-﻿using CraftMan_WebApi.Models;
+﻿using CraftMan_WebApi.DataAccessLayer;
+using CraftMan_WebApi.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections;
 namespace CraftMan_WebApi.ExtendedModels
@@ -15,9 +17,9 @@ namespace CraftMan_WebApi.ExtendedModels
             return IssueTicket.GetTicketByTicketId(TicketId);
         }
 
-        public static ArrayList GetTicketsByCompany(int CompanyId, int CountyId, int MunicipalityId)
+        public static ArrayList GetTicketsForCompany(int CompanyId, int? CountyId, int? MunicipalityId)
         {
-            return IssueTicket.GetTicketsByCompany(CompanyId, CountyId, MunicipalityId);
+            return IssueTicket.GetTicketsForCompany(CompanyId, CountyId, MunicipalityId);
         }
 
         public static Response IssueNewTicket(IssueTicket _IssueTicket)
@@ -71,7 +73,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
                             if (i == 0)
                             {
-                                strReturn.StatusMessage = "Issue Registered Successfully. But images are not saved.";
+                                strReturn.StatusMessage = "Issue Registered Successfully. But images are not uploaded.";
                             }
                         }
                     }
@@ -82,7 +84,8 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ErrorLogger.LogError(ex);
 
                 strReturn.StatusCode = 0;
@@ -91,5 +94,134 @@ namespace CraftMan_WebApi.ExtendedModels
 
             return strReturn;
         }
+
+        public static Response UpdateTicketReview(IssueTicketReview _IssueTicketReview)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                int i = IssueTicket.UpdateTicketReview(_IssueTicketReview);
+
+                if (i > 0)
+                {
+                    strReturn.StatusCode = 1;
+                    strReturn.StatusMessage = "Ticket star rating updated successfully";
+                }
+                else
+                {
+                    strReturn.StatusMessage = "Ticket star rating not updated.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return strReturn;
+        }
+
+        public static Response UpdateCompanyComment(IssueTicketCompanyComment _IssueTicketCompanyComment)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                int i = IssueTicket.UpdateCompanyComment(_IssueTicketCompanyComment);
+
+                if (i > 0)
+                {
+                    strReturn.StatusCode = 1;
+                    strReturn.StatusMessage = "Comment updated successfully";
+
+                    if (_IssueTicketCompanyComment.Images != null && _IssueTicketCompanyComment.Images.Count > 0)
+                    {
+                        string uploadFolder = @"C:\UploadedImages";
+
+                        if (!Directory.Exists(uploadFolder))
+                            Directory.CreateDirectory(uploadFolder);
+
+                        List<IssueTicketImage> uploadedImages = new List<IssueTicketImage>();
+
+                        foreach (var image in _IssueTicketCompanyComment.Images)
+                        {
+                            string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+
+                            string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                            string imagePath = Path.Combine(uploadFolder, imageName);
+
+                            using (var stream = new FileStream(imagePath, FileMode.Create))
+                            {
+                                image.CopyTo(stream);
+                            }
+
+                            IssueTicketImage _IssueTicketImage = new IssueTicketImage();
+
+                            _IssueTicketImage.TicketId = _IssueTicketCompanyComment.TicketId;
+                            _IssueTicketImage.ImageName = originalName;
+                            _IssueTicketImage.ImagePath = imagePath;
+
+                            uploadedImages.Add(_IssueTicketImage);
+                        }
+
+                        foreach (IssueTicketImage _IssueTicketImage in uploadedImages)
+                        {
+                            i = IssueTicket.InsertTicketWorkImage(_IssueTicketImage);
+
+                            if (i == 0)
+                            {
+                                strReturn.StatusMessage = "Comment updated Successfully. But images are not uploaded.";
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    strReturn.StatusMessage = "Comment not updated.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return strReturn;
+        }
+
+        public static Response UpdateTicketStatus(IssueTicketUpdateStatus _IssueTicketUpdateStatus)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                if (IssueTicket.ValidateUpdateTicketStatus(_IssueTicketUpdateStatus) == false)
+                {
+                    strReturn.StatusMessage = "Invalid OTP. Please check and try again.";
+                    strReturn.StatusCode = 1;
+                }
+                else
+                {
+                    int i = IssueTicket.UpdateTicketStatus(_IssueTicketUpdateStatus);
+
+                    if (i > 0)
+                    {
+                        strReturn.StatusCode = 1;
+                        strReturn.StatusMessage = "Status updated successfully";
+                    }
+                    else
+                    {
+                        strReturn.StatusMessage = "Status not updated.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return strReturn;
+        }
+
     }
 }
