@@ -55,7 +55,6 @@ namespace CraftMan_WebApi.Models
                 pCompanyMaster.JobList = reader["JobList"].ToString().Split(",");
                 if (reader["CompanyRegistrationNumber"].ToString() != "") { pCompanyMaster.CompanyRegistrationNumber = (string)reader["CompanyRegistrationNumber"]; }
 
-
             }
 
             reader.Close();
@@ -83,8 +82,6 @@ namespace CraftMan_WebApi.Models
         //}
         public static int GetTotalcnt(string user)
         {
-
-
             int cnt = 0;
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
@@ -99,10 +96,7 @@ namespace CraftMan_WebApi.Models
 
             reader.Close();
 
-
-
             return cnt;
-
         }
 
 

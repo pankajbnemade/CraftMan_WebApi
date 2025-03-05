@@ -5,12 +5,14 @@ using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace CraftMan_WebApi.Models
 {
     public class ServiceMaster
     {
         public int ServiceId { get; set; }
+
         public string ServiceName { get; set; }
         public byte[]? ImageData { get; set; }
 
@@ -29,7 +31,7 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
-                pServiceMaster.ServiceName = (string)reader["ServiceName"];
+                pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
                 pServiceMaster.ImageData = reader["ImageData"] as byte[];
             }
 
@@ -53,7 +55,7 @@ namespace CraftMan_WebApi.Models
                 var pServiceMaster = new ServiceMaster();
 
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
-                pServiceMaster.ServiceName = (string)reader["ServiceName"];
+                pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
 
                 ServiceList.Add(pServiceMaster);
             }

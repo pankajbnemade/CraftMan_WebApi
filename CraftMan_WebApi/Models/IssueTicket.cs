@@ -193,20 +193,20 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];// Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
-                pIssueTicket.Status = (string)reader["Status"];
-                pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
-                pIssueTicket.Address = (string)reader["Address"];
-                pIssueTicket.City = (string)reader["City"];
-                pIssueTicket.Pincode = reader["Pincode"].ToString();
+                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
+                pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
+                pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
+                pIssueTicket.City = reader["City"] == DBNull.Value ? "" : (string)reader["City"];
+                pIssueTicket.ToCraftmanType = reader["ToCraftmanType"] == DBNull.Value ? "" : (string)reader["ToCraftmanType"];
+                pIssueTicket.Pincode = reader["Pincode"] == DBNull.Value ? "" : reader["Pincode"].ToString();
                 pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
                 pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pIssueTicket.CountyName = reader["CountyName"].ToString();
-                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+                pIssueTicket.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
                 pIssueTicket.ReviewStarRating = Convert.ToInt32(reader["ReviewStarRating"]);
-                pIssueTicket.ReviewComment = reader["ReviewComment"].ToString();
-                pIssueTicket.CompanyComment = reader["CompanyComment"].ToString();
+                pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
+                pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                 pIssueTicket.ClosingOTP = Convert.ToInt32(reader["ClosingOTP"]);
             }
 
@@ -228,8 +228,8 @@ namespace CraftMan_WebApi.Models
 
                 pIssueTicketImage.TicketId = pIssueTicket.TicketId;
                 pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
-                pIssueTicketImage.ImageName = (string)reader["ImageName"];
-                pIssueTicketImage.ImagePath = (string)reader["ImagePath"];
+                pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
+                pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
 
                 pIssueTicket.TicketImages.Add(pIssueTicketImage);
             }
@@ -251,8 +251,8 @@ namespace CraftMan_WebApi.Models
 
                 pIssueTicketImage.TicketId = pIssueTicket.TicketId;
                 pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
-                pIssueTicketImage.ImageName = (string)reader["ImageName"];
-                pIssueTicketImage.ImagePath = (string)reader["ImagePath"];
+                pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
+                pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
 
                 pIssueTicket.TicketWorkImages.Add(pIssueTicketImage);
             }
@@ -284,20 +284,20 @@ namespace CraftMan_WebApi.Models
             {
                 var pIssueTicket = new IssueTicket();
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
-                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
-                pIssueTicket.Status = (string)reader["Status"];
-                pIssueTicket.Address = (string)reader["Address"];
-                pIssueTicket.City = (string)reader["City"];
-                pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
-                pIssueTicket.Pincode = reader["Pincode"].ToString();
+                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
+                pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
+                pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
+                pIssueTicket.City = reader["City"] == DBNull.Value ? "" : (string)reader["City"];
+                pIssueTicket.ToCraftmanType = reader["ToCraftmanType"] == DBNull.Value ? "" : (string)reader["ToCraftmanType"];
+                pIssueTicket.Pincode = reader["Pincode"] == DBNull.Value ? "" : reader["Pincode"].ToString();
                 pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
                 pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pIssueTicket.CountyName = reader["CountyName"].ToString();
-                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+                pIssueTicket.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
                 pIssueTicket.ReviewStarRating = Convert.ToInt32(reader["ReviewStarRating"]);
-                pIssueTicket.ReviewComment = reader["ReviewComment"].ToString();
-                pIssueTicket.CompanyComment = reader["CompanyComment"].ToString();
+                pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
+                pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                 pIssueTicket.ClosingOTP = Convert.ToInt32(reader["ClosingOTP"]);
 
                 IssueTicketList.Add(pIssueTicket);
@@ -337,20 +337,20 @@ namespace CraftMan_WebApi.Models
             {
                 var pIssueTicket = new IssueTicket();
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = (string)reader["ReportingPerson"];
-                pIssueTicket.ReportingDescription = (string)reader["ReportingDescription"];
-                pIssueTicket.Status = (string)reader["Status"];
-                pIssueTicket.Address = (string)reader["Address"];
-                pIssueTicket.City = (string)reader["City"];
-                pIssueTicket.ToCraftmanType = (string)reader["ToCraftmanType"];
-                pIssueTicket.Pincode = reader["Pincode"].ToString();
+                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
+                pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
+                pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
+                pIssueTicket.City = reader["City"] == DBNull.Value ? "" : (string)reader["City"];
+                pIssueTicket.ToCraftmanType = reader["ToCraftmanType"] == DBNull.Value ? "" : (string)reader["ToCraftmanType"];
+                pIssueTicket.Pincode = reader["Pincode"] == DBNull.Value ? "" : reader["Pincode"].ToString();
                 pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
                 pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pIssueTicket.CountyName = reader["CountyName"].ToString();
-                pIssueTicket.MunicipalityName = reader["MunicipalityName"].ToString();
+                pIssueTicket.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
                 pIssueTicket.ReviewStarRating = Convert.ToInt32(reader["ReviewStarRating"]);
-                pIssueTicket.ReviewComment = reader["ReviewComment"].ToString();
-                pIssueTicket.CompanyComment = reader["CompanyComment"].ToString();
+                pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
+                pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                 pIssueTicket.ClosingOTP = Convert.ToInt32(reader["ClosingOTP"]);
 
                 IssueTicketList.Add(pIssueTicket);

@@ -57,7 +57,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicketChat.TicketId = Convert.ToInt32(reader["TicketId"]);
                 pIssueTicketChat.CompanyId = Convert.ToInt32(reader["CompanyId"]);
                 pIssueTicketChat.UserId = Convert.ToInt32(reader["UserId"]);
-                pIssueTicketChat.Message = (string)reader["Message"];
+                pIssueTicketChat.Message = (string)(reader["Message"] == DBNull.Value ? "" : reader["Message"]);
                 pIssueTicketChat.CompanyUserName = (string)(reader["CompanyUserName"] == DBNull.Value ? "" : reader["CompanyUserName"]);
                 pIssueTicketChat.UserName = (string)(reader["UserName"] == DBNull.Value ? "" : reader["UserName"]);
 

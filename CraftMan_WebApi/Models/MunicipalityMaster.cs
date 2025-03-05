@@ -25,7 +25,7 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pMunicipalityMaster.MunicipalityName = (string)reader["MunicipalityName"];
+                pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
                 pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
             }
 
@@ -50,7 +50,7 @@ namespace CraftMan_WebApi.Models
                 var pMunicipalityMaster = new MunicipalityMaster();
 
                 pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pMunicipalityMaster.MunicipalityName = (string)reader["MunicipalityName"];
+                pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
                 pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
 
                 MunicipalityList.Add(pMunicipalityMaster);
@@ -81,7 +81,7 @@ namespace CraftMan_WebApi.Models
                 var pMunicipalityMaster = new MunicipalityMaster();
 
                 pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                pMunicipalityMaster.MunicipalityName = (string)reader["MunicipalityName"];
+                pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
                 pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
 
                 MunicipalityList.Add(pMunicipalityMaster);

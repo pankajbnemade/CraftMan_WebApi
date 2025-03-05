@@ -28,7 +28,7 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
-                pCountyMaster.CountyName = (string)reader["CountyName"];
+                pCountyMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
             }
 
             reader.Close();
@@ -53,7 +53,7 @@ namespace CraftMan_WebApi.Models
                 var pCountyMaster = new CountyMaster();
 
                 pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
-                pCountyMaster.CountyName = (string)reader["CountyName"];
+                pCountyMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
 
                 CountyList.Add(pCountyMaster);
             }
@@ -82,7 +82,7 @@ namespace CraftMan_WebApi.Models
                 var pCountyMaster = new CountyMaster();
 
                 pCountyMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
-                pCountyMaster.CountyName = (string)reader["CountyName"];
+                pCountyMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
 
                 CountyList.Add(pCountyMaster);
             }
