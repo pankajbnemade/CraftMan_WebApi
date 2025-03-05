@@ -1,5 +1,5 @@
 ﻿using CraftMan_WebApi.Models;
-using CraftMan_WebApi.ExtendedModels; 
+using CraftMan_WebApi.ExtendedModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 namespace CraftMan_WebApi.Controllers
@@ -8,15 +8,13 @@ namespace CraftMan_WebApi.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-         [HttpPost]
+        [HttpPost]
         [Route("CompanySignUp")]
         public Response Register(CompanyMaster _Company)
         {
-
             return Companymasterextended.RegistrationCompany(_Company);
-
-
         }
+
         [HttpGet]
         [Route("GetCompanyDetail")]
         public CompanyMaster GetCompanyDetail(string Username)
@@ -35,14 +33,16 @@ namespace CraftMan_WebApi.Controllers
         public int GetTotalJobRequest(string Username)
         {
             return Companymasterextended.GetTotalcnt(Username);
-           // return 0;//ompanymasterextended.GetCompanyDetail(Username);
+            // return 0;//ompanymasterextended.GetCompanyDetail(Username);
         }
+
         [HttpGet]
         [Route("GetCompanyEmpDetail")]
         public ArrayList GetCompanyEmpDetail(string Username)
         {
             return Companymasterextended.GetCompEmployeeList(Username);
         }
+
         [HttpGet]
         [Route("GetActivecountnoofcraftsman")]
         public int GetCompanyEmpDetailcnt(string Username)
