@@ -8,7 +8,8 @@ GO
 CREATE TABLE tblServiceMaster(
 	ServiceId [int] IDENTITY(1,1) NOT NULL,
 	ServiceName [varchar](255) NULL,
-	ImageData VARBINARY(MAX)
+	[ImageName] [nvarchar](255) NULL,
+	[ImagePath] [nvarchar](255) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ServiceId] ASC

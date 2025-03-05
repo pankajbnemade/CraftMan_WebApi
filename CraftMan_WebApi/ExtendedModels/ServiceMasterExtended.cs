@@ -1,5 +1,6 @@
 ﻿using CraftMan_WebApi.Models;
 using System.Collections;
+using static System.Net.Mime.MediaTypeNames;
 namespace CraftMan_WebApi.ExtendedModels
 {
     public class ServiceMasterExtended
@@ -43,6 +44,33 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
                 else
                 {
+                    if (_ServiceMaster.ServiceImage != null)
+                    {
+                        string uploadFolder = @"C:\UploadedImages\ServiceImage";
+
+                        if (!Directory.Exists(uploadFolder))
+                            Directory.CreateDirectory(uploadFolder);
+
+                        string originalName = Path.GetFileNameWithoutExtension(_ServiceMaster.ServiceImage.FileName);
+
+                        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_ServiceMaster.ServiceImage.FileName);
+                        string imagePath = Path.Combine(uploadFolder, imageName);
+
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            _ServiceMaster.ServiceImage.CopyTo(stream);
+                        }
+
+                        _ServiceMaster.ImageName = originalName;
+                        _ServiceMaster.ImagePath = imagePath;
+                    }
+                    else
+                    {
+                        _ServiceMaster.ImageName = "";
+                        _ServiceMaster.ImagePath = "";
+                    }
+
+
                     int i = ServiceMaster.InsertService(_ServiceMaster);
 
                     if (i > 0)
@@ -82,6 +110,32 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
                 else
                 {
+                    if (_ServiceMaster.ServiceImage != null)
+                    {
+                        string uploadFolder = @"C:\UploadedImages\ServiceImage";
+
+                        if (!Directory.Exists(uploadFolder))
+                            Directory.CreateDirectory(uploadFolder);
+
+                        string originalName = Path.GetFileNameWithoutExtension(_ServiceMaster.ServiceImage.FileName);
+
+                        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_ServiceMaster.ServiceImage.FileName);
+                        string imagePath = Path.Combine(uploadFolder, imageName);
+
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            _ServiceMaster.ServiceImage.CopyTo(stream);
+                        }
+
+                        _ServiceMaster.ImageName = originalName;
+                        _ServiceMaster.ImagePath = imagePath;
+                    }
+                    else
+                    {
+                        _ServiceMaster.ImageName = "";
+                        _ServiceMaster.ImagePath = "";
+                    }
+
                     int i = ServiceMaster.UpdateService(_ServiceMaster);
 
                     if (i > 0)

@@ -9,13 +9,16 @@ namespace CraftMan_WebApi.Models
         public int MunicipalityId { get; set; }
         public string MunicipalityName { get; set; }
         public int CountyId { get; set; }
-
+        public string? CountyName { get; set; }
         public static MunicipalityMaster GetMunicipalityDetail(int? MunicipalityId)
         {
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = "  SELECT  MunicipalityId, CountyId, MunicipalityName FROM  dbo.tblMunicipalityMaster where MunicipalityId="
+            string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.CountyId, tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName " +
+                " FROM  dbo.tblMunicipalityMaster " +
+                " LEFT OUTER JOIN  dbo.tblCountyMaster ON dbo.tblMunicipalityMaster.CountyId = dbo.tblCountyMaster.CountyId" +
+                " where MunicipalityId="
                         + MunicipalityId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -27,6 +30,7 @@ namespace CraftMan_WebApi.Models
                 pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
                 pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
                 pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pMunicipalityMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
             }
 
             reader.Close();
@@ -68,9 +72,11 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.MunicipalityName, tblMunicipalityMaster.CountyId, tblCompanyCountyRel.pCompId " +
+            string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.MunicipalityName, " +
+                        " tblMunicipalityMaster.CountyId, tblCompanyCountyRel.pCompId, tblCountyMaster.CountyName " +
                         " FROM  tblMunicipalityMaster " +
                         " INNER JOIN tblCompanyCountyRel ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
+                        " LEFT OUTER JOIN  dbo.tblCountyMaster ON dbo.tblMunicipalityMaster.CountyId = dbo.tblCountyMaster.CountyId" +
                         " where (tblMunicipalityMaster.CountyId=" + CountyId.ToString() + " or  0 = " + CountyId.ToString() + ") " +
                         " and tblCompanyCountyRel.pCompId = " + CompanyId + " ";
 
@@ -83,6 +89,7 @@ namespace CraftMan_WebApi.Models
                 pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
                 pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
                 pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pMunicipalityMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
 
                 MunicipalityList.Add(pMunicipalityMaster);
             }
@@ -134,7 +141,8 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
-            string qstr = " INSERT into dbo.tblMunicipalityMaster(MunicipalityName, CountyId)  VALUES('" + _MunicipalityMaster.MunicipalityName + "', '" + _MunicipalityMaster.CountyId + "') ";
+            string qstr = " INSERT into dbo.tblMunicipalityMaster(MunicipalityName, CountyId)  " +
+                " VALUES('" + _MunicipalityMaster.MunicipalityName + "', '" + _MunicipalityMaster.CountyId + "') ";
 
             DBAccess db = new DBAccess();
             int i = db.ExecuteNonQuery(qstr);
