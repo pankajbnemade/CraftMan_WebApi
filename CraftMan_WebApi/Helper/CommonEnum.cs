@@ -10,10 +10,16 @@ namespace CraftMan_WebApi.Helper
 {
     public enum TicketStatus
     {
-        Active,       // 0
-        InProgress, // 1
-        Closed,     // 2
-        Resolved,   // 3
-        Reopened    // 4
+        //Active,       // 0
+        //InProgress, // 1
+        //Closed,     // 2
+        //Resolved,   // 3
+        //Reopened    // 4
+
+        Created,       // 0
+        Accepted, // 1
+        Completed,     // 2
+        Inprogress   // 3
+
     }
 }

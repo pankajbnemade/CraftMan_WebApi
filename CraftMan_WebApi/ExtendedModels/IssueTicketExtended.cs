@@ -1,4 +1,5 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
+using CraftMan_WebApi.Helper;
 using CraftMan_WebApi.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -219,7 +220,8 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                if (IssueTicket.ValidateUpdateTicketStatus(_IssueTicketUpdateStatus) == false)
+                if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status  
+                    &&  IssueTicket.ValidateUpdateTicketStatus(_IssueTicketUpdateStatus) == false)
                 {
                     strReturn.StatusMessage = "Invalid OTP. Please check and try again.";
                     strReturn.StatusCode = 1;

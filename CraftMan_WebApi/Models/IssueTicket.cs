@@ -328,7 +328,7 @@ namespace CraftMan_WebApi.Models
                 " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  " +
                 " WHERE (" + (CountyId == null ? 0 : CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (CountyId == null ? 0 : CountyId) + " )" +
                     " AND (" + (MunicipalityId == null ? 0 : MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (MunicipalityId == null ? 0 : MunicipalityId) + " )" +
-                    " AND (tblIssueTicketMaster.Status = '" + TicketStatus.Active + "')";
+                    " AND (tblIssueTicketMaster.Status = '" + TicketStatus.Created.ToString() + "')";
 
 
             SqlDataReader reader = db.ReadDB(qstr);
