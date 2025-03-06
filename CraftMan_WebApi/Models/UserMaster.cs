@@ -12,8 +12,8 @@ namespace CraftMan_WebApi.Models
         public string MobileNumber { get; set; }
         public string ContactPerson { get; set; }
         public string EmailId { get; set; }
-        public DateTime CreatedOn { get; set; }
-        public DateTime UpdatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public int CountyId { get; set; }
         public int MunicipalityId { get; set; }
         public string? CountyName { get; set; }
@@ -54,7 +54,7 @@ namespace CraftMan_WebApi.Models
             {
                 qstr = " INSERT into dbo.tblUserMaster(Username,Password,Active,LocationId,MobileNumber,ContactPerson,EmailId,CreatedOn, CountyId, MunicipalityId)     " +
                     " VALUES('" + _User.Username + "','" + _User.Password + "','" + _User.Active + "','" + _User.LocationId + "','" + _User.MobileNumber + "','"
-                    + _User.ContactPerson + "','" + _User.EmailId + "',getdate()"
+                    + _User.ContactPerson + "','" + _User.EmailId + "', getdate()"
                     + "," + _User.CountyId + "," + _User.MunicipalityId 
                     + ")";
 
