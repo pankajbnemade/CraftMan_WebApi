@@ -57,24 +57,58 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static Response RegistrationCompany(CompanyMaster _Company)
+        public static Response RegistrationCompany(CompanyMaster _CompanyMaster)
         {
             Response strReturn = new Response();
             try
             {
-                if (_Company.ValidateCompany(_Company).StatusCode > 0)
+                if (_CompanyMaster.ValidateCompany(_CompanyMaster).StatusCode > 0)
                 {
                     strReturn.StatusMessage = "Company already exists...";
                     strReturn.StatusCode = 1;
                 }
                 else
                 {
-                    int i = CompanyMaster.InsertCompany(_Company);//joblist added
+                    if (_CompanyMaster.LogoImage != null)
+                    {
+                        string uploadFolder = @"C:\UploadedImages\CompanyLogoImages";
+
+                        if (!Directory.Exists(uploadFolder))
+                            Directory.CreateDirectory(uploadFolder);
+
+                        string originalName = Path.GetFileNameWithoutExtension(_CompanyMaster.LogoImage.FileName);
+
+                        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
+                        string imagePath = Path.Combine(uploadFolder, imageName);
+
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            _CompanyMaster.LogoImage.CopyTo(stream);
+                        }
+
+                        _CompanyMaster.LogoImageName = originalName;
+                        _CompanyMaster.LogoImagePath = imagePath;
+                    }
+                    else
+                    {
+                        _CompanyMaster.LogoImageName = "";
+                        _CompanyMaster.LogoImagePath = "";
+                    }
+
+
+
+                    int i = CompanyMaster.InsertCompany(_CompanyMaster);//joblist added
 
                     if (i > 0)
                     {
+                        _CompanyMaster.pCompId = i;
+
                         strReturn.StatusCode = 1;
                         strReturn.StatusMessage = "Company Registered Successfully";
+
+                        CompanyServices.InsertNewServices(_CompanyMaster.pCompId, _CompanyMaster.ServiceList);
+
+                        CompanyCountyRelationExtended.NewRelations(_CompanyMaster.pCompId, _CompanyMaster.CountyList, _CompanyMaster.MunicipalityList);
                     }
                     else
                     { strReturn.StatusMessage = "Company not registered"; }

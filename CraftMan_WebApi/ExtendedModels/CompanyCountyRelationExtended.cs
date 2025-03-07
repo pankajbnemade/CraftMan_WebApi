@@ -50,14 +50,13 @@ namespace CraftMan_WebApi.ExtendedModels
             return strReturn;
         }
 
-        public static Response NewRecords(int CompanyId, int[]? CountyIdList, int[]? MunicipalityIdList)
+        public static Response NewRelations(int CompanyId, int[]? CountyIdList, int[]? MunicipalityIdList)
         {
             Response strReturn = new Response();
 
             try
             {
-
-                //if (_CompanyCountyRelation.ValidateInsertRecord(_CompanyCountyRelation).StatusCode > 0)
+                //if (_CompanyCountyRelation.ValidateInsertRelation(_CompanyCountyRelation).StatusCode > 0)
                 //{
                 //    strReturn.StatusMessage = "Company relation already exists...";
                 //    strReturn.StatusCode = 1;
@@ -65,13 +64,15 @@ namespace CraftMan_WebApi.ExtendedModels
                 //else
                 //{
 
-                DeleteRelations(CompanyId);
 
                 List<MunicipalityMaster> MunicipalityList = MunicipalityMaster.GetMunicipalityList(MunicipalityIdList);
 
-                CountyIdList = CountyIdList?
-                            .Where(id => id != 0 && MunicipalityList != null && !MunicipalityList.Select(s => s.CountyId).Contains(id))
-                            .ToArray();
+                if (MunicipalityList != null && CountyIdList != null)
+                {
+                    CountyIdList = CountyIdList?
+                                .Where(id => id != 0 && MunicipalityList != null && !MunicipalityList.Select(s => s.CountyId).Contains(id))
+                                .ToArray();
+                }
 
                 List<CompanyCountyRelation> _CompanyCountyRelations = new List<CompanyCountyRelation>();
 
@@ -89,7 +90,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     {
                         _CompanyCountyRelations
                         .Add(new CompanyCountyRelation
-                            { pCompId = CompanyId, CountyId = pMunicipalityMaster.CountyId, MunicipalityId = pMunicipalityMaster.MunicipalityId }
+                        { pCompId = CompanyId, CountyId = pMunicipalityMaster.CountyId, MunicipalityId = pMunicipalityMaster.MunicipalityId }
                         );
                     }
                 }

@@ -46,7 +46,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 {
                     if (_ServiceMaster.ServiceImage != null)
                     {
-                        string uploadFolder = @"C:\UploadedImages\ServiceImage";
+                        string uploadFolder = @"C:\UploadedImages\ServiceImages";
 
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);

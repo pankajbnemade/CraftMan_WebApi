@@ -63,7 +63,7 @@ namespace CraftMan_WebApi.Models
         public static int InsertNewRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             string qstr = " INSERT into tblCompanyCountyRel(pCompId, CountyId, MunicipalityId)  " +
-                            " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.MunicipalityId + "," + _CompanyCountyRelation.CountyId + ") ";
+                            " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.CountyId + "," + _CompanyCountyRelation.MunicipalityId + ") ";
 
             DBAccess db = new DBAccess();
 

@@ -13,7 +13,7 @@ namespace CraftMan_WebApi.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public bool Active { get; set; }
-        public int Pkey_UId { get; set; }
+        public int pCompId { get; set; }
         public int LocationId { get; set; }
         public string MobileNumber { get; set; }
         public string ContactPerson { get; set; }
@@ -25,8 +25,13 @@ namespace CraftMan_WebApi.Models
         public string CompanyPresentation { get; set; }
         public string CompetenceDescription { get; set; }
         public string CompanyReferences { get; set; }
-        public string[] JobList { get; set; }
-        public string[] CompanyEmplist { get; set; }
+
+        public IFormFile? LogoImage { get; set; }
+        public string? LogoImageName { get; set; }
+        public string? LogoImagePath { get; set; }
+
+        public string[]? JobList { get; set; }
+        //public string[]? CompanyEmplist { get; set; }
         public int[]? CountyList { get; set; }
         public int[]? MunicipalityList { get; set; }
         public int[]? ServiceList { get; set; }
@@ -36,38 +41,40 @@ namespace CraftMan_WebApi.Models
 
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = "  SELECT  Username, Password, Active, UserType, pCompId, LocationId, MobileNumber, ContactPerson, " +
-                        " EmailId, CreatedOn, UpdatedOn, CompanyName, CompanyRegistrationNumber, CompanyPresentation, Logotype, " +
-                        " CompetenceDescription, CompanyReferences, JobList  " +
-                        " FROM  tblCompanyMaster where Username='" + user + "'  ";
+            string qstr = " SELECT  tblCompanyMaster.*  " +
+                            " FROM  tblCompanyMaster where Username='" + user + "'  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
             var pCompanyMaster = new CompanyMaster();
 
             while (reader.Read())
             {
-                pCompanyMaster.Username = (string)reader["Username"];
-                pCompanyMaster.Password = (string)reader["Password"];
-                pCompanyMaster.Active = Convert.ToBoolean(reader["Active"]);
-                pCompanyMaster.MobileNumber = (string)reader["MobileNumber"];
+                //pCompanyMaster.Username = (string)reader["Username"];
+                //pCompanyMaster.Password = (string)reader["Password"];
+                //pCompanyMaster.Active = Convert.ToBoolean(reader["Active"]);
 
-                pCompanyMaster.LocationId = Convert.ToInt32(reader["LocationId"]);
-                pCompanyMaster.ContactPerson = (string)reader["ContactPerson"];
-                pCompanyMaster.EmailId = (string)reader["EmailId"];
+                pCompanyMaster.Username = reader["Username"] == DBNull.Value ? "" : (string)reader["Username"];
+                pCompanyMaster.Password = reader["Password"] == DBNull.Value ? "" : (string)reader["Password"];
+                pCompanyMaster.Active = reader["Active"] == DBNull.Value ? false : Convert.ToBoolean(reader["Active"]);
+
+                pCompanyMaster.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
+                pCompanyMaster.LocationId = reader["LocationId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["LocationId"]);
+                pCompanyMaster.MobileNumber = reader["MobileNumber"] == DBNull.Value ? "" : (string)reader["MobileNumber"];
+                pCompanyMaster.ContactPerson = reader["ContactPerson"] == DBNull.Value ? "" : (string)reader["ContactPerson"];
+                pCompanyMaster.EmailId = reader["EmailId"] == DBNull.Value ? "" : (string)reader["EmailId"];
+
                 pCompanyMaster.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                 pCompanyMaster.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
 
-                if (reader["CompanyName"].ToString() != "")
-                {
-                    pCompanyMaster.CompanyName = (string)reader["CompanyName"];
-                }
+                pCompanyMaster.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+                pCompanyMaster.CompanyRegistrationNumber = reader["CompanyRegistrationNumber"] == DBNull.Value ? "" : (string)reader["CompanyRegistrationNumber"];
+                pCompanyMaster.CompanyPresentation = reader["CompanyPresentation"] == DBNull.Value ? "" : (string)reader["CompanyPresentation"];
+                pCompanyMaster.CompetenceDescription = reader["CompetenceDescription"] == DBNull.Value ? "" : (string)reader["CompetenceDescription"];
+                pCompanyMaster.CompanyReferences = reader["CompanyReferences"] == DBNull.Value ? "" : (string)reader["CompanyReferences"];
+                pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
+                pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
 
-                pCompanyMaster.JobList = reader["JobList"].ToString().Split(",");
-
-                if (reader["CompanyRegistrationNumber"].ToString() != "")
-                {
-                    pCompanyMaster.CompanyRegistrationNumber = (string)reader["CompanyRegistrationNumber"];
-                }
+                //pCompanyMaster.JobList = reader["JobList"].ToString().Split(",");
 
             }
 
@@ -82,7 +89,7 @@ namespace CraftMan_WebApi.Models
             int cnt = 0;
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = " select count(*)totaljobrequest from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user + "'   ";
+            string qstr = " select count(*) totaljobrequest from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
             while (reader.Read())
@@ -105,14 +112,21 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertCompany(CompanyMaster _Company)
         {
-            string qstr = " INSERT into tblCompanyMaster(Username, Password, Active, LocationId, MobileNumber, ContactPerson, EmailId, CreatedOn, joblist)  " +
-                "   VALUES('" + _Company.Username + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber
-                + "', '" + _Company.ContactPerson + "', '" + _Company.EmailId + "', getdate(),'" + string.Join(",", _Company.JobList) + "')";
+            string qstr = " INSERT into tblCompanyMaster" +
+                " (" +
+                "Username, Password, Active, LocationId, MobileNumber, ContactPerson, " +
+                "EmailId, CreatedOn,  CompanyName, CompanyRegistrationNumber, CompanyPresentation, " +
+                "CompetenceDescription, CompanyReferences,  LogoImageName, LogoImagePath " +
+                ")  " +
+                "   VALUES('" + _Company.Username + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
+                "', '" + _Company.EmailId + "',"+ " getdate(), " + "'" + _Company.CompanyName + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
+                "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath +
+                "')";
 
             int h = 0;
 
             DBAccess db = new DBAccess();
-            int i = db.ExecuteNonQuery(qstr);
+            int i = db.ExecuteScalar(qstr);
 
             return i;
         }
