@@ -1,6 +1,7 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace CraftMan_WebApi.Models
 {
@@ -65,6 +66,44 @@ namespace CraftMan_WebApi.Models
             return MunicipalityList;
         }
 
+
+        public static List<MunicipalityMaster> GetMunicipalityList(int[]? MunicipalityIdList)
+        {
+            List<MunicipalityMaster> MunicipalityList = new List<MunicipalityMaster>();
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            if (MunicipalityIdList != null)
+            {
+                string MunicipalityIdStr = MunicipalityIdList != null ? string.Join(",", MunicipalityIdList) : string.Empty;
+
+                string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.CountyId, tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName " +
+                    " FROM  dbo.tblMunicipalityMaster " +
+                    " LEFT OUTER JOIN  dbo.tblCountyMaster ON dbo.tblMunicipalityMaster.CountyId = dbo.tblCountyMaster.CountyId" +
+                    " where MunicipalityId in (" + MunicipalityIdStr + ")  ";
+
+                SqlDataReader reader = db.ReadDB(qstr);
+
+
+                while (reader.Read())
+                {
+                    var pMunicipalityMaster = new MunicipalityMaster();
+
+                    pMunicipalityMaster.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                    pMunicipalityMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
+                    pMunicipalityMaster.CountyId = Convert.ToInt32(reader["CountyId"]);
+                    pMunicipalityMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
+
+                    MunicipalityList.Add(pMunicipalityMaster);
+                }
+
+                reader.Close();
+            }
+            return MunicipalityList;
+        }
+
+
         public static ArrayList GetMunicipalityListByCompanyId(int CountyId, int CompanyId)
         {
             ArrayList MunicipalityList = new ArrayList();
@@ -101,7 +140,7 @@ namespace CraftMan_WebApi.Models
 
         public static Boolean ValidateMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
-             DBAccess db = new DBAccess();
+            DBAccess db = new DBAccess();
 
             Response strReturn = new Response();
 
@@ -121,7 +160,7 @@ namespace CraftMan_WebApi.Models
 
         public static Boolean ValidateUpdateMunicipality(MunicipalityMaster _MunicipalityMaster)
         {
-             DBAccess db = new DBAccess();
+            DBAccess db = new DBAccess();
 
             Response strReturn = new Response();
 

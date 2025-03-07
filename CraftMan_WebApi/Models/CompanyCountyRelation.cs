@@ -20,7 +20,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName, tblCompanyMaster.CompanyName, tblCompanyCountyRel.pCompId, tblCompanyCountyRel.MunicipalityId, tblCompanyCountyRel.CountyId " +
+            string qstr = " SELECT distinct tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName, tblCompanyMaster.CompanyName, tblCompanyCountyRel.pCompId, tblCompanyCountyRel.MunicipalityId, tblCompanyCountyRel.CountyId " +
                 " FROM   tblCompanyCountyRel " +
                 " INNER JOIN  tblCompanyMaster ON tblCompanyCountyRel.pCompId = tblCompanyMaster.pCompId " +
                 " LEFT OUTER JOIN  tblCountyMaster ON tblCompanyCountyRel.CountyId = tblCountyMaster.CountyId " +
@@ -48,7 +48,7 @@ namespace CraftMan_WebApi.Models
             return CountyRelationList;
         }
 
-        public Response ValidateInsertRecord(CompanyCountyRelation _CompanyCountyRelation)
+        public Response ValidateInsertRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             string qstr = " select pCompId from tblCompanyCountyRel " +
                         " where tblCompanyCountyRel.pCompId=" + _CompanyCountyRelation.pCompId +
@@ -60,8 +60,7 @@ namespace CraftMan_WebApi.Models
             return db.validate(qstr);
         }
 
-
-        public static int InsertNewRecord(CompanyCountyRelation _CompanyCountyRelation)
+        public static int InsertNewRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             string qstr = " INSERT into tblCompanyCountyRel(pCompId, CountyId, MunicipalityId)  " +
                             " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.MunicipalityId + "," + _CompanyCountyRelation.CountyId + ") ";
@@ -73,12 +72,45 @@ namespace CraftMan_WebApi.Models
             return i;
         }
 
-        public static int DeleteRecord(CompanyCountyRelation _CompanyCountyRelation)
+
+        public static int InsertNewRelations(List<CompanyCountyRelation> _CompanyCountyRelations)
+        {
+            if (_CompanyCountyRelations == null || _CompanyCountyRelations.Count == 0)
+                return 0; // No Relations to insert
+
+            string qstr = "INSERT INTO tblCompanyCountyRel (pCompId, CountyId, MunicipalityId) VALUES ";
+
+            List<string> valuesList = new List<string>();
+
+            foreach (var relation in _CompanyCountyRelations)
+            {
+                string values = $"({relation.pCompId}, {relation.CountyId}, {relation.MunicipalityId})";
+                valuesList.Add(values);
+            }
+
+            qstr += string.Join(",", valuesList); 
+
+            DBAccess db = new DBAccess();
+            return db.ExecuteNonQuery(qstr);
+
+        }
+
+        public static int DeleteRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             string qstr = " DELETE FROM dbo.tblCompanyCountyRel " +
                         " where tblCompanyCountyRel.pCompId=" + _CompanyCountyRelation.pCompId +
                         " and tblCompanyCountyRel.CountyId = " + _CompanyCountyRelation.CountyId +
                         " and tblCompanyCountyRel.MunicipalityId = " + _CompanyCountyRelation.MunicipalityId;
+
+            DBAccess db = new DBAccess();
+
+            return db.ExecuteNonQuery(qstr);
+        }
+
+        public static int DeleteRelations(int CompanyId)
+        {
+            string qstr = " DELETE FROM dbo.tblCompanyCountyRel " +
+                        " where tblCompanyCountyRel.pCompId=" + CompanyId;
 
             DBAccess db = new DBAccess();
 

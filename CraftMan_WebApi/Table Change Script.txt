@@ -1,0 +1,26 @@
+ALTER TABLE tblServiceMaster
+ALTER COLUMN ImagePath VARCHAR(2000);
+
+GO  -----------------------------
+
+
+ALTER TABLE [tblIssueTicketWorkImages]
+ALTER COLUMN ImagePath VARCHAR(2000);
+
+
+GO  -----------------------------
+
+ALTER TABLE [tblIssueTicketImages]
+ALTER COLUMN ImagePath VARCHAR(2000);
+
+
+GO  -----------------------------
+
+
+ALTER TABLE [tblCompanyMaster]
+Add LogoImageName VARCHAR(255);
+
+ALTER TABLE [tblCompanyMaster]
+Add LogoImagePath VARCHAR(2000);
+
+GO  -----------------------------
