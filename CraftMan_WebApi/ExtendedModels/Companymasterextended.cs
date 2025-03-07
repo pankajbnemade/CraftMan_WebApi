@@ -71,7 +71,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 {
                     if (_CompanyMaster.LogoImage != null)
                     {
-                        string uploadFolder = @"C:\UploadedImages\CompanyLogoImages";
+                        string uploadFolder = @"C:\CraftManImages\CompanyImages";
 
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);

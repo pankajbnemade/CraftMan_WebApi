@@ -64,7 +64,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
                     if (_IssueTicket.Images != null && _IssueTicket.Images.Count > 0)
                     {
-                        string uploadFolder = @"C:\UploadedImages";
+                        string uploadFolder = @"C:\CraftManImages\TicketImages";
 
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
@@ -160,7 +160,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
                     if (_IssueTicketCompanyComment.Images != null && _IssueTicketCompanyComment.Images.Count > 0)
                     {
-                        string uploadFolder = @"C:\UploadedImages";
+                        string uploadFolder = @"C:\CraftManImages\TicketImages";
 
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
