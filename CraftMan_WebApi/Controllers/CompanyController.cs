@@ -57,5 +57,21 @@ namespace CraftMan_WebApi.Controllers
         {
             return Companymasterextended.LoginValidateForCompany(_Company);
         }
+
+        //[HttpPost("forgot-password")]
+        //public IActionResult ForgotPassword([FromBody] string email)
+        //{
+        //    Response result = Companymasterextended.GeneratePasswordResetToken(email);
+        //    return Ok(result);
+        //}
+
+        //[HttpPost("reset-password")]
+        //public IActionResult ResetPassword([FromBody] ResetPasswordModel model)
+        //{
+        //    Response result = Companymasterextended.ResetPassword(model);
+        //    return Ok(result);
+        //}
+
+
     }
 }

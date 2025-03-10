@@ -43,5 +43,15 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
+        public static Response GeneratePasswordResetToken(string email)
+        {
+            return UserResetPassword.GeneratePasswordResetToken(email); ;
+        }
+
+        public static Response ResetPassword(ResetPasswordModel model)
+        {
+            return UserResetPassword.ResetPassword(model.Token, model.NewPassword);
+        }
     }
 }

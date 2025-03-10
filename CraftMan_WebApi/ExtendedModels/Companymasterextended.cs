@@ -1,4 +1,5 @@
 ﻿using CraftMan_WebApi.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
 using System.IO;
@@ -161,5 +162,17 @@ namespace CraftMan_WebApi.ExtendedModels
         //        throw new ApplicationException("An error occurred.", ex);
         //    }
         //}
+
+
+        public static Response GeneratePasswordResetToken(string email)
+        {
+            return CompanyResetPassword.GeneratePasswordResetToken(email); ;
+        }
+
+        public static Response ResetPassword(ResetPasswordModel model)
+        {
+            return CompanyResetPassword.ResetPassword(model.Token, model.NewPassword);
+        }
+
     }
 }
