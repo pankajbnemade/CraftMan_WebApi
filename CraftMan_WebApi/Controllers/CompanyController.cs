@@ -33,7 +33,6 @@ namespace CraftMan_WebApi.Controllers
         public int GetTotalJobRequest(string Username)
         {
             return Companymasterextended.GetTotalcnt(Username);
-            // return 0;//ompanymasterextended.GetCompanyDetail(Username);
         }
 
         [HttpGet]
@@ -56,9 +55,7 @@ namespace CraftMan_WebApi.Controllers
         [Route("CompanySignIn")]
         public Response LoginCompany(LoginComp _Company)
         {
-
             return Companymasterextended.LoginValidateForCompany(_Company);
-
         }
     }
 }

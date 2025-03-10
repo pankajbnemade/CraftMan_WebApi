@@ -8,7 +8,14 @@ namespace CraftMan_WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
-    { 
+    {
+        [HttpGet]
+        [Route("GetUserDetail")]
+        public UserMaster GetUserDetail(string EmailId)
+        {
+            return UserMaster.GetUserDetail(EmailId);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
