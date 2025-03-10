@@ -31,7 +31,7 @@ namespace CraftMan_WebApi.Models
             return db.ExecuteScalar(qstr);
         }
 
-        public static ArrayList GetChatMessagesByTicketId(int TicketId)
+        public static ArrayList GetChatMessagesByTicketId(int TicketId, int CompanyId)
         {
             ArrayList pIssueTicketList = new ArrayList();
 
@@ -44,6 +44,7 @@ namespace CraftMan_WebApi.Models
                         " LEFT OUTER JOIN tblUserMaster on tblIssueTicketChat.UserId = tblUserMaster.pkey_UId" +
                         " LEFT OUTER JOIN tblCompanyMaster on tblIssueTicketChat.CompanyId = tblCompanyMaster.pCompId" +
                         " WHERE TicketId = " + TicketId +
+                        " AND tblIssueTicketChat.CompanyId = " + CompanyId +
                         " ORDER BY ChatDateTime";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -68,6 +69,44 @@ namespace CraftMan_WebApi.Models
 
             return pIssueTicketList;
         }
+
+        public static ArrayList GetChatListByTicketId(int TicketId)
+        {
+            ArrayList pIssueTicketList = new ArrayList();
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = " SELECT  DISTINCT   tblIssueTicketChat.TicketId, " +
+                        " tblIssueTicketChat.CompanyId, tblCompanyMaster.Username AS CompanyUserName" +
+                        " FROM    tblIssueTicketChat" +
+                        " LEFT OUTER JOIN tblCompanyMaster on tblIssueTicketChat.CompanyId = tblCompanyMaster.pCompId" +
+                        " WHERE tblIssueTicketChat.TicketId = " + TicketId +
+                        " ORDER BY tblIssueTicketChat.CompanyId";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                var pIssueTicketChat = new IssueTicketChat();
+
+                pIssueTicketChat.ChatId = Convert.ToInt32(reader["ChatId"]);
+                pIssueTicketChat.ChatDateTime = (DateTime)reader["ChatDateTime"];
+                pIssueTicketChat.TicketId = Convert.ToInt32(reader["TicketId"]);
+                pIssueTicketChat.CompanyId = Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicketChat.UserId = Convert.ToInt32(reader["UserId"]);
+                pIssueTicketChat.Message = (string)(reader["Message"] == DBNull.Value ? "" : reader["Message"]);
+                pIssueTicketChat.CompanyUserName = (string)(reader["CompanyUserName"] == DBNull.Value ? "" : reader["CompanyUserName"]);
+                pIssueTicketChat.UserName = (string)(reader["UserName"] == DBNull.Value ? "" : reader["UserName"]);
+
+                pIssueTicketList.Add(pIssueTicketChat);
+            }
+
+            reader.Close();
+
+            return pIssueTicketList;
+        }
+
 
     }
 }

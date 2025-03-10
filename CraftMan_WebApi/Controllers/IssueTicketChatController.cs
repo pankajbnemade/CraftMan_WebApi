@@ -21,9 +21,16 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpGet]
         [Route("GetChatMessages")]
-        public ArrayList GetChatMessagesByTicket(int TicketId)
+        public ArrayList GetChatMessagesByTicket(int TicketId, int CompanyId)
         {
-            return IssueTicketChatExtended.GetChatMessagesByTicketId(TicketId);
+            return IssueTicketChatExtended.GetChatMessagesByTicketId(TicketId, CompanyId);
+        }
+
+        [HttpGet]
+        [Route("GetChatList")]
+        public ArrayList GetChatList(int TicketId)
+        {
+            return IssueTicketChatExtended.GetChatListByTicketId(TicketId);
         }
 
     }

@@ -5,11 +5,24 @@ namespace CraftMan_WebApi.ExtendedModels
 {
     public class IssueTicketChatExtended
     {
-        public static ArrayList GetChatMessagesByTicketId(int TicketId)
+        public static ArrayList GetChatMessagesByTicketId(int TicketId, int CompanyId)
         {
             try
             {
-                return IssueTicketChat.GetChatMessagesByTicketId(TicketId);
+                return IssueTicketChat.GetChatMessagesByTicketId(TicketId, CompanyId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
+        public static ArrayList GetChatListByTicketId(int TicketId)
+        {
+            try
+            {
+                return IssueTicketChat.GetChatListByTicketId(TicketId);
             }
             catch (Exception ex)
             {
