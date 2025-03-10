@@ -6,6 +6,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using CraftMan_WebApi.Helper;
 
 namespace CraftMan_WebApi.Models
 {
@@ -16,6 +17,9 @@ namespace CraftMan_WebApi.Models
         public IFormFile? ServiceImage { get; set; }
         public string? ImageName { get; set; }
         public string? ImagePath { get; set; }
+        public string? ImageContentType { get; set; }
+        public byte[]? ImageFileBytes { get; set; }
+        public string? ImageBase64String { get; set; }
 
         public static ServiceMaster GetServiceDetail(int? ServiceId)
         {
@@ -35,6 +39,14 @@ namespace CraftMan_WebApi.Models
                 pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
                 pServiceMaster.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pServiceMaster.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
+                
+                if (pServiceMaster.ImagePath != "")
+                {
+                    pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
+                    pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                    pServiceMaster.ImageBase64String = Convert.ToBase64String(pServiceMaster.ImageFileBytes);
+                }
+
             }
 
             reader.Close();
@@ -60,6 +72,13 @@ namespace CraftMan_WebApi.Models
                 pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
                 pServiceMaster.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pServiceMaster.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
+
+                if (pServiceMaster.ImagePath != "")
+                {
+                    pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
+                    pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                    pServiceMaster.ImageBase64String = Convert.ToBase64String(pServiceMaster.ImageFileBytes);
+                }
 
                 ServiceList.Add(pServiceMaster);
             }

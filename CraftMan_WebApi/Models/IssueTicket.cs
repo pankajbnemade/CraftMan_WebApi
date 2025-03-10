@@ -231,6 +231,13 @@ namespace CraftMan_WebApi.Models
                 pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
 
+                if (pIssueTicketImage.ImagePath != "")
+                {
+                    pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
+                    pIssueTicketImage.ImageFileBytes = System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath);
+                    pIssueTicketImage.ImageBase64String = Convert.ToBase64String(pIssueTicketImage.ImageFileBytes);
+                }
+
                 pIssueTicket.TicketImages.Add(pIssueTicketImage);
             }
 
@@ -253,6 +260,13 @@ namespace CraftMan_WebApi.Models
                 pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
                 pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
+
+                if (pIssueTicketImage.ImagePath != "")
+                {
+                    pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
+                    pIssueTicketImage.ImageFileBytes = System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath);
+                    pIssueTicketImage.ImageBase64String = Convert.ToBase64String(pIssueTicketImage.ImageFileBytes);
+                }
 
                 pIssueTicket.TicketWorkImages.Add(pIssueTicketImage);
             }

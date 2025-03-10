@@ -5,6 +5,8 @@ using System;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.IO;
+using CraftMan_WebApi.Helper;
 
 namespace CraftMan_WebApi.Models
 {
@@ -35,6 +37,9 @@ namespace CraftMan_WebApi.Models
         public int[]? CountyList { get; set; }
         public int[]? MunicipalityList { get; set; }
         public int[]? ServiceList { get; set; }
+        public string? LogoImageContentType { get; set; }
+        public byte[]? LogoImageFileBytes { get; set; }
+        public string? LogoImageBase64String { get; set; }
 
         public static CompanyMaster GetCompanyDetail(string user)
         {
@@ -49,10 +54,6 @@ namespace CraftMan_WebApi.Models
 
             while (reader.Read())
             {
-                //pCompanyMaster.Username = (string)reader["Username"];
-                //pCompanyMaster.Password = (string)reader["Password"];
-                //pCompanyMaster.Active = Convert.ToBoolean(reader["Active"]);
-
                 pCompanyMaster.Username = reader["Username"] == DBNull.Value ? "" : (string)reader["Username"];
                 pCompanyMaster.Password = reader["Password"] == DBNull.Value ? "" : (string)reader["Password"];
                 pCompanyMaster.Active = reader["Active"] == DBNull.Value ? false : Convert.ToBoolean(reader["Active"]);
@@ -74,8 +75,12 @@ namespace CraftMan_WebApi.Models
                 pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
                 pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
 
-                //pCompanyMaster.JobList = reader["JobList"].ToString().Split(",");
-
+                if (pCompanyMaster.LogoImagePath != "")
+                {
+                    pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
+                    pCompanyMaster.LogoImageFileBytes = System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath);
+                    pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(pCompanyMaster.LogoImageFileBytes);
+                }
             }
 
             reader.Close();
@@ -95,7 +100,6 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 cnt = (int)reader["totaljobrequest"];
-
             }
 
             reader.Close();
@@ -105,9 +109,32 @@ namespace CraftMan_WebApi.Models
 
         public Response ValidateCompany(CompanyMaster _Company)
         {
-            string qstr = " select Username from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";
+
             DBAccess db = new DBAccess();
             return db.validate(qstr);
+        }
+
+        public static Response LoginValidateForCompanyUser(LoginComp _User)
+        {
+            Response strReturn = new Response();
+
+            strReturn.StatusMessage = "Invalid User";
+            strReturn.StatusCode = 1;
+
+            DBAccess db = new DBAccess();
+
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _User.EmailId + "') and upper(Password)= upper('" + _User.Password + "')";
+
+            strReturn.StatusCode = db.ExecuteScalar(qstr);
+
+            if (strReturn.StatusCode > 0)
+            {
+                strReturn.StatusMessage = "Valid User!";
+            }
+            else { strReturn.StatusMessage = "Invalid User!"; }
+
+            return strReturn;
         }
 
         public static int InsertCompany(CompanyMaster _Company)
@@ -119,7 +146,7 @@ namespace CraftMan_WebApi.Models
                 "CompetenceDescription, CompanyReferences,  LogoImageName, LogoImagePath " +
                 ")  " +
                 "   VALUES('" + _Company.Username + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
-                "', '" + _Company.EmailId + "',"+ " getdate(), " + "'" + _Company.CompanyName + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
+                "', '" + _Company.EmailId + "'," + " getdate(), " + "'" + _Company.CompanyName + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
                 "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath +
                 "')";
 
@@ -130,19 +157,21 @@ namespace CraftMan_WebApi.Models
 
             return i;
         }
+
         public static int UpdateCompany(CompanyMaster _Company)
         {
-            string qstr = "UPDATE tblCompanyMaster " +
-                             "SET  " +
-                             "   Password = '" + _Company.Password + "'," +
-                             "   Active = '" + _Company.Active + "'," +
-                             "   LocationId = '" + _Company.LocationId + "'," +
-                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
-                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
-                             "   WHERE " +
-                             "   EmailId ='" + _Company.EmailId + "'  ";
+            string qstr = " UPDATE tblCompanyMaster " +
+                            " SET  " +
+                            "   Password = '" + _Company.Password + "'," +
+                            "   Active = '" + _Company.Active + "'," +
+                            "   LocationId = '" + _Company.LocationId + "'," +
+                            "   MobileNumber = '" + _Company.MobileNumber + "'," +
+                            "   ContactPerson = '" + _Company.ContactPerson + "'," +
+                            "   WHERE " +
+                            "   EmailId ='" + _Company.EmailId + "'  ";
 
             DBAccess db = new DBAccess();
+
             return db.ExecuteNonQuery(qstr);
         }
 

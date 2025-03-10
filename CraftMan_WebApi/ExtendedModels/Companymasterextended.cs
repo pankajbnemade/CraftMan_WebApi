@@ -1,6 +1,7 @@
 ﻿using CraftMan_WebApi.Models;
 using System;
 using System.Collections;
+using System.IO;
 
 namespace CraftMan_WebApi.ExtendedModels
 {
@@ -42,7 +43,6 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
-
 
         public static ArrayList GetCompEmployeeList(string _user)
         {
@@ -103,7 +103,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     {
                         _CompanyMaster.pCompId = i;
 
-                        strReturn.StatusCode = 1;
+                        strReturn.StatusCode = _CompanyMaster.pCompId;
                         strReturn.StatusMessage = "Company Registered Successfully";
 
                         CompanyServices.InsertNewServices(_CompanyMaster.pCompId, _CompanyMaster.ServiceList);
@@ -121,25 +121,12 @@ namespace CraftMan_WebApi.ExtendedModels
             }
             return strReturn;
         }
-        public static Response LoginValidateForCompany(LoginComp _comp)
+
+        public static Response LoginValidateForCompany(LoginComp _User)
         {
             try
             {
-                Response strReturn = new Response();
-                CompanyMaster objCM = new CompanyMaster();
-                objCM.Password = _comp.Password;
-                objCM.EmailId = _comp.EmailId;
-                if (objCM.ValidateCompany(objCM).StatusCode > 0)
-                {
-                    strReturn.StatusMessage = "Valid Company ";
-                    strReturn.StatusCode = 1;
-                }
-                else
-                {
-                    strReturn.StatusMessage = "InValid Company ";
-                    strReturn.StatusCode = 0;
-                }
-                return strReturn;
+                return CompanyMaster.LoginValidateForCompanyUser(_User);
             }
             catch (Exception ex)
             {
@@ -147,5 +134,32 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
+        //public static Response LoginValidateForCompany(LoginComp _comp)
+        //{
+        //    try
+        //    {
+        //        Response strReturn = new Response();
+        //        CompanyMaster objCM = new CompanyMaster();
+        //        objCM.Password = _comp.Password;
+        //        objCM.EmailId = _comp.EmailId;
+        //        if (objCM.ValidateCompany(objCM).StatusCode > 0)
+        //        {
+        //            strReturn.StatusMessage = "Valid Company ";
+        //            strReturn.StatusCode = 1;
+        //        }
+        //        else
+        //        {
+        //            strReturn.StatusMessage = "InValid Company ";
+        //            strReturn.StatusCode = 0;
+        //        }
+        //        return strReturn;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogger.LogError(ex);
+        //        throw new ApplicationException("An error occurred.", ex);
+        //    }
+        //}
     }
 }

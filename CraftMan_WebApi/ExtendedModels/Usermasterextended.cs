@@ -31,6 +31,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
         public static Response LoginValidateForUser(LoginUser _User) {
             try
             {                

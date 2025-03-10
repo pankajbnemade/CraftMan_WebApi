@@ -82,7 +82,6 @@ namespace CraftMan_WebApi.Models
 
         public static Response InsertUser(UserMaster _User)
         {
-
             Response strReturn = new Response();
             string qstr = "select Password from dbo.tblUserMaster where upper(EmailId)=upper('" + _User.EmailId + "') or upper(Username)=upper('" + _User.Username + "')";
             DBAccess db = new DBAccess();
