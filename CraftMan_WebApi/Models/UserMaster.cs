@@ -11,7 +11,7 @@ namespace CraftMan_WebApi.Models
         public int UserId { get; set; } // Primary key
         public int? LocationId { get; set; } // Nullable integer
         public string MobileNumber { get; set; }
-        public string ContactPerson { get; set; }
+        public string? ContactPerson { get; set; }
         public string EmailId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }

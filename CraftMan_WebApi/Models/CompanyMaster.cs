@@ -16,17 +16,17 @@ namespace CraftMan_WebApi.Models
         public string Password { get; set; }
         public bool Active { get; set; }
         public int pCompId { get; set; }
-        public int LocationId { get; set; }
+        public int? LocationId { get; set; }
         public string MobileNumber { get; set; }
-        public string ContactPerson { get; set; }
+        public string? ContactPerson { get; set; }
         public string EmailId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public string CompanyName { get; set; }
-        public string CompanyRegistrationNumber { get; set; }
-        public string CompanyPresentation { get; set; }
-        public string CompetenceDescription { get; set; }
-        public string CompanyReferences { get; set; }
+        public string? CompanyRegistrationNumber { get; set; }
+        public string? CompanyPresentation { get; set; }
+        public string? CompetenceDescription { get; set; }
+        public string? CompanyReferences { get; set; }
 
         public IFormFile? LogoImage { get; set; }
         public string? LogoImageName { get; set; }

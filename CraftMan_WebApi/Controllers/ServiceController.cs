@@ -14,7 +14,7 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("NewService")]
-        public Response NewService(ServiceMaster _ServiceMaster)
+        public Response NewService([FromForm] ServiceMaster _ServiceMaster)
         {
             return ServiceMasterExtended.NewService(_ServiceMaster);
         }

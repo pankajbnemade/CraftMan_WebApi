@@ -10,7 +10,7 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("CompanySignUp")]
-        public Response Register(CompanyMaster _Company)
+        public Response Register([FromForm] CompanyMaster _Company)
         {
             return Companymasterextended.RegistrationCompany(_Company);
         }
@@ -53,7 +53,7 @@ namespace CraftMan_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("CompanySignIn")]
-        public Response LoginCompany(LoginComp _Company)
+        public Response LoginCompany([FromBody] LoginComp _Company)
         {
             return Companymasterextended.LoginValidateForCompany(_Company);
         }
