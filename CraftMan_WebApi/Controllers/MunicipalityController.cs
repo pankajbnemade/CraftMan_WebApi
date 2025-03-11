@@ -14,14 +14,14 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("NewMunicipality")]
-        public Response NewMunicipality(MunicipalityMaster _MunicipalityMaster)
+        public Response NewMunicipality([FromBody] MunicipalityMaster _MunicipalityMaster)
         {
             return MunicipalityMasterExtended.NewMunicipality(_MunicipalityMaster);
         }
 
         [HttpPost]
         [Route("UpdateMunicipality")]
-        public Response UpdateMunicipality(MunicipalityMaster _MunicipalityMaster)
+        public Response UpdateMunicipality([FromBody] MunicipalityMaster _MunicipalityMaster)
         {
             return MunicipalityMasterExtended.UpdateMunicipality(_MunicipalityMaster);
         }

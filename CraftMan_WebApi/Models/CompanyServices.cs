@@ -1,5 +1,6 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Collections;
 
 namespace CraftMan_WebApi.Models
@@ -67,26 +68,33 @@ namespace CraftMan_WebApi.Models
         }
 
 
-        public static int InsertNewServices(int CompanyId,int[]? ServicesIdList)
+        public static int InsertNewServices(int CompanyId, string[]? ServicesIdList)
         {
-            if (ServicesIdList == null)
-                return 0; // No Services to insert
-
-            string qstr = "INSERT INTO tblCompanyServices (pCompId, ServiceId) VALUES ";
-
-            List<string> valuesList = new List<string>();
-
-            foreach (var ServiceId in ServicesIdList)
+            try
             {
-                string values = $"({CompanyId}, {ServiceId})";
-                valuesList.Add(values);
+                if (ServicesIdList == null)
+                    return 0; // No Services to insert
+
+                string qstr = "INSERT INTO tblCompanyServices (pCompId, ServiceId) VALUES ";
+
+                List<string> valuesList = new List<string>();
+
+                foreach (var ServiceId in ServicesIdList)
+                {
+                    string values = $"({Convert.ToInt32(CompanyId)}, {Convert.ToInt32(ServiceId)})";
+                    valuesList.Add(values);
+                }
+
+                qstr += string.Join(",", valuesList);
+
+                DBAccess db = new DBAccess();
+                return db.ExecuteNonQuery(qstr);
             }
-
-            qstr += string.Join(",", valuesList);
-
-            DBAccess db = new DBAccess();
-            return db.ExecuteNonQuery(qstr);
-
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static int DeleteService(CompanyServices _CompanyServices)

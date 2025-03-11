@@ -15,7 +15,7 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("IssueTicket")]
-        public Response IssueTicket([FromForm] IssueTicket _IssueTicket)
+        public Response IssueTicket([FromBody] IssueTicket _IssueTicket)
         {
             return IssueTicketExtended.IssueNewTicket(_IssueTicket);
         }
@@ -50,7 +50,7 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpPost]
         [Route("UpdateCompanyComment")]
-        public Response UpdateCompanyComment([FromForm] IssueTicketCompanyComment _IssueTicketCompanyComment)
+        public Response UpdateCompanyComment([FromBody] IssueTicketCompanyComment _IssueTicketCompanyComment)
         {
             return IssueTicketExtended.UpdateCompanyComment(_IssueTicketCompanyComment);
         }

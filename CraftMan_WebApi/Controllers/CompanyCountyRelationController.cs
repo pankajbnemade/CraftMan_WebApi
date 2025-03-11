@@ -11,9 +11,9 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("NewRelation")]
-        public Response NewRelation(CompanyCountyRelation _CompanyCountyRelation)
+        public Response NewRelation([FromBody] CompanyCountyRelation _CompanyCountyRelation)
         {
-            return CompanyCountyRelationExtended.NewRelation(_CompanyCountyRelation);
+            return CompanyCountyRelationExtended.InsertNewRelation(_CompanyCountyRelation);
         }
 
         [HttpPost]

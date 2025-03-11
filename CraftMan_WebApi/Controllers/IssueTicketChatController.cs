@@ -14,7 +14,7 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("NewTicketChat")]
-        public Response InsertIssueTicketChat(IssueTicketChat _IssueTicketChat)
+        public Response InsertIssueTicketChat([FromBody] IssueTicketChat _IssueTicketChat)
         {
             return IssueTicketChatExtended.InsertIssueTicketChat(_IssueTicketChat);
         }

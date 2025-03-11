@@ -39,7 +39,7 @@ namespace CraftMan_WebApi.Models
                 pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
                 pServiceMaster.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pServiceMaster.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
-                
+
                 if (pServiceMaster.ImagePath != "")
                 {
                     pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
@@ -130,12 +130,20 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertService(ServiceMaster _Service)
         {
-            string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ImageName, ImagePath)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
+            try
+            {
+                string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ImageName, ImagePath)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
 
-            DBAccess db = new DBAccess();
-            int i = db.ExecuteNonQuery(qstr);
+                DBAccess db = new DBAccess();
+                int i = db.ExecuteNonQuery(qstr);
 
-            return i;
+                return i;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static int UpdateService(ServiceMaster _Service)
@@ -143,8 +151,8 @@ namespace CraftMan_WebApi.Models
             string qstr = " UPDATE dbo.tblServiceMaster " +
                             " SET  " +
                             "   ServiceName = '" + _Service.ServiceName + "', " +
-                            "   ImageName = " + (_Service.ImageName == "" ? "ImageName," : "'" + _Service.ImageName + "', ")  +
-                            "   ImagePath = " + (_Service.ImagePath == "" ? "ImagePath" : "'" + _Service.ImagePath + "'")  +
+                            "   ImageName = " + (_Service.ImageName == "" ? "ImageName," : "'" + _Service.ImageName + "', ") +
+                            "   ImagePath = " + (_Service.ImagePath == "" ? "ImagePath" : "'" + _Service.ImagePath + "'") +
                             "   WHERE " +
                             "   ServiceId = " + _Service.ServiceId + "  ";
 

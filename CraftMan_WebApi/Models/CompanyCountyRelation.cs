@@ -62,6 +62,7 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertNewRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
+
             string qstr = " INSERT into tblCompanyCountyRel(pCompId, CountyId, MunicipalityId)  " +
                             " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.CountyId + "," + _CompanyCountyRelation.MunicipalityId + ") ";
 
@@ -75,24 +76,31 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertNewRelations(List<CompanyCountyRelation> _CompanyCountyRelations)
         {
-            if (_CompanyCountyRelations == null || _CompanyCountyRelations.Count == 0)
-                return 0; // No Relations to insert
-
-            string qstr = "INSERT INTO tblCompanyCountyRel (pCompId, CountyId, MunicipalityId) VALUES ";
-
-            List<string> valuesList = new List<string>();
-
-            foreach (var relation in _CompanyCountyRelations)
+            try
             {
-                string values = $"({relation.pCompId}, {relation.CountyId}, {relation.MunicipalityId})";
-                valuesList.Add(values);
+                if (_CompanyCountyRelations == null || _CompanyCountyRelations.Count == 0)
+                    return 0; // No Relations to insert
+
+                string qstr = "INSERT INTO tblCompanyCountyRel (pCompId, CountyId, MunicipalityId) VALUES ";
+
+                List<string> valuesList = new List<string>();
+
+                foreach (var relation in _CompanyCountyRelations)
+                {
+                    string values = $"({Convert.ToInt32(relation.pCompId)}, {Convert.ToInt32(relation.CountyId)}, {Convert.ToInt32(relation.MunicipalityId)})";
+                    valuesList.Add(values);
+                }
+
+                qstr += string.Join(",", valuesList);
+
+                DBAccess db = new DBAccess();
+                return db.ExecuteNonQuery(qstr);
             }
-
-            qstr += string.Join(",", valuesList); 
-
-            DBAccess db = new DBAccess();
-            return db.ExecuteNonQuery(qstr);
-
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         public static int DeleteRelation(CompanyCountyRelation _CompanyCountyRelation)

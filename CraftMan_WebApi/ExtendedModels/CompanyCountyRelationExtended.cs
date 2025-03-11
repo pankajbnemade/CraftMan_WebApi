@@ -17,7 +17,7 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static Response NewRelation(CompanyCountyRelation _CompanyCountyRelation)
+        public static Response InsertNewRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             Response strReturn = new Response();
 
@@ -50,7 +50,7 @@ namespace CraftMan_WebApi.ExtendedModels
             return strReturn;
         }
 
-        public static Response NewRelations(int CompanyId, int[]? CountyIdList, int[]? MunicipalityIdList)
+        public static Response InsertNewRelations(int CompanyId, string[]? CountyIdList, string[]? MunicipalityIdList)
         {
             Response strReturn = new Response();
 
@@ -63,14 +63,14 @@ namespace CraftMan_WebApi.ExtendedModels
                 //}
                 //else
                 //{
-
+                
 
                 List<MunicipalityMaster> MunicipalityList = MunicipalityMaster.GetMunicipalityList(MunicipalityIdList);
 
                 if (MunicipalityList != null && CountyIdList != null)
                 {
                     CountyIdList = CountyIdList?
-                                .Where(id => id != 0 && MunicipalityList != null && !MunicipalityList.Select(s => s.CountyId).Contains(id))
+                                .Where(id => Convert.ToInt32(id) != 0 && MunicipalityList != null && !MunicipalityList.Select(s => s.CountyId).Contains(Convert.ToInt32(id)))
                                 .ToArray();
                 }
 
@@ -78,9 +78,9 @@ namespace CraftMan_WebApi.ExtendedModels
 
                 if (CountyIdList != null)
                 {
-                    foreach (int id in CountyIdList)
+                    foreach (string id in CountyIdList)
                     {
-                        _CompanyCountyRelations.Add(new CompanyCountyRelation { pCompId = CompanyId, CountyId = id });
+                        _CompanyCountyRelations.Add(new CompanyCountyRelation { pCompId = CompanyId, CountyId = Convert.ToInt32(id) });
                     }
                 }
 

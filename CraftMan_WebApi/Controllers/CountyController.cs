@@ -14,14 +14,14 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("NewCounty")]
-        public Response NewCounty(CountyMaster _CountyMaster)
+        public Response NewCounty([FromBody] CountyMaster _CountyMaster)
         {
             return CountyMasterExtended.NewCounty(_CountyMaster);
         }
 
         [HttpPost]
         [Route("UpdateCounty")]
-        public Response UpdateCounty(CountyMaster _CountyMaster)
+        public Response UpdateCounty([FromBody] CountyMaster _CountyMaster)
         {
             return CountyMasterExtended.UpdateCounty(_CountyMaster);
         }

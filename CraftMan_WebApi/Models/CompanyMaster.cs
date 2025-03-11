@@ -15,7 +15,7 @@ namespace CraftMan_WebApi.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public bool Active { get; set; }
-        public int pCompId { get; set; }
+        public int? pCompId { get; set; }
         public int? LocationId { get; set; }
         public string MobileNumber { get; set; }
         public string? ContactPerson { get; set; }
@@ -27,16 +27,15 @@ namespace CraftMan_WebApi.Models
         public string? CompanyPresentation { get; set; }
         public string? CompetenceDescription { get; set; }
         public string? CompanyReferences { get; set; }
-
         public IFormFile? LogoImage { get; set; }
         public string? LogoImageName { get; set; }
         public string? LogoImagePath { get; set; }
 
         public string[]? JobList { get; set; }
         //public string[]? CompanyEmplist { get; set; }
-        public int[]? CountyList { get; set; }
-        public int[]? MunicipalityList { get; set; }
-        public int[]? ServiceList { get; set; }
+        public string[]? CountyList { get; set; }
+        public string[]? MunicipalityList { get; set; }
+        public string[]? ServiceList { get; set; }
         public string? LogoImageContentType { get; set; }
         public byte[]? LogoImageFileBytes { get; set; }
         public string? LogoImageBase64String { get; set; }
@@ -149,6 +148,8 @@ namespace CraftMan_WebApi.Models
                 "', '" + _Company.EmailId + "'," + " getdate(), " + "'" + _Company.CompanyName + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
                 "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath +
                 "')";
+
+            Console.WriteLine(qstr);
 
             int h = 0;
 

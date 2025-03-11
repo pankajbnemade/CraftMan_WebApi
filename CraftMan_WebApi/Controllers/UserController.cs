@@ -20,7 +20,7 @@ namespace CraftMan_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("UserSignUp")]
-        public Response RegisterUser(UserMaster _User)
+        public Response RegisterUser([FromBody] UserMaster _User)
         {   
             return Usermasterextended.RegistrationForUser(_User);         
         }      

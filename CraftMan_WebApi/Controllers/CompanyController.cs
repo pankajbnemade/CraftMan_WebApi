@@ -2,6 +2,7 @@
 using CraftMan_WebApi.ExtendedModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using Microsoft.AspNetCore.Http.HttpResults;
 namespace CraftMan_WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -10,16 +11,39 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("CompanySignUp")]
-        public Response Register([FromForm] CompanyMaster _Company)
+        public Response Register([FromBody] CompanyMaster _Company)
         {
-            return Companymasterextended.RegistrationCompany(_Company);
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return new Response { StatusCode = 0, StatusMessage = "Company model invalid." };
+                }
+
+                Console.WriteLine("Register");
+
+                return Companymasterextended.RegistrationCompany(_Company);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
 
         [HttpGet]
         [Route("GetCompanyDetail")]
         public CompanyMaster GetCompanyDetail(string Username)
         {
-            return Companymasterextended.GetCompanyDetail(Username);
+            try
+            {
+                return Companymasterextended.GetCompanyDetail(Username);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
         }
         [HttpGet]
         [Route("GetCompanyJobList")]

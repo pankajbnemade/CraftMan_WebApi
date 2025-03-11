@@ -66,7 +66,7 @@ namespace CraftMan_WebApi.Models
             return MunicipalityList;
         }
 
-        public static List<MunicipalityMaster> GetMunicipalityList(int[]? MunicipalityIdList)
+        public static List<MunicipalityMaster> GetMunicipalityList(string[]? MunicipalityIdList)
         {
             List<MunicipalityMaster> MunicipalityList = new List<MunicipalityMaster>();
 

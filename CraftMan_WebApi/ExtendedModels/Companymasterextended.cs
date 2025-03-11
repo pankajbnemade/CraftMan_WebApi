@@ -74,6 +74,8 @@ namespace CraftMan_WebApi.ExtendedModels
                     {
                         string uploadFolder = @"C:\CraftManImages\CompanyImages";
 
+                        Console.WriteLine(uploadFolder);
+
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
 
@@ -96,23 +98,33 @@ namespace CraftMan_WebApi.ExtendedModels
                         _CompanyMaster.LogoImagePath = "";
                     }
 
-
-
                     int i = CompanyMaster.InsertCompany(_CompanyMaster);//joblist added
+
+                    Console.WriteLine("InsertCompany");
 
                     if (i > 0)
                     {
                         _CompanyMaster.pCompId = i;
 
-                        strReturn.StatusCode = _CompanyMaster.pCompId;
+                        strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
                         strReturn.StatusMessage = "Company Registered Successfully";
 
-                        CompanyServices.InsertNewServices(_CompanyMaster.pCompId, _CompanyMaster.ServiceList);
+                        CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceList);
+                        Console.WriteLine(_CompanyMaster.ServiceList);
 
-                        CompanyCountyRelationExtended.NewRelations(_CompanyMaster.pCompId, _CompanyMaster.CountyList, _CompanyMaster.MunicipalityList);
+                        Console.WriteLine("InsertNewServices");
+
+                        CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyList, _CompanyMaster.MunicipalityList);
+
+                        Console.WriteLine(_CompanyMaster.CountyList);
+                        Console.WriteLine(_CompanyMaster.MunicipalityList);
+                        Console.WriteLine("InsertNewRelations");
+
                     }
                     else
-                    { strReturn.StatusMessage = "Company not registered"; }
+                    { 
+                        strReturn.StatusMessage = "Company not registered"; 
+                    }
                 }
             }
             catch (Exception ex)
