@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 
 namespace CraftMan_WebApi.Models
 {
@@ -75,7 +76,14 @@ namespace CraftMan_WebApi.Models
 
             if (MunicipalityIdList != null && MunicipalityIdList.Any())
             {
-                string MunicipalityIdStr = MunicipalityIdList != null ? string.Join(",", MunicipalityIdList) : string.Empty;
+                List<string> MunicipalityIdListTrim = new List<string>();
+
+                foreach (string Id in MunicipalityIdList)
+                {
+                    MunicipalityIdListTrim.Add(Id.Trim().Trim('"'));
+                }
+
+                string MunicipalityIdStr = MunicipalityIdListTrim != null ? string.Join(",", MunicipalityIdListTrim) : string.Empty;
 
                 string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.CountyId, tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName " +
                     " FROM  dbo.tblMunicipalityMaster " +

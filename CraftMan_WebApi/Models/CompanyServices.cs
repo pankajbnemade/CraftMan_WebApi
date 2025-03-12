@@ -78,8 +78,10 @@ namespace CraftMan_WebApi.Models
 
                     List<string> valuesList = new List<string>();
 
-                    foreach (var ServiceId in ServicesIdList)
+                    foreach (string Id in ServicesIdList)
                     {
+                        string ServiceId = Id.Trim().Trim('"');
+
                         string values = $"({Convert.ToInt32(CompanyId)}, {Convert.ToInt32(ServiceId)})";
                         valuesList.Add(values);
                     }
