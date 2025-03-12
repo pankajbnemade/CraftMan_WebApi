@@ -11,7 +11,7 @@ namespace CraftMan_WebApi.Controllers
     {
         [HttpPost]
         [Route("CompanySignUp")]
-        public Response Register([FromBody] CompanyMaster _Company)
+        public Response Register([FromForm] CompanyMaster _Company)
         {
             try
             {
