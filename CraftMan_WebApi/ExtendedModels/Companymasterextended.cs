@@ -8,11 +8,11 @@ namespace CraftMan_WebApi.ExtendedModels
 {
     public class Companymasterextended
     {
-        public static CompanyMaster GetCompanyDetail(string Username)
+        public static CompanyMaster GetCompanyDetail(string EmailId)
         {
             try
             {
-                return CompanyMaster.GetCompanyDetail(Username);
+                return CompanyMaster.GetCompanyDetail(EmailId);
             }
             catch (Exception ex)
             {

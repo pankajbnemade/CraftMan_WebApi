@@ -73,7 +73,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            if (MunicipalityIdList != null)
+            if (MunicipalityIdList != null && MunicipalityIdList.Any())
             {
                 string MunicipalityIdStr = MunicipalityIdList != null ? string.Join(",", MunicipalityIdList) : string.Empty;
 

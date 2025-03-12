@@ -33,11 +33,11 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpGet]
         [Route("GetCompanyDetail")]
-        public CompanyMaster GetCompanyDetail(string Username)
+        public CompanyMaster GetCompanyDetail(string EmailId)
         {
             try
             {
-                return Companymasterextended.GetCompanyDetail(Username);
+                return Companymasterextended.GetCompanyDetail(EmailId);
             }
             catch (Exception ex)
             {

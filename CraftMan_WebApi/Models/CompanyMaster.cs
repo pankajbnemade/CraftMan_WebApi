@@ -40,13 +40,13 @@ namespace CraftMan_WebApi.Models
         public byte[]? LogoImageFileBytes { get; set; }
         public string? LogoImageBase64String { get; set; }
 
-        public static CompanyMaster GetCompanyDetail(string user)
+        public static CompanyMaster GetCompanyDetail(string EmailId)
         {
 
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
             string qstr = " SELECT  tblCompanyMaster.*  " +
-                            " FROM  tblCompanyMaster where Username='" + user + "'  ";
+                            " FROM  tblCompanyMaster where upper(EmailId) = upper('" + EmailId + "')  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
             var pCompanyMaster = new CompanyMaster();

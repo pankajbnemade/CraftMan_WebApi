@@ -72,23 +72,25 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                if (ServicesIdList == null)
-                    return 0; // No Services to insert
-
-                string qstr = "INSERT INTO tblCompanyServices (pCompId, ServiceId) VALUES ";
-
-                List<string> valuesList = new List<string>();
-
-                foreach (var ServiceId in ServicesIdList)
+                if (ServicesIdList != null && ServicesIdList.Any())
                 {
-                    string values = $"({Convert.ToInt32(CompanyId)}, {Convert.ToInt32(ServiceId)})";
-                    valuesList.Add(values);
+                    string qstr = "INSERT INTO tblCompanyServices (pCompId, ServiceId) VALUES ";
+
+                    List<string> valuesList = new List<string>();
+
+                    foreach (var ServiceId in ServicesIdList)
+                    {
+                        string values = $"({Convert.ToInt32(CompanyId)}, {Convert.ToInt32(ServiceId)})";
+                        valuesList.Add(values);
+                    }
+
+                    qstr += string.Join(",", valuesList);
+
+                    DBAccess db = new DBAccess();
+                    return db.ExecuteNonQuery(qstr);
                 }
 
-                qstr += string.Join(",", valuesList);
-
-                DBAccess db = new DBAccess();
-                return db.ExecuteNonQuery(qstr);
+                return 0;
             }
             catch (Exception ex)
             {

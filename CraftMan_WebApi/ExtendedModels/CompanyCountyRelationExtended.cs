@@ -63,11 +63,10 @@ namespace CraftMan_WebApi.ExtendedModels
                 //}
                 //else
                 //{
-                
 
                 List<MunicipalityMaster> MunicipalityList = MunicipalityMaster.GetMunicipalityList(MunicipalityIdList);
 
-                if (MunicipalityList != null && CountyIdList != null)
+                if (MunicipalityList != null && CountyIdList != null && CountyIdList.Any())
                 {
                     CountyIdList = CountyIdList?
                                 .Where(id => Convert.ToInt32(id) != 0 && MunicipalityList != null && !MunicipalityList.Select(s => s.CountyId).Contains(Convert.ToInt32(id)))
@@ -76,7 +75,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
                 List<CompanyCountyRelation> _CompanyCountyRelations = new List<CompanyCountyRelation>();
 
-                if (CountyIdList != null)
+                if (CountyIdList != null && CountyIdList.Any())
                 {
                     foreach (string id in CountyIdList)
                     {
@@ -84,7 +83,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     }
                 }
 
-                if (MunicipalityList != null)
+                if (MunicipalityList != null && MunicipalityList.Any())
                 {
                     foreach (MunicipalityMaster pMunicipalityMaster in MunicipalityList)
                     {
