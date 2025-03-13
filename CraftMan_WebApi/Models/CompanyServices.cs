@@ -14,7 +14,7 @@ namespace CraftMan_WebApi.Models
 
         public static ArrayList GetServicesByCompany(int CompanyId)
         {
-            ArrayList CountyServiceList = new ArrayList();
+            ArrayList CompanyServiceList = new ArrayList();
 
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
@@ -22,7 +22,7 @@ namespace CraftMan_WebApi.Models
             string qstr = " SELECT distinct tblServiceMaster.ServiceName, tblCompanyMaster.CompanyName, tblCompanyServices.pCompId, tblCompanyServices.ServiceId " +
                 " FROM   tblCompanyServices " +
                 " INNER JOIN  tblCompanyMaster ON tblCompanyServices.pCompId = tblCompanyMaster.pCompId " +
-                " LEFT OUTER JOIN  tblServiceMaster ON tblCompanyServices.CountyId = tblServiceMaster.ServiceId " +
+                " LEFT OUTER JOIN  tblServiceMaster ON tblCompanyServices.ServiceId = tblServiceMaster.ServiceId " +
                 " WHERE tblCompanyServices.pCompId = " + CompanyId + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -36,12 +36,12 @@ namespace CraftMan_WebApi.Models
                 pCompanyServices.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
                 pCompanyServices.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
 
-                CountyServiceList.Add(pCompanyServices);
+                CompanyServiceList.Add(pCompanyServices);
             }
 
             reader.Close();
 
-            return CountyServiceList;
+            return CompanyServiceList;
         }
 
         public Response ValidateInsertService(CompanyServices _CompanyServices)
@@ -66,7 +66,6 @@ namespace CraftMan_WebApi.Models
 
             return i;
         }
-
 
         public static int InsertNewServices(int CompanyId, string[]? ServicesIdList)
         {
@@ -100,7 +99,7 @@ namespace CraftMan_WebApi.Models
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
-
+        
         public static int DeleteService(CompanyServices _CompanyServices)
         {
             string qstr = " DELETE FROM dbo.tblCompanyServices " +

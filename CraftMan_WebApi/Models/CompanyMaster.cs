@@ -27,18 +27,22 @@ namespace CraftMan_WebApi.Models
         public string? CompanyPresentation { get; set; }
         public string? CompetenceDescription { get; set; }
         public string? CompanyReferences { get; set; }
+        public string[]? JobList { get; set; }
+        //public string[]? CompanyEmplist { get; set; }
+        public string[]? CountyIdList { get; set; }
+        public string[]? MunicipalityIdList { get; set; }
+        public string[]? ServiceIdList { get; set; }
         public IFormFile? LogoImage { get; set; }
         public string? LogoImageName { get; set; }
         public string? LogoImagePath { get; set; }
-
-        public string[]? JobList { get; set; }
-        //public string[]? CompanyEmplist { get; set; }
-        public string[]? CountyList { get; set; }
-        public string[]? MunicipalityList { get; set; }
-        public string[]? ServiceList { get; set; }
         public string? LogoImageContentType { get; set; }
         public byte[]? LogoImageFileBytes { get; set; }
         public string? LogoImageBase64String { get; set; }
+        public List<CountyMaster>? CountyList { get; set; }
+        public List<MunicipalityMaster>? MunicipalityList { get; set; }
+        public List<CompanyCountyRelation>? CountyRelationList { get; set; }
+        public List<CompanyServices>? ServiceList { get; set; }
+
 
         public static CompanyMaster GetCompanyDetail(string EmailId)
         {

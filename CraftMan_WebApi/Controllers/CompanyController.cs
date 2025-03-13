@@ -45,6 +45,7 @@ namespace CraftMan_WebApi.Controllers
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
         [HttpGet]
         [Route("GetCompanyJobList")]
         public string[] GetCompanyJobList(string Username)

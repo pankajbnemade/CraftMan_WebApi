@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
+using System.ComponentModel.Design;
+using System.Diagnostics.Metrics;
 using System.IO;
 
 namespace CraftMan_WebApi.ExtendedModels
@@ -12,7 +14,64 @@ namespace CraftMan_WebApi.ExtendedModels
         {
             try
             {
-                return CompanyMaster.GetCompanyDetail(EmailId);
+                var pCompanyMaster = CompanyMaster.GetCompanyDetail(EmailId);
+
+                if (pCompanyMaster.pCompId != null)
+                {
+                    ArrayList CountyRelationList = CompanyCountyRelation.GetRelationDetailByCompany(Convert.ToInt32(pCompanyMaster.pCompId));
+
+                    ArrayList CompanyServiceList = CompanyServices.GetServicesByCompany(Convert.ToInt32(pCompanyMaster.pCompId));
+
+                    if (CompanyServiceList != null && CompanyServiceList.Count != 0)
+                    {
+                        pCompanyMaster.ServiceIdList = CompanyServiceList.Cast<CompanyServices>()
+                                                      .Select(service => service.ServiceId.ToString())
+                                                      .Distinct()
+                                                      .ToArray();
+
+                        pCompanyMaster.ServiceList = CompanyServiceList.Cast<CompanyServices>().ToList();
+                    }
+
+                    if (CountyRelationList != null && CountyRelationList.Count != 0)
+                    {
+                        pCompanyMaster.CountyIdList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                      .Select(relation => relation.CountyId.ToString())
+                                                      .Distinct()
+                                                      .ToArray();
+
+                        pCompanyMaster.MunicipalityIdList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                        .Where(w => w.MunicipalityId != 0)
+                                                        .Select(relation => relation.MunicipalityId.ToString())
+                                                        .Distinct()
+                                                        .ToArray();
+
+                        pCompanyMaster.CountyList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                    .Select(county => new CountyMaster()
+                                                    {
+                                                        CountyId = county.CountyId,
+                                                        CountyName = county.CountyName
+                                                    })
+                                                    .Distinct()
+                                                    .ToList();
+
+                        pCompanyMaster.MunicipalityList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                        .Where(w => w.MunicipalityId != 0)
+                                                        .Select(municipality => new MunicipalityMaster()
+                                                        {
+                                                            MunicipalityId = municipality.MunicipalityId,
+                                                            MunicipalityName = municipality.MunicipalityName,
+                                                            CountyId = municipality.CountyId,
+                                                            CountyName = municipality.CountyName
+                                                        })
+                                                        .Distinct()
+                                                        .ToList();
+
+                        pCompanyMaster.CountyRelationList = CountyRelationList.Cast<CompanyCountyRelation>().Distinct().ToList();
+                    }
+
+                }
+
+                return pCompanyMaster;
             }
             catch (Exception ex)
             {
@@ -20,6 +79,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
         public static int GetTotalcnt(string Username)
         {
             try
@@ -32,6 +92,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
         public static int GetActivecountnoofcraftsman(string Username)
         {
             try
@@ -109,21 +170,21 @@ namespace CraftMan_WebApi.ExtendedModels
                         strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
                         strReturn.StatusMessage = "Company Registered Successfully";
 
-                        CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceList);
-                        Console.WriteLine(_CompanyMaster.ServiceList);
+                        CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
+                        Console.WriteLine(_CompanyMaster.ServiceIdList);
 
                         Console.WriteLine("InsertNewServices");
 
-                        CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyList, _CompanyMaster.MunicipalityList);
+                        CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
 
-                        Console.WriteLine(_CompanyMaster.CountyList);
-                        Console.WriteLine(_CompanyMaster.MunicipalityList);
+                        Console.WriteLine(_CompanyMaster.CountyIdList);
+                        Console.WriteLine(_CompanyMaster.MunicipalityIdList);
                         Console.WriteLine("InsertNewRelations");
 
                     }
                     else
-                    { 
-                        strReturn.StatusMessage = "Company not registered"; 
+                    {
+                        strReturn.StatusMessage = "Company not registered";
                     }
                 }
             }
@@ -147,34 +208,6 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
-
-        //public static Response LoginValidateForCompany(LoginComp _comp)
-        //{
-        //    try
-        //    {
-        //        Response strReturn = new Response();
-        //        CompanyMaster objCM = new CompanyMaster();
-        //        objCM.Password = _comp.Password;
-        //        objCM.EmailId = _comp.EmailId;
-        //        if (objCM.ValidateCompany(objCM).StatusCode > 0)
-        //        {
-        //            strReturn.StatusMessage = "Valid Company ";
-        //            strReturn.StatusCode = 1;
-        //        }
-        //        else
-        //        {
-        //            strReturn.StatusMessage = "InValid Company ";
-        //            strReturn.StatusCode = 0;
-        //        }
-        //        return strReturn;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorLogger.LogError(ex);
-        //        throw new ApplicationException("An error occurred.", ex);
-        //    }
-        //}
-
 
         public static Response GeneratePasswordResetToken(string email)
         {
