@@ -40,6 +40,8 @@ app.UseAuthorization();
 // this is for using api in other app - temp enabled
 app.UseCors("AllowAll");
 
+
+//this code is for accessing image with url
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(@"C:\CraftManImages"),
