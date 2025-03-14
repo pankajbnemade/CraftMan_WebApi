@@ -248,7 +248,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (Enum.IsDefined(typeof(TicketStatus), _IssueTicketUpdateStatus.Status) == false)
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Invalid Status " + pIssueTicket.Status;
+                    strReturn.StatusMessage = "Ticket status not updated. Invalid Status " + _IssueTicketUpdateStatus.Status;
                 }
                 else if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status
                      && IssueTicket.ValidateClosingOTP(_IssueTicketUpdateStatus) == false)
