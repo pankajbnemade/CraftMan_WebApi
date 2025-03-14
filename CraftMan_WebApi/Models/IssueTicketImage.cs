@@ -12,7 +12,7 @@ namespace CraftMan_WebApi.Models
         public string? ImageName { get; set; }
         public string? ImagePath { get; set; }
         public string? ImageContentType { get; set; }
-        public byte[]? ImageFileBytes { get; set; }
+        //public byte[]? ImageFileBytes { get; set; }
         public string? ImageBase64String { get; set; }
     }
 }

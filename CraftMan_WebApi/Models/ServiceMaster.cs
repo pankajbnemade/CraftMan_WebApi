@@ -42,9 +42,12 @@ namespace CraftMan_WebApi.Models
 
                 if (pServiceMaster.ImagePath != "")
                 {
-                    pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
-                    pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                    pServiceMaster.ImageBase64String = Convert.ToBase64String(pServiceMaster.ImageFileBytes);
+                    if (System.IO.File.Exists(pServiceMaster.ImagePath))
+                    {
+                        pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
+                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                        pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
+                    }
                 }
 
             }
@@ -75,9 +78,12 @@ namespace CraftMan_WebApi.Models
 
                 if (pServiceMaster.ImagePath != "")
                 {
-                    pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
-                    pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                    pServiceMaster.ImageBase64String = Convert.ToBase64String(pServiceMaster.ImageFileBytes);
+                    if (System.IO.File.Exists(pServiceMaster.ImagePath))
+                    {
+                        pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
+                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                        pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
+                    }
                 }
 
                 ServiceList.Add(pServiceMaster);

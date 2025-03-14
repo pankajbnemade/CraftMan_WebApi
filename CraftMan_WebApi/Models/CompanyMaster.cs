@@ -36,7 +36,7 @@ namespace CraftMan_WebApi.Models
         public string? LogoImageName { get; set; }
         public string? LogoImagePath { get; set; }
         public string? LogoImageContentType { get; set; }
-        public byte[]? LogoImageFileBytes { get; set; }
+        //public byte[]? LogoImageFileBytes { get; set; }
         public string? LogoImageBase64String { get; set; }
         public List<CountyMaster>? CountyList { get; set; }
         public List<MunicipalityMaster>? MunicipalityList { get; set; }
@@ -80,9 +80,12 @@ namespace CraftMan_WebApi.Models
 
                 if (pCompanyMaster.LogoImagePath != "")
                 {
-                    pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
-                    pCompanyMaster.LogoImageFileBytes = System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath);
-                    pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(pCompanyMaster.LogoImageFileBytes);
+                    if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
+                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                        pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
+                    }
                 }
             }
 
@@ -97,7 +100,7 @@ namespace CraftMan_WebApi.Models
             int cnt = 0;
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
-            string qstr = " select count(*) totaljobrequest from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user + "'   ";
+            string qstr = " select count(*) totaljobrequest from   [dbo].[tblIssueTicketMaster] a inner join [dbo].[tblCompanyMaster] b  on b.LocationId=a.Pincode and b.Username= '" + user.Trim() + "'   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
             while (reader.Read())
@@ -112,7 +115,7 @@ namespace CraftMan_WebApi.Models
 
         public Response ValidateCompany(CompanyMaster _Company)
         {
-            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId + "') and upper(Password)= upper('" + _Company.Password + "')";
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') and upper(Password)= upper('" + _Company.Password + "')";
 
             DBAccess db = new DBAccess();
             return db.validate(qstr);
@@ -127,7 +130,7 @@ namespace CraftMan_WebApi.Models
 
             DBAccess db = new DBAccess();
 
-            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _User.EmailId + "') and upper(Password)= upper('" + _User.Password + "')";
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _User.EmailId.Trim() + "') and upper(Password)= upper('" + _User.Password + "')";
 
             strReturn.StatusCode = db.ExecuteScalar(qstr);
 
@@ -148,8 +151,8 @@ namespace CraftMan_WebApi.Models
                 "EmailId, CreatedOn,  CompanyName, CompanyRegistrationNumber, CompanyPresentation, " +
                 "CompetenceDescription, CompanyReferences,  LogoImageName, LogoImagePath " +
                 ")  " +
-                "   VALUES('" + _Company.Username + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
-                "', '" + _Company.EmailId + "'," + " getdate(), " + "'" + _Company.CompanyName + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
+                "   VALUES('" + _Company.Username.Trim() + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
+                "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
                 "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath +
                 "')";
 
@@ -173,7 +176,7 @@ namespace CraftMan_WebApi.Models
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
                             "   WHERE " +
-                            "   EmailId ='" + _Company.EmailId + "'  ";
+                            "   EmailId ='" + _Company.EmailId.Trim() + "'  ";
 
             DBAccess db = new DBAccess();
 

@@ -29,7 +29,7 @@ namespace CraftMan_WebApi.Models
                             " FROM  tblUserMaster " +
                             " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblUserMaster.CountyId " +
                             " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblUserMaster.MunicipalityId" +
-                            " where upper(EmailId)=upper('" + EmailId + "')  ";
+                            " where upper(EmailId)=upper('" + EmailId.Trim() + "')  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
             var pUserMaster = new UserMaster();
@@ -67,7 +67,7 @@ namespace CraftMan_WebApi.Models
             
             DBAccess db = new DBAccess();
             
-            string qstr = "select pkey_UId from dbo.tblUserMaster where Password='" + _User.Password + "' and Active='" + _User.Active + "' and   upper(EmailId)=upper('" + _User.EmailId + "')  ";
+            string qstr = "select pkey_UId from dbo.tblUserMaster where Password='" + _User.Password + "' and Active='" + _User.Active + "' and   upper(EmailId)=upper('" + _User.EmailId.Trim() + "')  ";
            
             strReturn.StatusCode = db.ExecuteScalar(qstr);
             
@@ -83,7 +83,7 @@ namespace CraftMan_WebApi.Models
         public static Response InsertUser(UserMaster _User)
         {
             Response strReturn = new Response();
-            string qstr = "select Password from dbo.tblUserMaster where upper(EmailId)=upper('" + _User.EmailId + "') or upper(Username)=upper('" + _User.Username + "')";
+            string qstr = "select Password from dbo.tblUserMaster where upper(EmailId)=upper('" + _User.EmailId.Trim() + "') or upper(Username)=upper('" + _User.Username.Trim() + "')";
             DBAccess db = new DBAccess();
             if (db.validate(qstr).StatusCode > 0)
             {
@@ -93,8 +93,8 @@ namespace CraftMan_WebApi.Models
             else
             {
                 qstr = " INSERT into dbo.tblUserMaster(Username,Password,Active,LocationId,MobileNumber,ContactPerson,EmailId,CreatedOn, CountyId, MunicipalityId)     " +
-                    " VALUES('" + _User.Username + "','" + _User.Password + "','" + _User.Active + "','" + _User.LocationId + "','" + _User.MobileNumber + "','"
-                    + _User.ContactPerson + "','" + _User.EmailId + "', getdate()"
+                    " VALUES('" + _User.Username.Trim() + "','" + _User.Password + "','" + _User.Active + "','" + _User.LocationId + "','" + _User.MobileNumber + "','"
+                    + _User.ContactPerson + "','" + _User.EmailId.Trim() + "', getdate()"
                     + "," + _User.CountyId + "," + _User.MunicipalityId
                     + ")";
 

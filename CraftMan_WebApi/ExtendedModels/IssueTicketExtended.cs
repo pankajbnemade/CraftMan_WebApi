@@ -59,7 +59,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 {
                     _IssueTicket.TicketId = i;
 
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = i;
                     strReturn.StatusMessage = "Issue Registered Successfully";
 
                     if (_IssueTicket.Images != null && _IssueTicket.Images.Count > 0)
@@ -151,6 +151,17 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
+                IssueTicket pIssueTicket = IssueTicket.GetTicketByTicketId(_IssueTicketCompanyComment.TicketId);
+
+                if (pIssueTicket != null && pIssueTicket.TicketId != 0)
+                {
+                    if (pIssueTicket.Status != TicketStatus.Inprogress.ToString())
+                    {
+                        strReturn.StatusCode = 0;
+                        strReturn.StatusMessage = "Company comment not updated. Current ticket status should be " + TicketStatus.Inprogress.ToString();
+                    }
+                }
+
                 int i = IssueTicket.UpdateCompanyComment(_IssueTicketCompanyComment);
 
                 if (i > 0)
@@ -220,11 +231,48 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status  
-                    &&  IssueTicket.ValidateUpdateTicketStatus(_IssueTicketUpdateStatus) == false)
+                IssueTicket pIssueTicket = IssueTicket.GetTicketByTicketId(_IssueTicketUpdateStatus.TicketId);
+
+                if (pIssueTicket == null)
                 {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Invalid ticket details";
+                }
+
+                if (pIssueTicket.TicketId == 0)
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Invalid ticket details";
+                }
+
+                if (Enum.IsDefined(typeof(TicketStatus), _IssueTicketUpdateStatus.Status) == false)
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Ticket status not updated. Invalid Status " + pIssueTicket.Status;
+                }
+                else if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status
+                     && IssueTicket.ValidateClosingOTP(_IssueTicketUpdateStatus) == false)
+                {
+                    strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Invalid OTP. Please check and try again.";
-                    strReturn.StatusCode = 1;
+                }
+                else if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status
+                    && pIssueTicket.Status != TicketStatus.Inprogress.ToString())
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Inprogress.ToString();
+                }
+                else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
+                    && pIssueTicket.Status != TicketStatus.Created.ToString())
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Created.ToString();
+                }
+                else if (TicketStatus.Inprogress.ToString() == _IssueTicketUpdateStatus.Status
+                    && pIssueTicket.Status != TicketStatus.Accepted.ToString())
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Accepted.ToString();
                 }
                 else
                 {
