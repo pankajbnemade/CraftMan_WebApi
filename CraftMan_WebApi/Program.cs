@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,11 @@ app.UseAuthorization();
 // this is for using api in other app - temp enabled
 app.UseCors("AllowAll");
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(@"C:\CraftManImages"),
+    RequestPath = "/CraftManImages"
+});
 
 app.MapControllers();
 

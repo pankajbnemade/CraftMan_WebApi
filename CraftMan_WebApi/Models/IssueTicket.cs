@@ -253,6 +253,8 @@ namespace CraftMan_WebApi.Models
                 reader = db.ReadDB(qstr);
 
 
+                ImageSettings pImageSettings = new ImageSettings();
+
                 pIssueTicket.TicketImages = new List<IssueTicketImage>();
 
                 while (reader.Read())
@@ -271,6 +273,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 
@@ -305,6 +309,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 
@@ -371,6 +377,8 @@ namespace CraftMan_WebApi.Models
 
             reader.Close();
 
+            ImageSettings pImageSettings = new ImageSettings();
+
             foreach (IssueTicket issueTicket in IssueTicketList)
             {
                 qstr = "select ImageId, TicketId, ImageName, ImagePath " +
@@ -380,7 +388,7 @@ namespace CraftMan_WebApi.Models
                 reader = db.ReadDB(qstr);
 
                 issueTicket.TicketImages = new List<IssueTicketImage>();
-
+                
                 while (reader.Read())
                 {
                     var pIssueTicketImage = new IssueTicketImage();
@@ -397,6 +405,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 
@@ -430,6 +440,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 
@@ -497,6 +509,7 @@ namespace CraftMan_WebApi.Models
 
             reader.Close();
 
+            ImageSettings pImageSettings = new ImageSettings();
 
             foreach (IssueTicket issueTicket in IssueTicketList)
             {
@@ -525,6 +538,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 
@@ -558,6 +573,8 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
                             //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                             pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
                     }
 

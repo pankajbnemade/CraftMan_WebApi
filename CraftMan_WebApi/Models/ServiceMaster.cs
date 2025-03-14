@@ -33,6 +33,8 @@ namespace CraftMan_WebApi.Models
 
             var pServiceMaster = new ServiceMaster();
 
+            ImageSettings pImageSettings = new ImageSettings();
+
             while (reader.Read())
             {
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
@@ -47,6 +49,8 @@ namespace CraftMan_WebApi.Models
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
                         //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                         pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
+
+                        pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
                 }
 
@@ -67,6 +71,8 @@ namespace CraftMan_WebApi.Models
 
             SqlDataReader reader = db.ReadDB(qstr);
 
+            ImageSettings pImageSettings = new ImageSettings();
+
             while (reader.Read())
             {
                 var pServiceMaster = new ServiceMaster();
@@ -83,6 +89,8 @@ namespace CraftMan_WebApi.Models
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
                         //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                         pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
+
+                        pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
                 }
 

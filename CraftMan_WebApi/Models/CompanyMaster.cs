@@ -42,8 +42,7 @@ namespace CraftMan_WebApi.Models
         public List<MunicipalityMaster>? MunicipalityList { get; set; }
         public List<CompanyCountyRelation>? CountyRelationList { get; set; }
         public List<CompanyServices>? ServiceList { get; set; }
-
-
+        
         public static CompanyMaster GetCompanyDetail(string EmailId)
         {
 
@@ -78,6 +77,8 @@ namespace CraftMan_WebApi.Models
                 pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
                 pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
 
+                ImageSettings pImageSettings = new ImageSettings();
+
                 if (pCompanyMaster.LogoImagePath != "")
                 {
                     if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
@@ -85,6 +86,8 @@ namespace CraftMan_WebApi.Models
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
                         //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
                         pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
+
+                        pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
                 }
             }
