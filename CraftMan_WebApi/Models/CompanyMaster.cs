@@ -22,6 +22,7 @@ namespace CraftMan_WebApi.Models
         public string EmailId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public bool Is24X7 { get; set; }
         public string CompanyName { get; set; }
         public string? CompanyRegistrationNumber { get; set; }
         public string? CompanyPresentation { get; set; }
@@ -42,7 +43,7 @@ namespace CraftMan_WebApi.Models
         public List<MunicipalityMaster>? MunicipalityList { get; set; }
         public List<CompanyCountyRelation>? CountyRelationList { get; set; }
         public List<CompanyServices>? ServiceList { get; set; }
-        
+
         public static CompanyMaster GetCompanyDetail(string EmailId)
         {
 
@@ -65,6 +66,7 @@ namespace CraftMan_WebApi.Models
                 pCompanyMaster.MobileNumber = reader["MobileNumber"] == DBNull.Value ? "" : (string)reader["MobileNumber"];
                 pCompanyMaster.ContactPerson = reader["ContactPerson"] == DBNull.Value ? "" : (string)reader["ContactPerson"];
                 pCompanyMaster.EmailId = reader["EmailId"] == DBNull.Value ? "" : (string)reader["EmailId"];
+                pCompanyMaster.Is24X7 = reader["Is24X7"] == DBNull.Value ? true : Convert.ToBoolean(reader["Is24X7"]);
 
                 pCompanyMaster.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                 pCompanyMaster.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
@@ -76,6 +78,7 @@ namespace CraftMan_WebApi.Models
                 pCompanyMaster.CompanyReferences = reader["CompanyReferences"] == DBNull.Value ? "" : (string)reader["CompanyReferences"];
                 pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
                 pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
+
 
                 ImageSettings pImageSettings = new ImageSettings();
 
@@ -148,22 +151,24 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertCompany(CompanyMaster _Company)
         {
+
             string qstr = " INSERT into tblCompanyMaster" +
                 " (" +
-                "Username, Password, Active, LocationId, MobileNumber, ContactPerson, " +
-                "EmailId, CreatedOn,  CompanyName, CompanyRegistrationNumber, CompanyPresentation, " +
-                "CompetenceDescription, CompanyReferences,  LogoImageName, LogoImagePath " +
+                    "Username, Password, Active, LocationId, MobileNumber, ContactPerson, " +
+                    "EmailId, CreatedOn,  CompanyName, CompanyRegistrationNumber, CompanyPresentation, " +
+                    "CompetenceDescription, CompanyReferences,  LogoImageName, LogoImagePath, Is24X7 " +
                 ")  " +
                 "   VALUES('" + _Company.Username.Trim() + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
-                "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
-                "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath +
+                        "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
+                        "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + ", " 
+                        + "1" //is24X7
+                        +
                 "')";
 
             Console.WriteLine(qstr);
 
-            int h = 0;
-
             DBAccess db = new DBAccess();
+
             int i = db.ExecuteScalar(qstr);
 
             return i;
@@ -173,18 +178,116 @@ namespace CraftMan_WebApi.Models
         {
             string qstr = " UPDATE tblCompanyMaster " +
                             " SET  " +
-                            "   Password = '" + _Company.Password + "'," +
-                            "   Active = '" + _Company.Active + "'," +
-                            "   LocationId = '" + _Company.LocationId + "'," +
+                            "   LocationId = " + _Company.LocationId + "," +
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
+                            "   CompanyName = '" + _Company.CompanyName + "'," +
+                            "   CompanyRegistrationNumber = '" + _Company.CompanyRegistrationNumber + "'," +
+                            "   CompanyPresentation = '" + _Company.CompanyPresentation + "'," +
+                            "   CompetenceDescription = '" + _Company.CompetenceDescription + "'," +
+                            "   CompanyReferences = '" + _Company.CompanyReferences + "'," + "   LogoImageName = " + (_Company.LogoImageName == "" ? "LogoImageName," : "'" + _Company.LogoImageName + "', ") +
+                            "   LogoImagePath = " + (_Company.LogoImagePath == "" ? "LogoImagePath" : "'" + _Company.LogoImagePath + "'") +
                             "   WHERE " +
-                            "   EmailId ='" + _Company.EmailId.Trim() + "'  ";
+                            "   UPPER(EmailId) = UPPER('" + _Company.EmailId.Trim() + "') " +
+                            "   AND  pCompId =" + _Company.pCompId;
 
             DBAccess db = new DBAccess();
 
             return db.ExecuteNonQuery(qstr);
         }
+
+        public static int UpdateActive(int companyId, string active)
+        {
+            string qstr = " UPDATE tblCompanyMaster " +
+                            " SET  " +
+                            " Active = " + active +
+                            " WHERE  pCompId = " + companyId;
+
+            DBAccess db = new DBAccess();
+
+            return db.ExecuteNonQuery(qstr);
+        }
+
+        public static int UpdateCompanyIs24X7(int companyId, bool is24X7)
+        {
+            string qstr = " UPDATE tblCompanyMaster " +
+                            " SET  " +
+                            " Is24X7 = " + (is24X7 == true ? 1 : 0) +
+                            " WHERE  pCompId = " + companyId;
+
+            DBAccess db = new DBAccess();
+
+            return db.ExecuteNonQuery(qstr);
+        }
+
+        public static ArrayList GetCompany24X7ForUser(Int32 userId)
+        {
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = " SELECT	tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType, " +
+                        " tblCompanyMaster.pCompId, tblCompanyMaster.LocationId, tblCompanyMaster.MobileNumber, tblCompanyMaster.ContactPerson,  " +
+                        " tblCompanyMaster.EmailId, tblCompanyMaster.CreatedOn, tblCompanyMaster.UpdatedOn, tblCompanyMaster.CompanyName,  " +
+                        " tblCompanyMaster.CompanyRegistrationNumber, tblCompanyMaster.CompanyPresentation, tblCompanyMaster.Logotype,  " +
+                        " tblCompanyMaster.CompetenceDescription, tblCompanyMaster.CompanyReferences, tblCompanyMaster.JobList,  " +
+                        " tblCompanyMaster.LogoImageName, tblCompanyMaster.LogoImagePath, tblCompanyMaster.PasswordResetToken, " +
+                        " tblCompanyMaster.ResetTokenExpiry, tblCompanyMaster.Is24X7, tblCompanyCountyRel.CountyId, tblCompanyCountyRel.MunicipalityId " +
+                        " FROM   tblCompanyMaster " +
+                        " INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId " +
+                        " INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId " +
+                        " AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR tblCompanyCountyRel.MunicipalityId = 0) " +
+                        " WHERE tblUserMaster.pkey_UId = " + userId.ToString() +
+                        " AND ISNULL(tblCompanyMaster.Is24X7, 1) = 1";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            ArrayList CompanyMasterList = new ArrayList();
+
+            while (reader.Read())
+            {
+                CompanyMaster pCompanyMaster = new CompanyMaster();
+
+                pCompanyMaster.Username = reader["Username"] == DBNull.Value ? "" : (string)reader["Username"];
+                pCompanyMaster.Password = reader["Password"] == DBNull.Value ? "" : (string)reader["Password"];
+                pCompanyMaster.Active = reader["Active"] == DBNull.Value ? false : Convert.ToBoolean(reader["Active"]);
+                pCompanyMaster.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
+                pCompanyMaster.LocationId = reader["LocationId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["LocationId"]);
+                pCompanyMaster.MobileNumber = reader["MobileNumber"] == DBNull.Value ? "" : (string)reader["MobileNumber"];
+                pCompanyMaster.ContactPerson = reader["ContactPerson"] == DBNull.Value ? "" : (string)reader["ContactPerson"];
+                pCompanyMaster.EmailId = reader["EmailId"] == DBNull.Value ? "" : (string)reader["EmailId"];
+                pCompanyMaster.Is24X7 = reader["Is24X7"] == DBNull.Value ? true : Convert.ToBoolean(reader["Is24X7"]);
+                pCompanyMaster.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
+                pCompanyMaster.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
+                pCompanyMaster.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+                pCompanyMaster.CompanyRegistrationNumber = reader["CompanyRegistrationNumber"] == DBNull.Value ? "" : (string)reader["CompanyRegistrationNumber"];
+                pCompanyMaster.CompanyPresentation = reader["CompanyPresentation"] == DBNull.Value ? "" : (string)reader["CompanyPresentation"];
+                pCompanyMaster.CompetenceDescription = reader["CompetenceDescription"] == DBNull.Value ? "" : (string)reader["CompetenceDescription"];
+                pCompanyMaster.CompanyReferences = reader["CompanyReferences"] == DBNull.Value ? "" : (string)reader["CompanyReferences"];
+                pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
+                pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
+
+                ImageSettings pImageSettings = new ImageSettings();
+
+                if (pCompanyMaster.LogoImagePath != "")
+                {
+                    if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
+                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                        pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
+
+                        pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                }
+
+                CompanyMasterList.Add(pCompanyMaster);
+            }
+
+            reader.Close();
+
+            return CompanyMasterList;
+        }
+
 
     }
 }

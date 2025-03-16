@@ -1,2 +1,6 @@
 ALTER TABLE tblIssueTicketMaster
-Add CompanyId Int null
+Add CompanyId Int null;
+
+
+alter table tblcompanymaster
+add  Is24X7 BIT NULL default(1)

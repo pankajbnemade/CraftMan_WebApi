@@ -97,6 +97,26 @@ namespace CraftMan_WebApi.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("UpdateCompanyIs24X7")]
+        public Response UpdateCompanyIs24X7(int companyId, bool is24X7)
+        {
+            return Companymasterextended.UpdateCompanyIs24X7(companyId, is24X7);
+        }
+
+        //[HttpPost]
+        //[Route("UpdateActive")]
+        //public Response UpdateActive(int companyId, string active)
+        //{
+        //    return Companymasterextended.UpdateActive(companyId, active);
+        //}
+
+        //[HttpPost]
+        //[Route("UpdateCompany")]
+        //public Response UpdateCompany([FromForm] CompanyMaster _Company)
+        //{
+        //    return Companymasterextended.UpdateCompany(_Company);
+        //}
 
     }
 }

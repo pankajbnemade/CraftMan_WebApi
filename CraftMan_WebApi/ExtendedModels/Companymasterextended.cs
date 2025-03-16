@@ -80,6 +80,19 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
+        public static ArrayList GetCompany24X7ForUser(Int32 userId)
+        {
+            try
+            {
+                return CompanyMaster.GetCompany24X7ForUser(userId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
         public static int GetTotalcnt(string Username)
         {
             try
@@ -218,6 +231,121 @@ namespace CraftMan_WebApi.ExtendedModels
         {
             return CompanyResetPassword.ResetPassword(model);
         }
+
+        public static Response UpdateCompanyIs24X7(int companyId, bool is24X7)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                int i = CompanyMaster.UpdateCompanyIs24X7(companyId, is24X7);
+
+                if (i > 0)
+                {
+                    strReturn.StatusCode = companyId;
+                    strReturn.StatusMessage = "Company Is24X7 status updated successfully";
+                }
+                else
+                {
+                    strReturn.StatusMessage = "Company Is24X7 status not updated.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+
+            return strReturn;
+        }
+
+        public static Response UpdateActive(int companyId, string active)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                int i = CompanyMaster.UpdateActive(companyId, active);
+
+                if (i > 0)
+                {
+                    strReturn.StatusCode = companyId;
+                    strReturn.StatusMessage = "Company active status updated successfully";
+                }
+                else
+                {
+                    strReturn.StatusMessage = "Company active status not updated.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+
+            return strReturn;
+        }
+
+        public static Response UpdateCompany(CompanyMaster _CompanyMaster)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                if (_CompanyMaster.LogoImage != null)
+                {
+                    string uploadFolder = @"C:\CraftManImages\CompanyImages";
+
+                    if (!Directory.Exists(uploadFolder))
+                        Directory.CreateDirectory(uploadFolder);
+
+                    string originalName = Path.GetFileNameWithoutExtension(_CompanyMaster.LogoImage.FileName);
+
+                    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
+                    string imagePath = Path.Combine(uploadFolder, imageName);
+
+                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        _CompanyMaster.LogoImage.CopyTo(stream);
+                    }
+
+                    _CompanyMaster.LogoImageName = originalName;
+                    _CompanyMaster.LogoImagePath = imagePath;
+                }
+                else
+                {
+                    _CompanyMaster.LogoImageName = "";
+                    _CompanyMaster.LogoImagePath = "";
+                }
+
+                int i = CompanyMaster.UpdateCompany(_CompanyMaster);
+
+                if (i > 0)
+                {
+                    strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
+                    strReturn.StatusMessage = "Company updated successfully";
+
+                    CompanyServices.DeleteServices(Convert.ToInt32(_CompanyMaster.pCompId));
+
+                    CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
+
+                    CompanyCountyRelationExtended.DeleteRelations(Convert.ToInt32(_CompanyMaster.pCompId));
+                    CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
+                }
+                else
+                {
+                    strReturn.StatusMessage = "Company not registered";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+
+            return strReturn;
+        }
+
 
     }
 }
