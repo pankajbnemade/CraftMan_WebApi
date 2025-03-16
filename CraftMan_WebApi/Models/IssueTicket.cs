@@ -29,13 +29,13 @@ namespace CraftMan_WebApi.Models
         public string? CompanyComment { get; set; }
         public int? ClosingOTP { get; set; }
         public int? CompanyId { get; set; }
-        public string CompanyEmailId { get; set; }
-        public string CompanyName { get; set; }
-        public string CompanyMobileNumber { get; set; }
+        public string? CompanyEmailId { get; set; }
+        public string? CompanyName { get; set; }
+        public string? CompanyMobileNumber { get; set; }
         public int? UserId { get; set; }
-        public string UserEmailId { get; set; }
-        public string UserName { get; set; }
-        public string UserMobileNumber { get; set; }
+        public string? UserEmailId { get; set; }
+        public string? UserName { get; set; }
+        public string? UserMobileNumber { get; set; }
 
         public List<IFormFile>? Images { get; set; }
         public List<IssueTicketImage>? TicketImages { get; set; }
