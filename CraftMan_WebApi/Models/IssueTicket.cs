@@ -28,6 +28,15 @@ namespace CraftMan_WebApi.Models
         public string? ReviewComment { get; set; }
         public string? CompanyComment { get; set; }
         public int? ClosingOTP { get; set; }
+        public int? CompanyId { get; set; }
+        public string CompanyEmailId { get; set; }
+        public string CompanyName { get; set; }
+        public string CompanyMobileNumber { get; set; }
+        public int? UserId { get; set; }
+        public string UserEmailId { get; set; }
+        public string UserName { get; set; }
+        public string UserMobileNumber { get; set; }
+
         public List<IFormFile>? Images { get; set; }
         public List<IssueTicketImage>? TicketImages { get; set; }
         public List<IssueTicketImage>? TicketWorkImages { get; set; }
@@ -166,15 +175,19 @@ namespace CraftMan_WebApi.Models
         {
             string qstr = " UPDATE tblIssueTicketMaster " +
                             " SET  " +
-                            "   Status = '" + _IssueTicketUpdateStatus.Status + "'" +
-                            "   WHERE " +
-                            "   TicketId = " + _IssueTicketUpdateStatus.TicketId + "  ";
+                            "   Status = '" + _IssueTicketUpdateStatus.Status + "'";
+
+            if (_IssueTicketUpdateStatus.Status == TicketStatus.Accepted.ToString())
+            {
+                qstr = qstr + " , CompanyId =  " + Convert.ToInt32(_IssueTicketUpdateStatus.CompanyId);
+            }
+
+            qstr = qstr + "   WHERE " +
+                    " TicketId = " + _IssueTicketUpdateStatus.TicketId + "  ";
 
             DBAccess db = new DBAccess();
 
             return db.ExecuteNonQuery(qstr);
-
-            return 0;
         }
 
         public static Boolean ValidateClosingOTP(IssueTicketUpdateStatus _IssueTicketUpdateStatus)
@@ -207,13 +220,18 @@ namespace CraftMan_WebApi.Models
                 DBAccess db = new DBAccess();
                 Response strReturn = new Response();
 
-                string qstr = "select TicketId, ReportingPerson, Address, City, ReportingDescription,Status,ToCraftmanType,Pincode, " +
+                string qstr = "select tblIssueTicketMaster.TicketId, tblIssueTicketMaster.ReportingPerson, tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
+                                " tblIssueTicketMaster.ReportingDescription,tblIssueTicketMaster.Status,tblIssueTicketMaster.ToCraftmanType,tblIssueTicketMaster.Pincode, " +
                                 " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
                                 " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
-                                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName " +
+                                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
+                                " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
+                                " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
                                 " FROM tblIssueTicketMaster " +
                                 " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
                                 " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
+                                " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
+                                " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
                             " where  TicketId = " + TicketId + "   ";
 
                 SqlDataReader reader = db.ReadDB(qstr);
@@ -238,6 +256,16 @@ namespace CraftMan_WebApi.Models
                     pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
                     pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                     pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
+
+                    pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
+                    pIssueTicket.CompanyMobileNumber = reader["CompanyMobileNumber"] == DBNull.Value ? "" : (string)reader["CompanyMobileNumber"];
+                    pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
+                    pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+
+                    pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                    pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
+                    pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
+                    pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
 
                     pIssueTicket.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                     pIssueTicket.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
@@ -339,14 +367,18 @@ namespace CraftMan_WebApi.Models
             string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, " +
                             " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId,  tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
                             " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
-                            " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName " +
+                            " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
+                            " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
+                            " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
                             " FROM tblIssueTicketMaster " +
                             " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
                             " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
+                            " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
+                            " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
                             " where  upper(ReportingPerson) = upper('" + _User.Trim() + "')   ";
             SqlDataReader reader = db.ReadDB(qstr);
 
-            
+
 
             while (reader.Read())
             {
@@ -369,6 +401,16 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                 pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
 
+                pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicket.CompanyMobileNumber = reader["CompanyMobileNumber"] == DBNull.Value ? "" : (string)reader["CompanyMobileNumber"];
+                pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
+                pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+
+                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
+                pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
+                pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
+
                 pIssueTicket.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                 pIssueTicket.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
 
@@ -388,7 +430,7 @@ namespace CraftMan_WebApi.Models
                 reader = db.ReadDB(qstr);
 
                 issueTicket.TicketImages = new List<IssueTicketImage>();
-                
+
                 while (reader.Read())
                 {
                     var pIssueTicketImage = new IssueTicketImage();
@@ -456,7 +498,7 @@ namespace CraftMan_WebApi.Models
             return IssueTicketList;
         }
 
-        public static ArrayList GetTicketsForCompany(int CompanyId, int? CountyId, int? MunicipalityId)
+        public static ArrayList GetTicketsForCompany(IssueTicketForCompanyFilter filter)
         {
             ArrayList IssueTicketList = new ArrayList();
 
@@ -466,18 +508,34 @@ namespace CraftMan_WebApi.Models
             string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
                 " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
                 " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
-                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName " +
+                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
+                " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
+                " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
                 " FROM tblIssueTicketMaster " +
                 " INNER JOIN( " +
                 " SELECT CountyId, MunicipalityId " +
-                " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + CompanyId + " ) AS tRel " +
+                " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
                 " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
                 " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
                 " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  " +
-                " WHERE (" + (CountyId == null ? 0 : CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (CountyId == null ? 0 : CountyId) + " )" +
-                    " AND (" + (MunicipalityId == null ? 0 : MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (MunicipalityId == null ? 0 : MunicipalityId) + " )" +
-                    " AND ( upper(tblIssueTicketMaster.Status) = upper('" + TicketStatus.Created.ToString() + "') )";
+                " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
+                " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
+                " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
+                    " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
+            //" AND ( " +
+            //            "( upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND upper('" + filter.Status + "') = upper('" + TicketStatus.Created.ToString() + "') )" +
+            //            "( upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND isnull(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) " +
+            //    ")";
 
+            if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
+            {
+                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
+            }
+
+            if (filter.Status.ToString().ToUpper() != TicketStatus.Created.ToString().ToUpper())
+            {
+                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND isnull(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) ";
+            }
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -500,6 +558,16 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
                 pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
                 pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
+
+                pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicket.CompanyMobileNumber = reader["CompanyMobileNumber"] == DBNull.Value ? "" : (string)reader["CompanyMobileNumber"];
+                pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
+                pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+
+                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
+                pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
+                pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
 
                 pIssueTicket.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                 pIssueTicket.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];

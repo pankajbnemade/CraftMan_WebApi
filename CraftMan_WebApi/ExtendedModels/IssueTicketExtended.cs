@@ -34,11 +34,11 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static ArrayList GetTicketsForCompany(int CompanyId, int? CountyId, int? MunicipalityId)
+        public static ArrayList GetTicketsForCompany(IssueTicketForCompanyFilter filter)
         {
             try
             {
-                return IssueTicket.GetTicketsForCompany(CompanyId, CountyId, MunicipalityId);
+                return IssueTicket.GetTicketsForCompany(filter);
             }
             catch (Exception ex)
             {
@@ -267,6 +267,12 @@ namespace CraftMan_WebApi.ExtendedModels
                 {
                     strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Created.ToString();
+                }
+                else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
+                    && (_IssueTicketUpdateStatus.CompanyId == 0 || _IssueTicketUpdateStatus.CompanyId == null))
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Ticket status not updated. Invalid CompanyId";
                 }
                 else if (TicketStatus.Inprogress.ToString() == _IssueTicketUpdateStatus.Status
                     && pIssueTicket.Status != TicketStatus.Accepted.ToString())

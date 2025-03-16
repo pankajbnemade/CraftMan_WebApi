@@ -12,7 +12,7 @@ namespace CraftMan_WebApi.Helper
     {
         Created,       // 0
         Accepted, // 1
-        Completed,     // 2
-        Inprogress   // 3
+        Inprogress,     // 2
+        Completed   // 3
     }
 }

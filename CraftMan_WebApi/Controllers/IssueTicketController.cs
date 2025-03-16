@@ -36,9 +36,9 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpGet]
         [Route("GetTicketsForCompany")]
-        public ArrayList GetTicketsForCompany(int CompanyId, int? CountyId, int? MunicipalityId)
+        public ArrayList GetTicketsForCompany([FromQuery] IssueTicketForCompanyFilter filter)
         {
-            return IssueTicketExtended.GetTicketsForCompany(CompanyId, CountyId, MunicipalityId);
+            return IssueTicketExtended.GetTicketsForCompany(filter);
         }
 
         [HttpPost]
