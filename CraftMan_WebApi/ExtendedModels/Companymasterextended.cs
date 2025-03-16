@@ -216,7 +216,7 @@ namespace CraftMan_WebApi.ExtendedModels
 
         public static Response ResetPassword(ResetPasswordModel model)
         {
-            return CompanyResetPassword.ResetPassword(model.Token, model.NewPassword);
+            return CompanyResetPassword.ResetPassword(model);
         }
 
     }

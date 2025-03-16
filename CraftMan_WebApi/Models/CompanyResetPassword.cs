@@ -22,16 +22,16 @@ namespace CraftMan_WebApi.Models
             Response response = new Response();
             DBAccess db = new DBAccess();
 
-            string checkUserQuery = $"SELECT pCompId FROM tblCompanyMaster WHERE EmailId = '{email}'";
-            int userExists = db.ExecuteScalar(checkUserQuery);
+            string checkUserQuery = $"SELECT pCompId FROM tblCompanyMaster WHERE upper(EmailId) = upper('{email}')";
+            int userId = db.ExecuteScalar(checkUserQuery);
 
-            if (userExists > 0)
+            if (userId > 0)
             {
                 //string token = Guid.NewGuid().ToString(); // Generate unique token
                 string token = new Random().Next(100000, 999999).ToString();
                 DateTime expiryTime = DateTime.Now.AddHours(1); // Token valid for 1 hour
 
-                string updateQuery = $"UPDATE tblCompanyMaster SET PasswordResetToken = '{token}', ResetTokenExpiry = '{expiryTime}' WHERE EmailId = '{email}'";
+                string updateQuery = $"UPDATE tblCompanyMaster SET PasswordResetToken = '{token}', ResetTokenExpiry = '{expiryTime}' WHERE pCompId = {userId}";
                 db.ExecuteNonQuery(updateQuery);
 
                 EmailHelper.SendResetEmail(email, token);
@@ -47,19 +47,18 @@ namespace CraftMan_WebApi.Models
 
             return response;
         }
-        
 
-        public static Response ResetPassword(string token, string newPassword)
+        public static Response ResetPassword(ResetPasswordModel model)
         {
             Response response = new Response();
             DBAccess db = new DBAccess();
 
-            string query = $"SELECT pCompId FROM tblCompanyMaster WHERE PasswordResetToken = '{token}' AND ResetTokenExpiry > GETDATE()";
+            string query = $"SELECT pCompId FROM tblCompanyMaster WHERE upper(EmailId) = upper('{model.EmailId}') AND PasswordResetToken = '{model.Token}' AND ResetTokenExpiry > GETDATE()";
             int userId = db.ExecuteScalar(query);
 
             if (userId > 0)
             {
-                string updateQuery = $"UPDATE tblCompanyMaster SET Password = '{newPassword}', PasswordResetToken = NULL, ResetTokenExpiry = NULL WHERE PasswordResetToken = '{token}'";
+                string updateQuery = $"UPDATE tblCompanyMaster SET Password = '{model.NewPassword}', PasswordResetToken = NULL, ResetTokenExpiry = NULL WHERE pCompId = {userId}";
                 db.ExecuteNonQuery(updateQuery);
 
                 response.StatusCode = 1;
@@ -73,6 +72,5 @@ namespace CraftMan_WebApi.Models
 
             return response;
         }
-
     }
 }

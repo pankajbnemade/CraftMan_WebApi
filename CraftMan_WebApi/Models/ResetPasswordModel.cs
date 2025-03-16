@@ -12,6 +12,7 @@ namespace CraftMan_WebApi.Models
 {
     public class ResetPasswordModel
     {
+        public string EmailId { get; set; }
         public string Token { get; set; }
         public string NewPassword { get; set; }
 
