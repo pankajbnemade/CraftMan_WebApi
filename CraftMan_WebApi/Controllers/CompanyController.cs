@@ -3,18 +3,35 @@ using CraftMan_WebApi.ExtendedModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text.Json;
 namespace CraftMan_WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CompanyController : ControllerBase
     {
+        private readonly ILogger<CompanyController> _logger;
+
+        public CompanyController(ILogger<CompanyController> logger)
+        {
+            _logger = logger;
+        }
+
+
         [HttpPost]
         [Route("CompanySignUp")]
-        public Response Register([FromForm] CompanyMaster _Company)
+        public Response Register([FromForm] CompanyMaster _CompanyMaster)
         {
             try
             {
+                if (_CompanyMaster == null)
+                {
+                    _logger.LogWarning("Received null CompanyMaster object.");
+                }
+
+                // Log the received data as JSON
+                _logger.LogInformation("Received CompanyMaster: {CompanyMasterData}", JsonSerializer.Serialize(_CompanyMaster));
+
                 if (!ModelState.IsValid)
                 {
                     return new Response { StatusCode = 0, StatusMessage = "Company model invalid." };
@@ -22,7 +39,7 @@ namespace CraftMan_WebApi.Controllers
 
                 Console.WriteLine("Register");
 
-                return Companymasterextended.RegistrationCompany(_Company);
+                return Companymasterextended.RegistrationCompany(_CompanyMaster);
             }
             catch (Exception ex)
             {

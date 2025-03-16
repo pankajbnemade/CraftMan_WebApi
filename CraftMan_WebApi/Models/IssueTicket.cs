@@ -70,15 +70,15 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                if (!validateticket(_IssueTicket))
-                {
-                    string qstr = " INSERT INTO tblIssueTicketMaster   (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId) " +
-                        " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ")";
+                //if (!validateticket(_IssueTicket))
+                //{
+                string qstr = " INSERT INTO tblIssueTicketMaster   (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId) " +
+                    " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ")";
 
-                    DBAccess db = new DBAccess();
+                DBAccess db = new DBAccess();
 
-                    return db.ExecuteScalar(qstr);
-                }
+                return db.ExecuteScalar(qstr);
+                //}
             }
             catch (Exception ex)
             {

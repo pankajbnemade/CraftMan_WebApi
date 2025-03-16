@@ -22,7 +22,7 @@ namespace CraftMan_WebApi.Models
         public string EmailId { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public bool Is24X7 { get; set; }
+        public bool? Is24X7 { get; set; }
         public string CompanyName { get; set; }
         public string? CompanyRegistrationNumber { get; set; }
         public string? CompanyPresentation { get; set; }
@@ -123,7 +123,7 @@ namespace CraftMan_WebApi.Models
 
         public Response ValidateCompany(CompanyMaster _Company)
         {
-            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') and upper(Password)= upper('" + _Company.Password + "')";
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') or upper(Username)= upper('" + _Company.Username + "')";
 
             DBAccess db = new DBAccess();
             return db.validate(qstr);
@@ -162,10 +162,10 @@ namespace CraftMan_WebApi.Models
                 ")  " +
                 "   VALUES('" + _Company.Username.Trim() + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
                         "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
-                        "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + ", " 
+                        "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + "', " 
                         + "1" //is24X7
                         +
-                "')";
+                ")";
 
             Console.WriteLine(qstr);
 
