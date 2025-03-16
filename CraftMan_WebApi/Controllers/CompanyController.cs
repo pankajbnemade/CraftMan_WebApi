@@ -104,6 +104,13 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.UpdateCompanyIs24X7(companyId, is24X7);
         }
 
+        [HttpGet]
+        [Route("GetCompany24X7ForUser")]
+        public ArrayList GetCompany24X7ForUser(Int32 userId)
+        {
+            return Companymasterextended.GetCompany24X7ForUser(userId);
+        }
+
         //[HttpPost]
         //[Route("UpdateActive")]
         //public Response UpdateActive(int companyId, string active)
