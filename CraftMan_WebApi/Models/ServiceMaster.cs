@@ -44,6 +44,8 @@ namespace CraftMan_WebApi.Models
 
                 if (pServiceMaster.ImagePath != "")
                 {
+                    pServiceMaster.ImagePath= pServiceMaster.ImagePath.Replace("\\", "/");
+
                     if (System.IO.File.Exists(pServiceMaster.ImagePath))
                     {
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
@@ -84,6 +86,8 @@ namespace CraftMan_WebApi.Models
 
                 if (pServiceMaster.ImagePath != "")
                 {
+                    pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace("\\", "/");
+
                     if (System.IO.File.Exists(pServiceMaster.ImagePath))
                     {
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);

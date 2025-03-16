@@ -84,6 +84,8 @@ namespace CraftMan_WebApi.Models
 
                 if (pCompanyMaster.LogoImagePath != "")
                 {
+                    pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace("\\", "/");
+
                     if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
@@ -270,6 +272,8 @@ namespace CraftMan_WebApi.Models
 
                 if (pCompanyMaster.LogoImagePath != "")
                 {
+                    pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace("\\", "/");
+
                     if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);

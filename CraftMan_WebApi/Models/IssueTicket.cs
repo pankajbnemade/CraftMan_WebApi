@@ -296,6 +296,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
@@ -332,6 +334,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
@@ -442,6 +446,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
@@ -477,6 +483,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
@@ -601,6 +609,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
@@ -636,6 +646,8 @@ namespace CraftMan_WebApi.Models
 
                     if (pIssueTicketImage.ImagePath != "")
                     {
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
