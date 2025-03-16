@@ -34,14 +34,14 @@ namespace CraftMan_WebApi.Models
                 string updateQuery = $"UPDATE tblCompanyMaster SET PasswordResetToken = '{token}', ResetTokenExpiry = '{expiryTime}' WHERE EmailId = '{email}'";
                 db.ExecuteNonQuery(updateQuery);
 
-                CommonFunction.SendResetEmail(email, token);
+                EmailHelper.SendResetEmail(email, token);
 
-                response.StatusCode = 0;
+                response.StatusCode = 1;
                 response.StatusMessage = "Password reset link sent to email.";
             }
             else
             {
-                response.StatusCode = 1;
+                response.StatusCode = 0;
                 response.StatusMessage = "Email not found!";
             }
 
@@ -62,12 +62,12 @@ namespace CraftMan_WebApi.Models
                 string updateQuery = $"UPDATE tblCompanyMaster SET Password = '{newPassword}', PasswordResetToken = NULL, ResetTokenExpiry = NULL WHERE PasswordResetToken = '{token}'";
                 db.ExecuteNonQuery(updateQuery);
 
-                response.StatusCode = 0;
+                response.StatusCode = 1;
                 response.StatusMessage = "Password has been reset successfully.";
             }
             else
             {
-                response.StatusCode = 1;
+                response.StatusCode = 0;
                 response.StatusMessage = "Invalid or expired token.";
             }
 

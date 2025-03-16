@@ -21,15 +21,6 @@ namespace CraftMan_WebApi.Helper
             };
         }
 
-        public static void SendResetEmail(string email, string token)
-        {
-            string resetLink = $"https://yourapp.com/reset-password?token={token}";
-            string subject = "Password Reset Request";
-            string body = $"Click the link below to reset your password:\n{resetLink}\n\nThis link is valid for 1 hour.";
-
-            // Use an SMTP client to send an email
-            //EmailHelper.SendEmail(email, subject, body);
-        }
 
     }
 }

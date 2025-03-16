@@ -37,19 +37,19 @@ namespace CraftMan_WebApi.Controllers
         }
 
 
-        //[HttpPost("forgot-password")]
-        //public IActionResult ForgotPassword([FromBody] string email)
-        //{
-        //    Response result = Usermasterextended.GeneratePasswordResetToken(email);
-        //    return Ok(result);
-        //}
+        [HttpPost("ForgotPassword")]
+        public IActionResult ForgotPassword([FromBody] string email)
+        {
+            Response result = Usermasterextended.GeneratePasswordResetToken(email);
+            return Ok(result);
+        }
 
-        //[HttpPost("reset-password")]
-        //public IActionResult ResetPassword([FromBody] ResetPasswordModel model)
-        //{
-        //    Response result = Usermasterextended.ResetPassword(model);
-        //    return Ok(result);
-        //}
+        [HttpPost("ResetPassword")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordModel model)
+        {
+            Response result = Usermasterextended.ResetPassword(model);
+            return Ok(result);
+        }
 
 
     }
