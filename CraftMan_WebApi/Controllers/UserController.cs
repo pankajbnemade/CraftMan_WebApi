@@ -29,7 +29,7 @@ namespace CraftMan_WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("UserSignIn")]
-        public Response LoginUser(LoginUser _User)
+        public Response LoginUser([FromBody] LoginUser _User)
         {            
         
           return Usermasterextended.LoginValidateForUser(_User);

@@ -1,5 +1,6 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace CraftMan_WebApi.Models
 {
@@ -61,22 +62,27 @@ namespace CraftMan_WebApi.Models
         public static Response LoginValidateForUser(LoginUser _User)
         {
             Response strReturn = new Response();
-            
+
             strReturn.StatusMessage = "Invalid User";
             strReturn.StatusCode = 1;
-            
+
             DBAccess db = new DBAccess();
-            
+
             string qstr = "select pkey_UId from dbo.tblUserMaster where Password='" + _User.Password + "' and Active='" + _User.Active + "' and   upper(EmailId)=upper('" + _User.EmailId.Trim() + "')  ";
-           
+
             strReturn.StatusCode = db.ExecuteScalar(qstr);
-            
+
             if (strReturn.StatusCode > 0)
             {
                 strReturn.StatusMessage = "Valid User!";
+
+                //if (_User.FcmToken != null && _User.FcmToken != "")
+                //{
+                //    SaveFcmToken(strReturn.StatusCode, _User.FcmToken);
+                //}
             }
             else { strReturn.StatusMessage = "Invalid User!"; }
-            
+
             return strReturn;
         }
 
@@ -111,6 +117,32 @@ namespace CraftMan_WebApi.Models
 
             return strReturn;
         }
+
+        //private static Response SaveFcmToken(int userId, string? fcmToken)
+        //{
+        //    Response strReturn = new Response();
+        //    DBAccess db = new DBAccess();
+
+        //    string qstr = " UPDATE dbo.tblUserMaster " +
+        //                    " SET  " +
+        //                    "   FcmToken  = '" + fcmToken + "'" +
+        //                    "   WHERE " +
+        //                    "   pkey_UId = " + userId + "  ";
+
+
+        //    strReturn.StatusCode = db.ExecuteNonQuery(qstr);
+
+        //    if (strReturn.StatusCode > 0)
+        //    {
+        //        strReturn.StatusMessage = "Token updated successfully.";
+        //    }
+        //    else
+        //    { 
+        //        strReturn.StatusMessage = "Token not updated."; 
+        //    }
+
+        //    return strReturn;
+        //}
 
     }
 }
