@@ -38,7 +38,7 @@ namespace CraftMan_WebApi.Models
         public string? LogoImagePath { get; set; }
         public string? LogoImageContentType { get; set; }
         //public byte[]? LogoImageFileBytes { get; set; }
-        public string? LogoImageBase64String { get; set; }
+        //public string? LogoImageBase64String { get; set; }
         public List<CountyMaster>? CountyList { get; set; }
         public List<MunicipalityMaster>? MunicipalityList { get; set; }
         public List<CompanyCountyRelation>? CountyRelationList { get; set; }
@@ -90,7 +90,7 @@ namespace CraftMan_WebApi.Models
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
                         //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
+                        //pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
@@ -278,7 +278,7 @@ namespace CraftMan_WebApi.Models
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
                         //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
+                        //pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
