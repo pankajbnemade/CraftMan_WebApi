@@ -5,7 +5,6 @@ namespace CraftMan_WebApi.Models
 {
     public class ImageSettings
     {
-
         public string BaseUrl { get; set; }
         public string StoragePath { get; set; }
 

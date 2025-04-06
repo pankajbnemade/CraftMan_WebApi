@@ -56,14 +56,6 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-                //if (_CompanyCountyRelation.ValidateInsertRelation(_CompanyCountyRelation).StatusCode > 0)
-                //{
-                //    strReturn.StatusMessage = "Company relation already exists...";
-                //    strReturn.StatusCode = 1;
-                //}
-                //else
-                //{
-
                 List<MunicipalityMaster> MunicipalityList = MunicipalityMaster.GetMunicipalityList(MunicipalityIdList);
 
                 if (MunicipalityList != null && CountyIdList != null && CountyIdList.Any())
@@ -106,7 +98,6 @@ namespace CraftMan_WebApi.ExtendedModels
                 {
                     strReturn.StatusMessage = "County relation not added.";
                 }
-                //}
             }
             catch (Exception ex)
             {

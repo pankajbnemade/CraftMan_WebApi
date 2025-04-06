@@ -70,15 +70,12 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                //if (!validateticket(_IssueTicket))
-                //{
                 string qstr = " INSERT INTO tblIssueTicketMaster   (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId, CreatedOn) " +
                     " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ", getdate()" + ")";
 
                 DBAccess db = new DBAccess();
 
                 return db.ExecuteScalar(qstr);
-                //}
             }
             catch (Exception ex)
             {
@@ -339,8 +336,6 @@ namespace CraftMan_WebApi.Models
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
@@ -451,8 +446,6 @@ namespace CraftMan_WebApi.Models
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
@@ -488,8 +481,6 @@ namespace CraftMan_WebApi.Models
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
@@ -530,10 +521,6 @@ namespace CraftMan_WebApi.Models
                 " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
                 " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
                     " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
-            //" AND ( " +
-            //            "( upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND upper('" + filter.Status + "') = upper('" + TicketStatus.Created.ToString() + "') )" +
-            //            "( upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND isnull(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) " +
-            //    ")";
 
             if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
             {
@@ -614,8 +601,6 @@ namespace CraftMan_WebApi.Models
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
@@ -651,8 +636,6 @@ namespace CraftMan_WebApi.Models
                         if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
                         {
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }

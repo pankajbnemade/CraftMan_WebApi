@@ -14,9 +14,7 @@ namespace CraftMan_WebApi.Models
         public string Lname { get; set; }
         public bool Active { get; set; }
         public int Pkey_CId { get; set; }
-       
         public string MobileNumber { get; set; }
-        
         public string EmailId { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }

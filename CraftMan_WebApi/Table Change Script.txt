@@ -1,6 +1,93 @@
-ALTER TABLE tblIssueTicketMaster
-Add CompanyId Int null;
+ALTER TABLE [tblCompanyCountyRel]
+ADD CONSTRAINT FK_tblCompanyCountyRel_tblCompanyMaster_pCompId
+FOREIGN KEY (pCompId)
+REFERENCES [tblCompanyMaster](pCompId);
+
+go
 
 
-alter table tblcompanymaster
-add  Is24X7 BIT NULL default(1)
+ALTER TABLE [tblCompanyServices]
+ADD CONSTRAINT FK_tblCompanyServices_tblCompanyMaster_pCompId
+FOREIGN KEY (pCompId)
+REFERENCES [tblCompanyMaster](pCompId);
+
+go
+
+ALTER TABLE [tblCompanyServices]
+ADD CONSTRAINT FK_tblCompanyServices_tblServiceMaster_ServiceId
+FOREIGN KEY (ServiceId)
+REFERENCES [tblServiceMaster](ServiceId);
+
+go
+
+ALTER TABLE tblIssueTicketChat
+ADD CONSTRAINT FK_tblIssueTicketChat_tblCompanyMaster_CompanyId
+FOREIGN KEY (CompanyId)
+REFERENCES tblCompanyMaster(pCompId);
+
+go
+
+ALTER TABLE tblIssueTicketChat
+ADD CONSTRAINT FK_tblIssueTicketChat_tblIssueTicketMaster_TicketId
+FOREIGN KEY (TicketId)
+REFERENCES tblIssueTicketMaster(TicketId);
+
+go
+
+ALTER TABLE tblIssueTicketChat
+ADD CONSTRAINT FK_tblIssueTicketChat_tblUserMaster_UserId
+FOREIGN KEY (UserId)
+REFERENCES tblUserMaster(pkey_UId);
+
+go
+
+ALTER TABLE tblIssueTicketImages
+ALTER COLUMN TicketId int;
+
+go
+
+ALTER TABLE tblIssueTicketImages
+ADD CONSTRAINT FK_tblIssueTicketImages_tblIssueTicketMaster_TicketId
+FOREIGN KEY (TicketId)
+REFERENCES tblIssueTicketMaster(TicketId);
+
+go
+
+ALTER TABLE tblIssueTicketWorkImages
+ALTER COLUMN TicketId int;
+
+go
+
+ALTER TABLE tblIssueTicketWorkImages
+ADD CONSTRAINT FK_tblIssueTicketWorkImages_tblIssueTicketMaster_TicketId
+FOREIGN KEY (TicketId)
+REFERENCES tblIssueTicketMaster(TicketId);
+
+go
+
+ALTER TABLE tblMunicipalityMaster
+ADD CONSTRAINT FK_tblMunicipalityMaster_tblCountyMaster_CountyId
+FOREIGN KEY (CountyId)
+REFERENCES tblCountyMaster(CountyId);
+
+go
+
+
+ALTER TABLE tblUserMaster
+ADD CONSTRAINT FK_tblUserMaster_tblCountyMaster_CountyId
+FOREIGN KEY (CountyId)
+REFERENCES tblCountyMaster(CountyId);
+
+go
+
+
+ALTER TABLE tblUserMaster
+ADD CONSTRAINT FK_tblUserMaster_tblMunicipalityMaster_MunicipalityId
+FOREIGN KEY (MunicipalityId)
+REFERENCES tblMunicipalityMaster(MunicipalityId);
+
+go
+
+
+
+

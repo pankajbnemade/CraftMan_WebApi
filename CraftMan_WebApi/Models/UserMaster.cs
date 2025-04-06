@@ -80,11 +80,6 @@ namespace CraftMan_WebApi.Models
                 var token = CommonFunction.GenerateJwtToken(strReturn.StatusCode, "User");
 
                 strReturn.JWTToken = token;
-
-                //if (_User.FcmToken != null && _User.FcmToken != "")
-                //{
-                //    SaveFcmToken(strReturn.StatusCode, _User.FcmToken);
-                //}
             }
             else { strReturn.StatusMessage = "Invalid User!"; }
 
@@ -122,32 +117,6 @@ namespace CraftMan_WebApi.Models
 
             return strReturn;
         }
-
-        //private static Response SaveFcmToken(int userId, string? fcmToken)
-        //{
-        //    Response strReturn = new Response();
-        //    DBAccess db = new DBAccess();
-
-        //    string qstr = " UPDATE dbo.tblUserMaster " +
-        //                    " SET  " +
-        //                    "   FcmToken  = '" + fcmToken + "'" +
-        //                    "   WHERE " +
-        //                    "   pkey_UId = " + userId + "  ";
-
-
-        //    strReturn.StatusCode = db.ExecuteNonQuery(qstr);
-
-        //    if (strReturn.StatusCode > 0)
-        //    {
-        //        strReturn.StatusMessage = "Token updated successfully.";
-        //    }
-        //    else
-        //    { 
-        //        strReturn.StatusMessage = "Token not updated."; 
-        //    }
-
-        //    return strReturn;
-        //}
 
     }
 }

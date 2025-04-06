@@ -29,7 +29,6 @@ namespace CraftMan_WebApi.Models
         public string? CompetenceDescription { get; set; }
         public string? CompanyReferences { get; set; }
         public string[]? JobList { get; set; }
-        //public string[]? CompanyEmplist { get; set; }
         public string[]? CountyIdList { get; set; }
         public string[]? MunicipalityIdList { get; set; }
         public string[]? ServiceIdList { get; set; }
@@ -37,8 +36,6 @@ namespace CraftMan_WebApi.Models
         public string? LogoImageName { get; set; }
         public string? LogoImagePath { get; set; }
         public string? LogoImageContentType { get; set; }
-        //public byte[]? LogoImageFileBytes { get; set; }
-        //public string? LogoImageBase64String { get; set; }
         public List<CountyMaster>? CountyList { get; set; }
         public List<MunicipalityMaster>? MunicipalityList { get; set; }
         public List<CompanyCountyRelation>? CountyRelationList { get; set; }
@@ -89,8 +86,6 @@ namespace CraftMan_WebApi.Models
                     if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
-                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        //pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
@@ -281,8 +276,6 @@ namespace CraftMan_WebApi.Models
                     if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
                     {
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
-                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        //pCompanyMaster.LogoImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pCompanyMaster.LogoImagePath));
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }

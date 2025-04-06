@@ -18,8 +18,6 @@ namespace CraftMan_WebApi.Models
         public string? ImageName { get; set; }
         public string? ImagePath { get; set; }
         public string? ImageContentType { get; set; }
-        //public byte[]? ImageFileBytes { get; set; }
-        //public string? ImageBase64String { get; set; }
 
         public static ServiceMaster GetServiceDetail(int? ServiceId)
         {
@@ -49,8 +47,6 @@ namespace CraftMan_WebApi.Models
                     if (System.IO.File.Exists(pServiceMaster.ImagePath))
                     {
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
-                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        //pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
 
                         pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
@@ -91,8 +87,6 @@ namespace CraftMan_WebApi.Models
                     if (System.IO.File.Exists(pServiceMaster.ImagePath))
                     {
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
-                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                        //pServiceMaster.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pServiceMaster.ImagePath));
 
                         pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
