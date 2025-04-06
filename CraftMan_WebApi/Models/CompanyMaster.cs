@@ -145,6 +145,10 @@ namespace CraftMan_WebApi.Models
             if (strReturn.StatusCode > 0)
             {
                 strReturn.StatusMessage = "Valid User!";
+
+                var token = CommonFunction.GenerateJwtToken(strReturn.StatusCode, "User");
+
+                strReturn.JWTToken = token;
             }
             else { strReturn.StatusMessage = "Invalid User!"; }
 

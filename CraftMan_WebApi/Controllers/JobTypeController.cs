@@ -2,11 +2,12 @@
 using CraftMan_WebApi.ExtendedModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using Microsoft.AspNetCore.Authorization;
 namespace CraftMan_WebApi.Controllers
 {
-    
 
-        [Route("api/[controller]")]
+    [Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class JobTypeController : Controller
     {

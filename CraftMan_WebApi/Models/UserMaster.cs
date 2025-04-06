@@ -1,4 +1,5 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
+using CraftMan_WebApi.Helper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -75,6 +76,10 @@ namespace CraftMan_WebApi.Models
             if (strReturn.StatusCode > 0)
             {
                 strReturn.StatusMessage = "Valid User!";
+
+                var token = CommonFunction.GenerateJwtToken(strReturn.StatusCode, "User");
+
+                strReturn.JWTToken = token;
 
                 //if (_User.FcmToken != null && _User.FcmToken != "")
                 //{

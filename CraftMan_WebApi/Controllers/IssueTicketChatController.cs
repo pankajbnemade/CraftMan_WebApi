@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System;
 using System.Collections;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CraftMan_WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class IssueTicketChatController : Controller

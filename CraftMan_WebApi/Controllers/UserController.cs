@@ -1,7 +1,8 @@
 ﻿using CraftMan_WebApi.Models;
 using CraftMan_WebApi.ExtendedModels;
 using Microsoft.AspNetCore.Mvc;
- 
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace CraftMan_WebApi.Controllers
 {
@@ -9,6 +10,7 @@ namespace CraftMan_WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        [Authorize]
         [HttpGet]
         [Route("GetUserDetail")]
         public UserMaster GetUserDetail(string EmailId)

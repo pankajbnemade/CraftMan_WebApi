@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 namespace CraftMan_WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -48,48 +49,6 @@ namespace CraftMan_WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetCompanyDetail")]
-        public CompanyMaster GetCompanyDetail(string EmailId)
-        {
-            try
-            {
-                return Companymasterextended.GetCompanyDetail(EmailId);
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.LogError(ex);
-                throw new ApplicationException("An error occurred.", ex);
-            }
-        }
-
-        [HttpGet]
-        [Route("GetCompanyJobList")]
-        public string[] GetCompanyJobList(string Username)
-        {
-            return Companymasterextended.GetCompanyDetail(Username).JobList;
-        }
-
-        [HttpGet]
-        [Route("GetTotalJobRequest")]
-        public int GetTotalJobRequest(string Username)
-        {
-            return Companymasterextended.GetTotalcnt(Username);
-        }
-
-        [HttpGet]
-        [Route("GetCompanyEmpDetail")]
-        public ArrayList GetCompanyEmpDetail(string Username)
-        {
-            return Companymasterextended.GetCompEmployeeList(Username);
-        }
-
-        [HttpGet]
-        [Route("GetActivecountnoofcraftsman")]
-        public int GetCompanyEmpDetailcnt(string Username)
-        {
-            return Companymasterextended.GetCompEmployeeList(Username).Count;
-        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -114,6 +73,57 @@ namespace CraftMan_WebApi.Controllers
             return Ok(result);
         }
 
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetCompanyDetail")]
+        public CompanyMaster GetCompanyDetail(string EmailId)
+        {
+            try
+            {
+                return Companymasterextended.GetCompanyDetail(EmailId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetCompanyJobList")]
+        public string[] GetCompanyJobList(string Username)
+        {
+            return Companymasterextended.GetCompanyDetail(Username).JobList;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetTotalJobRequest")]
+        public int GetTotalJobRequest(string Username)
+        {
+            return Companymasterextended.GetTotalcnt(Username);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetCompanyEmpDetail")]
+        public ArrayList GetCompanyEmpDetail(string Username)
+        {
+            return Companymasterextended.GetCompEmployeeList(Username);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetActivecountnoofcraftsman")]
+        public int GetCompanyEmpDetailcnt(string Username)
+        {
+            return Companymasterextended.GetCompEmployeeList(Username).Count;
+        }
+
+        [Authorize]
         [HttpPost]
         [Route("UpdateCompanyIs24X7")]
         public Response UpdateCompanyIs24X7(int companyId, bool is24X7)
@@ -121,6 +131,8 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.UpdateCompanyIs24X7(companyId, is24X7);
         }
 
+
+        [Authorize]
         [HttpGet]
         [Route("GetCompany24X7ForUser")]
         public ArrayList GetCompany24X7ForUser(Int32 userId)

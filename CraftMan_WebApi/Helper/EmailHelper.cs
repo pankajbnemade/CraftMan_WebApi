@@ -8,55 +8,23 @@ namespace CraftMan_WebApi.Helper
 {
     public class EmailHelper
     {
-        private static readonly string smtpServer = "smtp.gmail.com";
-        private static readonly int smtpPort = 587; // Gmail uses port 587 for TLS
-        private static readonly string senderEmail = "sendmailfordevelopment@gmail.com"; // Replace with your email
-        private static readonly string senderPassword = "nzssuistgydjvfyu"; // Replace with your Gmail App Password
-
-
-        //public static void SendResetEmail(string email, string token)
-        //{
-        //    //var builder = new ConfigurationBuilder()
-        //    //                .SetBasePath(Directory.GetCurrentDirectory())
-        //    //                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-
-        //    //IConfigurationRoot configuration = builder.Build();
-
-        //    //string Url = configuration["ApplicationURL:Url"];
-
-        //    //string resetLink = $"{Url}/ResetPassword?token={token}";
-
-
-
-        //    string subject = "Password Reset Code";
-        //    string body = $"<p>Your password reset code is: <b>{token}</b></p><p>This code is valid for 15 minutes.</p>";
-
-        //    bool emailSent = EmailHelper.SendEmail(email, subject, body);
-        //    if (emailSent)
-        //    {
-        //        Console.WriteLine("Password reset email sent successfully.");
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("Failed to send password reset email.");
-        //    }
-
-        //}
-
+        private static string smtpServer;
+        private static int smtpPort;
+        private static string senderEmail;
+        private static string senderPassword;
 
         public static void SendResetEmail(string email, string token)
         {
-            //var builder = new ConfigurationBuilder()
-            //                .SetBasePath(Directory.GetCurrentDirectory())
-            //                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var builder = new ConfigurationBuilder()
+                            .SetBasePath(Directory.GetCurrentDirectory())
+                            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-            //IConfigurationRoot configuration = builder.Build();
+            IConfigurationRoot configuration = builder.Build();
 
-            //string Url = configuration["ApplicationURL:Url"];
-
-            //string resetLink = $"{Url}/ResetPassword?token={token}";
-
-
+            smtpServer = configuration["ApplicationURL:Host"].ToString();
+            smtpPort = Convert.ToInt32(configuration["ApplicationURL:Port"]); // Gmail uses port 587 for TLS
+            senderEmail = configuration["ApplicationURL:Mail"].ToString();
+            senderPassword = configuration["ApplicationURL:Password"].ToString();
 
             string subject = "Password Reset Code";
 

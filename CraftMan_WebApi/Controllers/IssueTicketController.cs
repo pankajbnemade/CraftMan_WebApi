@@ -6,9 +6,11 @@ using System.Data;
 using System;
 using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CraftMan_WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class IssueTicketController : Controller
