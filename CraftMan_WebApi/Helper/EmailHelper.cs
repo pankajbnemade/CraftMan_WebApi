@@ -21,10 +21,10 @@ namespace CraftMan_WebApi.Helper
 
             IConfigurationRoot configuration = builder.Build();
 
-            smtpServer = configuration["ApplicationURL:Host"].ToString();
-            smtpPort = Convert.ToInt32(configuration["ApplicationURL:Port"]); // Gmail uses port 587 for TLS
-            senderEmail = configuration["ApplicationURL:Mail"].ToString();
-            senderPassword = configuration["ApplicationURL:Password"].ToString();
+            smtpServer = configuration["MailSettings:Host"].ToString();
+            smtpPort = Convert.ToInt32(configuration["MailSettings:Port"]); // Gmail uses port 587 for TLS
+            senderEmail = configuration["MailSettings:Mail"].ToString();
+            senderPassword = configuration["MailSettings:Password"].ToString();
 
             string subject = "Password Reset Code";
 
