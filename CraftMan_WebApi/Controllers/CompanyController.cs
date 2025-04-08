@@ -75,7 +75,7 @@ namespace CraftMan_WebApi.Controllers
 
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetCompanyDetail")]
         public CompanyMaster GetCompanyDetail(string EmailId)
@@ -91,7 +91,7 @@ namespace CraftMan_WebApi.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetCompanyJobList")]
         public string[] GetCompanyJobList(string Username)
@@ -99,7 +99,7 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.GetCompanyDetail(Username).JobList;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetTotalJobRequest")]
         public int GetTotalJobRequest(string Username)
@@ -107,7 +107,7 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.GetTotalcnt(Username);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetCompanyEmpDetail")]
         public ArrayList GetCompanyEmpDetail(string Username)
@@ -115,7 +115,7 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.GetCompEmployeeList(Username);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetActivecountnoofcraftsman")]
         public int GetCompanyEmpDetailcnt(string Username)
@@ -123,7 +123,7 @@ namespace CraftMan_WebApi.Controllers
             return Companymasterextended.GetCompEmployeeList(Username).Count;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [Route("UpdateCompanyIs24X7")]
         public Response UpdateCompanyIs24X7(int companyId, bool is24X7)
@@ -132,7 +132,7 @@ namespace CraftMan_WebApi.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetCompany24X7ForUser")]
         public ArrayList GetCompany24X7ForUser(Int32 userId)

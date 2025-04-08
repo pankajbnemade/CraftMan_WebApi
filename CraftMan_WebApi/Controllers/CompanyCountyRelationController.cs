@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace CraftMan_WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CompanyCountyRelationController : Controller

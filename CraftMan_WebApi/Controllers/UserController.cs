@@ -10,7 +10,7 @@ namespace CraftMan_WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [Route("GetUserDetail")]
         public UserMaster GetUserDetail(string EmailId)

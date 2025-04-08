@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CraftMan_WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ServiceController : Controller
