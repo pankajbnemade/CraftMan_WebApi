@@ -58,7 +58,7 @@ namespace CraftMan_WebApi.ExtendedModels
                                                         .Where(w => w.MunicipalityId != 0)
                                                         .Select(municipality => new MunicipalityMaster()
                                                         {
-                                                            MunicipalityId = municipality.MunicipalityId,
+                                                            MunicipalityId = municipality.MunicipalityId == null ? 0 : Convert.ToInt32(municipality.MunicipalityId),
                                                             MunicipalityName = municipality.MunicipalityName,
                                                             CountyId = municipality.CountyId,
                                                             CountyName = municipality.CountyName

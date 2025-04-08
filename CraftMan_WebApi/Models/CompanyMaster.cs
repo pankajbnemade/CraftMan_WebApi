@@ -89,6 +89,11 @@ namespace CraftMan_WebApi.Models
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
+                    else
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pCompanyMaster.LogoImagePath = pImageSettings.DefaultImageUrl;
+                    }
                 }
             }
 
@@ -278,6 +283,11 @@ namespace CraftMan_WebApi.Models
                         pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
 
                         pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                    else
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pCompanyMaster.LogoImagePath = pImageSettings.DefaultImageUrl;
                     }
                 }
 

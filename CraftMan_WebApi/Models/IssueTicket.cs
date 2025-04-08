@@ -303,6 +303,11 @@ namespace CraftMan_WebApi.Models
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
+                        }
                     }
 
 
@@ -338,6 +343,11 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                        }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
                         }
                     }
 
@@ -449,6 +459,11 @@ namespace CraftMan_WebApi.Models
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
+                        }
                     }
 
                     issueTicket.TicketImages.Add(pIssueTicketImage);
@@ -483,6 +498,11 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                        }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
                         }
                     }
 
@@ -604,6 +624,11 @@ namespace CraftMan_WebApi.Models
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                         }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
+                        }
                     }
 
                     issueTicket.TicketImages.Add(pIssueTicketImage);
@@ -638,6 +663,11 @@ namespace CraftMan_WebApi.Models
                             pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
 
                             pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                        }
+                        else
+                        {
+                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
                         }
                     }
 

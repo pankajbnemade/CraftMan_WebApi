@@ -50,6 +50,11 @@ namespace CraftMan_WebApi.Models
 
                         pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
                     }
+                    else
+                    {
+                        pServiceMaster.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pServiceMaster.ImagePath = pImageSettings.DefaultImageUrl;
+                    }
                 }
 
             }
@@ -89,6 +94,11 @@ namespace CraftMan_WebApi.Models
                         pServiceMaster.ImageContentType = CommonFunction.GetContentType(pServiceMaster.ImagePath);
 
                         pServiceMaster.ImagePath = pServiceMaster.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                    else
+                    {
+                        pServiceMaster.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pServiceMaster.ImagePath = pImageSettings.DefaultImageUrl;
                     }
                 }
 

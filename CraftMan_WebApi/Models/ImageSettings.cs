@@ -5,6 +5,7 @@ namespace CraftMan_WebApi.Models
 {
     public class ImageSettings
     {
+        public string DefaultImageUrl { get; set; }
         public string BaseUrl { get; set; }
         public string StoragePath { get; set; }
 
@@ -16,6 +17,7 @@ namespace CraftMan_WebApi.Models
 
             IConfigurationRoot configuration = builder.Build();
 
+            DefaultImageUrl = configuration["ImageSettings:DefaultImageUrl"];
             BaseUrl= configuration["ImageSettings:BaseUrl"];
             StoragePath = configuration["ImageSettings:StoragePath"];
         }
