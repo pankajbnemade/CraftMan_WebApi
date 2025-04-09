@@ -1,12 +1,7 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Collections.Generic;
-using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using CraftMan_WebApi.Helper;
 using Microsoft.Data.SqlClient;
 using System.Collections;
-using System.IO;
-using CraftMan_WebApi.Helper;
 
 namespace CraftMan_WebApi.Models
 {
@@ -103,6 +98,98 @@ namespace CraftMan_WebApi.Models
 
         }
 
+        public static ArrayList GetCompanyList(int? countyId, int? municipalityId, int? serviceId)
+        {
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = " SELECT	DISTINCT tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType, " +
+                            " tblCompanyMaster.pCompId, tblCompanyMaster.LocationId, tblCompanyMaster.MobileNumber, " +
+                            " tblCompanyMaster.ContactPerson, tblCompanyMaster.EmailId, tblCompanyMaster.CreatedOn, tblCompanyMaster.UpdatedOn," +
+                            " tblCompanyMaster.CompanyName, tblCompanyMaster.CompanyRegistrationNumber, tblCompanyMaster.CompanyPresentation, " +
+                            " tblCompanyMaster.Logotype, tblCompanyMaster.CompetenceDescription, tblCompanyMaster.CompanyReferences, " +
+                            " tblCompanyMaster.JobList, tblCompanyMaster.LogoImageName, tblCompanyMaster.LogoImagePath, tblCompanyMaster.PasswordResetToken, " +
+                            " tblCompanyMaster.ResetTokenExpiry, tblCompanyMaster.Is24X7" +
+                            //" , tblCompanyCountyRel.CountyId, tblCompanyCountyRel.MunicipalityId,  tblCompanyServices.ServiceId" +
+                            " FROM   tblCompanyMaster" +
+                            " LEFT OUTER JOIN tblCompanyCountyRel ON tblCompanyCountyRel.pCompId = tblCompanyMaster.pCompId" +
+                            " LEFT OUTER JOIN tblCompanyServices ON tblCompanyServices.pCompId = tblCompanyMaster.pCompId " +
+                            " WHERE tblCompanyMaster.pCompId != 0";
+
+            if (countyId != null && countyId != 0)
+            {
+                qstr = qstr + " AND tblCompanyCountyRel.CountyId = " + countyId;
+            }
+
+            if (municipalityId != null && municipalityId != 0)
+            {
+                qstr = qstr + " AND tblCompanyCountyRel.MunicipalityId = " + municipalityId;
+            }
+
+            if (serviceId != null && serviceId != 0)
+            {
+                qstr = qstr + " AND tblCompanyServices.ServiceId = " + serviceId;
+            }
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            ArrayList CompanyMasterList = new ArrayList();
+
+            while (reader.Read())
+            {
+                CompanyMaster pCompanyMaster = new CompanyMaster();
+
+                pCompanyMaster.Username = reader["Username"] == DBNull.Value ? "" : (string)reader["Username"];
+                pCompanyMaster.Password = reader["Password"] == DBNull.Value ? "" : (string)reader["Password"];
+                pCompanyMaster.Active = reader["Active"] == DBNull.Value ? false : Convert.ToBoolean(reader["Active"]);
+
+                pCompanyMaster.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
+                pCompanyMaster.LocationId = reader["LocationId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["LocationId"]);
+                pCompanyMaster.MobileNumber = reader["MobileNumber"] == DBNull.Value ? "" : (string)reader["MobileNumber"];
+                pCompanyMaster.ContactPerson = reader["ContactPerson"] == DBNull.Value ? "" : (string)reader["ContactPerson"];
+                pCompanyMaster.EmailId = reader["EmailId"] == DBNull.Value ? "" : (string)reader["EmailId"];
+                pCompanyMaster.Is24X7 = reader["Is24X7"] == DBNull.Value ? true : Convert.ToBoolean(reader["Is24X7"]);
+
+                pCompanyMaster.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
+                pCompanyMaster.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
+
+                pCompanyMaster.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
+                pCompanyMaster.CompanyRegistrationNumber = reader["CompanyRegistrationNumber"] == DBNull.Value ? "" : (string)reader["CompanyRegistrationNumber"];
+                pCompanyMaster.CompanyPresentation = reader["CompanyPresentation"] == DBNull.Value ? "" : (string)reader["CompanyPresentation"];
+                pCompanyMaster.CompetenceDescription = reader["CompetenceDescription"] == DBNull.Value ? "" : (string)reader["CompetenceDescription"];
+                pCompanyMaster.CompanyReferences = reader["CompanyReferences"] == DBNull.Value ? "" : (string)reader["CompanyReferences"];
+                pCompanyMaster.LogoImageName = reader["LogoImageName"] == DBNull.Value ? "" : (string)reader["LogoImageName"];
+                pCompanyMaster.LogoImagePath = reader["LogoImagePath"] == DBNull.Value ? "" : (string)reader["LogoImagePath"];
+
+
+                ImageSettings pImageSettings = new ImageSettings();
+
+                if (pCompanyMaster.LogoImagePath != "")
+                {
+                    pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace("\\", "/");
+
+                    if (System.IO.File.Exists(pCompanyMaster.LogoImagePath))
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pCompanyMaster.LogoImagePath);
+
+                        pCompanyMaster.LogoImagePath = pCompanyMaster.LogoImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                    else
+                    {
+                        pCompanyMaster.LogoImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pCompanyMaster.LogoImagePath = pImageSettings.DefaultImageUrl;
+                    }
+                }
+
+                CompanyMasterList.Add(pCompanyMaster);
+            }
+
+            reader.Close();
+
+            return CompanyMasterList;
+
+        }
+
         public static int GetTotalcnt(string user)
         {
             int cnt = 0;
@@ -166,7 +253,7 @@ namespace CraftMan_WebApi.Models
                 ")  " +
                 "   VALUES('" + _Company.Username.Trim() + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
                         "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
-                        "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + "', " 
+                        "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + "', "
                         + "1" //is24X7
                         +
                 ")";
@@ -298,7 +385,5 @@ namespace CraftMan_WebApi.Models
 
             return CompanyMasterList;
         }
-
-
     }
 }

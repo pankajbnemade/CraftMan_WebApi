@@ -80,6 +80,19 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
+        public static ArrayList GetCompanyList(int? countyId, int? municipalityId, int? serviceId)
+        {
+            try
+            {
+                return CompanyMaster.GetCompanyList(countyId, municipalityId, serviceId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
         public static ArrayList GetCompany24X7ForUser(Int32 userId)
         {
             try
