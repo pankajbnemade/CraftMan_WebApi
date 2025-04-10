@@ -62,6 +62,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }
@@ -206,163 +207,161 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }
 
         public static IssueTicket GetTicketByTicketId(int TicketId)
         {
-            try
+
+            DBAccess db = new DBAccess();
+            Response strReturn = new Response();
+
+            string qstr = "select tblIssueTicketMaster.TicketId, tblIssueTicketMaster.ReportingPerson, tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
+                            " tblIssueTicketMaster.ReportingDescription,tblIssueTicketMaster.Status,tblIssueTicketMaster.ToCraftmanType,tblIssueTicketMaster.Pincode, " +
+                            " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
+                            " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
+                            " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
+                            " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
+                            " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
+                            " FROM tblIssueTicketMaster " +
+                            " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
+                            " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
+                            " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
+                            " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
+                        " where  TicketId = " + TicketId + "   ";
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            var pIssueTicket = new IssueTicket();
+
+            while (reader.Read())
             {
-                DBAccess db = new DBAccess();
-                Response strReturn = new Response();
+                pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
+                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
+                pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
+                pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
+                pIssueTicket.City = reader["City"] == DBNull.Value ? "" : (string)reader["City"];
+                pIssueTicket.ToCraftmanType = reader["ToCraftmanType"] == DBNull.Value ? "" : (string)reader["ToCraftmanType"];
+                pIssueTicket.Pincode = reader["Pincode"] == DBNull.Value ? "" : reader["Pincode"].ToString();
+                pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
+                pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
+                pIssueTicket.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
+                pIssueTicket.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
+                pIssueTicket.ReviewStarRating = reader["ReviewStarRating"] == DBNull.Value ? null : Convert.ToInt32(reader["ReviewStarRating"]);
+                pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
+                pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
+                pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
 
-                string qstr = "select tblIssueTicketMaster.TicketId, tblIssueTicketMaster.ReportingPerson, tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
-                                " tblIssueTicketMaster.ReportingDescription,tblIssueTicketMaster.Status,tblIssueTicketMaster.ToCraftmanType,tblIssueTicketMaster.Pincode, " +
-                                " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
-                                " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
-                                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
-                                " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
-                                " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
-                                " FROM tblIssueTicketMaster " +
-                                " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
-                                " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
-                                " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
-                                " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
-                            " where  TicketId = " + TicketId + "   ";
+                pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicket.CompanyMobileNumber = reader["CompanyMobileNumber"] == DBNull.Value ? "" : (string)reader["CompanyMobileNumber"];
+                pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
+                pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
 
-                SqlDataReader reader = db.ReadDB(qstr);
+                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
+                pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
+                pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
 
-                var pIssueTicket = new IssueTicket();
-
-                while (reader.Read())
-                {
-                    pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                    pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
-                    pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
-                    pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
-                    pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
-                    pIssueTicket.City = reader["City"] == DBNull.Value ? "" : (string)reader["City"];
-                    pIssueTicket.ToCraftmanType = reader["ToCraftmanType"] == DBNull.Value ? "" : (string)reader["ToCraftmanType"];
-                    pIssueTicket.Pincode = reader["Pincode"] == DBNull.Value ? "" : reader["Pincode"].ToString();
-                    pIssueTicket.CountyId = Convert.ToInt32(reader["CountyId"]);
-                    pIssueTicket.MunicipalityId = Convert.ToInt32(reader["MunicipalityId"]);
-                    pIssueTicket.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
-                    pIssueTicket.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
-                    pIssueTicket.ReviewStarRating = reader["ReviewStarRating"] == DBNull.Value ? null : Convert.ToInt32(reader["ReviewStarRating"]);
-                    pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
-                    pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
-                    pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
-
-                    pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
-                    pIssueTicket.CompanyMobileNumber = reader["CompanyMobileNumber"] == DBNull.Value ? "" : (string)reader["CompanyMobileNumber"];
-                    pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
-                    pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
-
-                    pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
-                    pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
-                    pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
-                    pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
-
-                    pIssueTicket.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
-                    pIssueTicket.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
-                }
-
-                reader.Close();
-
-
-                qstr = "select ImageId, TicketId, ImageName, ImagePath " +
-                        " FROM tblIssueTicketImages " +
-                        " where  TicketId=" + TicketId + "   ";
-
-                reader = db.ReadDB(qstr);
-
-
-                ImageSettings pImageSettings = new ImageSettings();
-
-                pIssueTicket.TicketImages = new List<IssueTicketImage>();
-
-                while (reader.Read())
-                {
-                    var pIssueTicketImage = new IssueTicketImage();
-
-                    pIssueTicketImage.TicketId = pIssueTicket.TicketId;
-                    pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
-                    pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
-                    pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
-
-                    if (pIssueTicketImage.ImagePath != "")
-                    {
-                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
-
-                        if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
-                        {
-                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-                            //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
-                            //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
-
-                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
-                        }
-                        else
-                        {
-                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
-                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
-                        }
-                    }
-
-
-                    pIssueTicket.TicketImages.Add(pIssueTicketImage);
-                }
-
-                reader.Close();
-
-                qstr = "select ImageId, TicketId, ImageName, ImagePath " +
-                        " FROM tblIssueTicketWorkImages " +
-                        " where  TicketId=" + TicketId + "   ";
-
-                reader = db.ReadDB(qstr);
-
-
-                pIssueTicket.TicketWorkImages = new List<IssueTicketImage>();
-
-                while (reader.Read())
-                {
-                    var pIssueTicketImage = new IssueTicketImage();
-
-                    pIssueTicketImage.TicketId = pIssueTicket.TicketId;
-                    pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
-                    pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
-                    pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
-
-                    if (pIssueTicketImage.ImagePath != "")
-                    {
-                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
-
-                        if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
-                        {
-                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
-
-                            pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
-                        }
-                        else
-                        {
-                            pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
-                            pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
-                        }
-                    }
-
-                    pIssueTicket.TicketWorkImages.Add(pIssueTicketImage);
-                }
-
-                reader.Close();
-
-                return pIssueTicket;
+                pIssueTicket.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
+                pIssueTicket.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
             }
-            catch (Exception ex)
+
+            reader.Close();
+            reader.Dispose();
+
+
+            qstr = "select ImageId, TicketId, ImageName, ImagePath " +
+                    " FROM tblIssueTicketImages " +
+                    " where  TicketId=" + TicketId + "   ";
+
+            reader = db.ReadDB(qstr);
+
+
+            ImageSettings pImageSettings = new ImageSettings();
+
+            pIssueTicket.TicketImages = new List<IssueTicketImage>();
+
+            while (reader.Read())
             {
-                ErrorLogger.LogError(ex);
-                throw new ApplicationException("An error occurred.", ex);
+                var pIssueTicketImage = new IssueTicketImage();
+
+                pIssueTicketImage.TicketId = pIssueTicket.TicketId;
+                pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
+                pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
+                pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
+
+                if (pIssueTicketImage.ImagePath != "")
+                {
+                    pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
+                    if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
+                    {
+                        pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
+                        //pServiceMaster.ImageFileBytes = System.IO.File.ReadAllBytes(pServiceMaster.ImagePath);
+                        //pIssueTicketImage.ImageBase64String = Convert.ToBase64String(System.IO.File.ReadAllBytes(pIssueTicketImage.ImagePath));
+
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                    else
+                    {
+                        pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
+                    }
+                }
+
+
+                pIssueTicket.TicketImages.Add(pIssueTicketImage);
             }
+
+            reader.Close();
+            reader.Dispose();
+
+            qstr = "select ImageId, TicketId, ImageName, ImagePath " +
+                    " FROM tblIssueTicketWorkImages " +
+                    " where  TicketId=" + TicketId + "   ";
+
+            reader = db.ReadDB(qstr);
+
+
+            pIssueTicket.TicketWorkImages = new List<IssueTicketImage>();
+
+            while (reader.Read())
+            {
+                var pIssueTicketImage = new IssueTicketImage();
+
+                pIssueTicketImage.TicketId = pIssueTicket.TicketId;
+                pIssueTicketImage.ImageId = Convert.ToInt32(reader["ImageId"]);
+                pIssueTicketImage.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
+                pIssueTicketImage.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
+
+                if (pIssueTicketImage.ImagePath != "")
+                {
+                    pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace("\\", "/");
+
+                    if (System.IO.File.Exists(pIssueTicketImage.ImagePath))
+                    {
+                        pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pIssueTicketImage.ImagePath);
+
+                        pIssueTicketImage.ImagePath = pIssueTicketImage.ImagePath.Replace(pImageSettings.StoragePath, pImageSettings.BaseUrl);
+                    }
+                    else
+                    {
+                        pIssueTicketImage.ImageContentType = CommonFunction.GetContentType(pImageSettings.DefaultImageUrl);
+                        pIssueTicketImage.ImagePath = pImageSettings.DefaultImageUrl;
+                    }
+                }
+
+                pIssueTicket.TicketWorkImages.Add(pIssueTicketImage);
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            return pIssueTicket;
+
 
         }
 
@@ -427,6 +426,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             ImageSettings pImageSettings = new ImageSettings();
 
@@ -470,6 +470,7 @@ namespace CraftMan_WebApi.Models
                 }
 
                 reader.Close();
+                reader.Dispose();
 
                 qstr = "select ImageId, TicketId, ImageName, ImagePath " +
                         " FROM tblIssueTicketWorkImages " +
@@ -510,6 +511,7 @@ namespace CraftMan_WebApi.Models
                 }
 
                 reader.Close();
+                reader.Dispose();
             }
 
 
@@ -591,6 +593,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             ImageSettings pImageSettings = new ImageSettings();
 
@@ -635,6 +638,7 @@ namespace CraftMan_WebApi.Models
                 }
 
                 reader.Close();
+                reader.Dispose();
 
                 qstr = "select ImageId, TicketId, ImageName, ImagePath " +
                         " FROM tblIssueTicketWorkImages " +
@@ -675,6 +679,7 @@ namespace CraftMan_WebApi.Models
                 }
 
                 reader.Close();
+                reader.Dispose();
             }
 
 

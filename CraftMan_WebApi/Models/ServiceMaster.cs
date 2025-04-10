@@ -60,6 +60,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return pServiceMaster;
         }
@@ -106,6 +107,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return ServiceList;
         }
@@ -126,6 +128,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }
@@ -146,6 +149,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }

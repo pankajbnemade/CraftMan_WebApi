@@ -32,6 +32,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return pCountyMaster;
         }
@@ -59,6 +60,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return CountyList;
         }
@@ -88,6 +90,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return CountyList;
         }
@@ -108,6 +111,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }
@@ -128,6 +132,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }

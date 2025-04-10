@@ -42,8 +42,9 @@ namespace CraftMan_WebApi.Models
                     jobTypes.Add(jobType);
                 }
 
-                reader.Close();
-          
+            reader.Close();
+            reader.Dispose();
+
             return jobTypes;
         }
     }

@@ -44,6 +44,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return CountyRelationList;
         }

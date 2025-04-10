@@ -36,6 +36,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return pMunicipalityMaster;
         }
@@ -63,6 +64,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return MunicipalityList;
         }
@@ -106,6 +108,7 @@ namespace CraftMan_WebApi.Models
                 }
 
                 reader.Close();
+                reader.Dispose();
             }
             return MunicipalityList;
         }
@@ -141,6 +144,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return MunicipalityList;
         }
@@ -161,6 +165,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }
@@ -181,6 +186,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return false;
         }

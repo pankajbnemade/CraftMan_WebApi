@@ -33,16 +33,19 @@ namespace CraftMan_WebApi.DataAccessLayer
         {
             if (strConnectionString.State == ConnectionState.Closed)
                 strConnectionString.Open();
-            sqlCmd = strConnectionString.CreateCommand();
+
+            // Avoid reusing class-level SqlCommand to prevent thread-safety and state issues
+            var sqlCmd = strConnectionString.CreateCommand();
             sqlCmd.CommandTimeout = 6000;
             sqlCmd.CommandText = SQLstr;
-            // ''---------------------
-            if (!(this.sqlTransaction == null))
-               
-                this.sqlCmd.Transaction = this.sqlTransaction;
-            // ''---------------------
-            return sqlCmd.ExecuteReader();
+
+            if (this.sqlTransaction != null)
+                sqlCmd.Transaction = this.sqlTransaction;
+
+            // CommandBehavior.CloseConnection will close the connection when reader is closed
+            return sqlCmd.ExecuteReader(CommandBehavior.CloseConnection);
         }
+
         public Response validate(string qstr)
         {
             Response strReturn = new Response();

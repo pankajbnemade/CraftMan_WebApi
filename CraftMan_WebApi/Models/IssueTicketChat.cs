@@ -66,6 +66,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return pIssueTicketList;
         }
@@ -98,6 +99,7 @@ namespace CraftMan_WebApi.Models
             }
 
             reader.Close();
+            reader.Dispose();
 
             return pIssueTicketList;
         }
