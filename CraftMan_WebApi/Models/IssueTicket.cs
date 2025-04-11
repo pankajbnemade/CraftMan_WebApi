@@ -757,6 +757,8 @@ namespace CraftMan_WebApi.Models
                     + " AND tblCompanyServices.ServiceId in (" + serviceIdList + ") ";
             }
 
+            reader = db.ReadDB(qstr);
+
             string companyIdList = "";
 
             while (reader.Read())
@@ -776,7 +778,7 @@ namespace CraftMan_WebApi.Models
 
             qstr = @" SELECT Id, pCompId, Token, Platform, RegisteredOn
                     FROM   tblCompanyUserDevices  
-                    WHERE pCompId IN (" + companyIdList;
+                    WHERE pCompId IN (" + companyIdList + ")";
 
             reader = db.ReadDB(qstr);
 

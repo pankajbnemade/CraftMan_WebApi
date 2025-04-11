@@ -33,6 +33,8 @@ namespace CraftMan_WebApi.Controllers
 
             response = IssueTicketExtended.IssueNewTicket(_IssueTicket);
 
+            response.StatusCode = 47;
+
             List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(response.StatusCode);
 
             if (tokenList.Any())
