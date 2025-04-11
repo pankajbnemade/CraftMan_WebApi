@@ -51,7 +51,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (CountyMaster.ValidateCounty(_CountyMaster) == true)
                 {
                     strReturn.StatusMessage = "County name already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {
@@ -85,12 +85,12 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (CountyMaster.GetCountyDetail(_CountyMaster.CountyId).CountyId == 0)
                 {
                     strReturn.StatusMessage = "County details not exists for update...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else if (CountyMaster.ValidateUpdateCounty(_CountyMaster) == true)
                 {
                     strReturn.StatusMessage = "County name already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {

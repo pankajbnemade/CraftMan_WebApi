@@ -52,7 +52,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (MunicipalityMaster.ValidateMunicipality(_MunicipalityMaster)==true)
                 {
                     strReturn.StatusMessage = "Municipality name already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {
@@ -85,12 +85,12 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (MunicipalityMaster.GetMunicipalityDetail(_MunicipalityMaster.MunicipalityId).MunicipalityId == 0)
                 {
                     strReturn.StatusMessage = "Municipality details not exists for update...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else if (MunicipalityMaster.ValidateUpdateMunicipality(_MunicipalityMaster) == true)
                 {
                     strReturn.StatusMessage = "Municipality name already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {

@@ -304,5 +304,18 @@ namespace CraftMan_WebApi.ExtendedModels
             return strReturn;
         }
 
+        public static List<string> GetCompanyDeviceTokenList(Int32 ticketId)
+        {
+            try
+            {
+                return IssueTicket.GetCompanyDeviceTokenList(ticketId);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
     }
 }

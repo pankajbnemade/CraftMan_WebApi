@@ -7,6 +7,8 @@ using System;
 using System.Collections;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Linq;
+using CraftMan_WebApi.Helper;
 
 namespace CraftMan_WebApi.Controllers
 {
@@ -15,11 +17,30 @@ namespace CraftMan_WebApi.Controllers
     [ApiController]
     public class IssueTicketController : Controller
     {
+        private readonly IConfiguration _config;
+        private readonly FirebaseNotificationService _notificationService;
+        public IssueTicketController(IConfiguration config)
+        {
+            _config = config;
+            _notificationService = new FirebaseNotificationService(_config);
+        }
+
         [HttpPost]
         [Route("IssueTicket")]
-        public Response IssueTicket([FromForm] IssueTicket _IssueTicket)
+        public async Task<Response> IssueTicket([FromForm] IssueTicket _IssueTicket)
         {
-            return IssueTicketExtended.IssueNewTicket(_IssueTicket);
+            Response response = new Response();
+
+            response = IssueTicketExtended.IssueNewTicket(_IssueTicket);
+
+            List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(response.StatusCode);
+
+            if (tokenList.Any())
+            {
+                await _notificationService.SendNotificationAsync(tokenList, "New Job Card", "A new job card was created.");
+            }
+
+            return response;
         }
 
         [HttpGet]

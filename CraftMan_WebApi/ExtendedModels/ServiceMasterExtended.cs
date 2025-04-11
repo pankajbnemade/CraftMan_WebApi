@@ -40,7 +40,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (ServiceMaster.ValidateService(_ServiceMaster) == true)
                 {
                     strReturn.StatusMessage = "Service name already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {

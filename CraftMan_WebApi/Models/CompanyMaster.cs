@@ -2,6 +2,7 @@
 using CraftMan_WebApi.Helper;
 using Microsoft.Data.SqlClient;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace CraftMan_WebApi.Models
 {
@@ -321,7 +322,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT	tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType, " +
+            string qstr = " SELECT DISTINCT	tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType, " +
                         " tblCompanyMaster.pCompId, tblCompanyMaster.LocationId, tblCompanyMaster.MobileNumber, tblCompanyMaster.ContactPerson,  " +
                         " tblCompanyMaster.EmailId, tblCompanyMaster.CreatedOn, tblCompanyMaster.UpdatedOn, tblCompanyMaster.CompanyName,  " +
                         " tblCompanyMaster.CompanyRegistrationNumber, tblCompanyMaster.CompanyPresentation, tblCompanyMaster.Logotype,  " +
@@ -389,5 +390,7 @@ namespace CraftMan_WebApi.Models
 
             return CompanyMasterList;
         }
+
+
     }
 }

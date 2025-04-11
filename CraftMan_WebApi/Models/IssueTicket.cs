@@ -537,8 +537,12 @@ namespace CraftMan_WebApi.Models
                 " SELECT CountyId, MunicipalityId " +
                 " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
                 " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
+                " INNER JOIN( " + 
+                " SELECT ServiceName " +
+                " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
+                " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " + 
                 " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
-                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId  " +
+                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
                 " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
                 " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
                 " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
@@ -685,6 +689,120 @@ namespace CraftMan_WebApi.Models
 
             return IssueTicketList;
         }
+
+
+        public static List<string> GetCompanyDeviceTokenList(Int32 TicketId)
+        {
+            Response strReturn = new Response();
+            string qstr;
+            string serviceIdList;
+            SqlDataReader reader;
+
+            DBAccess db = new DBAccess();
+
+            qstr = @" select DISTINCT tblServiceMaster.ServiceId
+                    from tblIssueTicketMaster
+                    LEFT OUTER JOIN tblServiceMaster ON tblIssueTicketMaster.ToCraftmanType like '%' + tblServiceMaster.ServiceName + '%'
+                    where tblIssueTicketMaster.TicketId = " + TicketId;
+
+            reader = db.ReadDB(qstr);
+
+            serviceIdList = "";
+
+            while (reader.Read())
+            {
+                if (serviceIdList == "")
+                {
+                    serviceIdList = (reader["ServiceId"] == DBNull.Value ? "" : reader["ServiceId"].ToString());
+                }
+                else
+                {
+                    serviceIdList = serviceIdList + "," + (reader["ServiceId"] == DBNull.Value ? "" : reader["ServiceId"].ToString());
+                }
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+
+            int userId = 0;
+
+            qstr = @" select  tblUserMaster.pkey_UId
+                    from	tblIssueTicketMaster
+                    LEFT OUTER JOIN tblUserMaster ON tblIssueTicketMaster.ReportingPerson = tblUserMaster.Username
+                    where tblIssueTicketMaster.TicketId = " + TicketId;
+
+            reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                userId = reader["pkey_UId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pkey_UId"]);
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+
+            qstr = @" SELECT	DISTINCT tblCompanyMaster.pCompId 
+                    FROM   tblCompanyMaster  
+                    INNER JOIN tblCompanyServices ON tblCompanyMaster.pCompId = tblCompanyServices.pCompId  
+                    INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId  
+                    INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId  
+                    AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR tblCompanyCountyRel.MunicipalityId = 0)  
+                    WHERE tblUserMaster.pkey_UId = " + userId.ToString();
+
+            if (serviceIdList != "")
+            {
+                qstr = qstr
+                    + " AND tblCompanyServices.ServiceId in (" + serviceIdList + ") ";
+            }
+
+            string companyIdList = "";
+
+            while (reader.Read())
+            {
+                if (companyIdList == "")
+                {
+                    companyIdList = (reader["pCompId"] == DBNull.Value ? "" : reader["pCompId"].ToString());
+                }
+                else
+                {
+                    companyIdList = companyIdList + "," + (reader["pCompId"] == DBNull.Value ? "" : reader["pCompId"].ToString());
+                }
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            qstr = @" SELECT Id, pCompId, Token, Platform, RegisteredOn
+                    FROM   tblCompanyUserDevices  
+                    WHERE pCompId IN (" + companyIdList;
+
+            reader = db.ReadDB(qstr);
+
+            //ArrayList DeviceTokenModelList = new ArrayList();
+
+            List<string> tokenList = new();
+
+            while (reader.Read())
+            {
+                //DeviceTokenModel pDeviceTokenModel = new DeviceTokenModel();
+
+                //pDeviceTokenModel.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
+                //pDeviceTokenModel.Token = reader["Token"] == DBNull.Value ? "" : (string)reader["Token"];
+                //pDeviceTokenModel.Platform = reader["Platform"] == DBNull.Value ? "" : (string)reader["Platform"];
+
+                //DeviceTokenModelList.Add(pDeviceTokenModel);
+
+                tokenList.Add(reader["Token"] == DBNull.Value ? "" : (string)reader["Token"]);
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            return tokenList;
+        }
+
 
     }
 }

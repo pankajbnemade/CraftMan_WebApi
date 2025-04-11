@@ -1,3 +1,22 @@
+CREATE TABLE tblCompanyUserDevices (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    pCompId INT NOT NULL,
+    Token NVARCHAR(512) NOT NULL,
+    Platform NVARCHAR(20) NOT NULL,  -- e.g., 'android', 'ios'
+    RegisteredOn DATETIME NOT NULL,
+
+    CONSTRAINT FK_tblCompanyUserDevices_tblCompanyMaster FOREIGN KEY (pCompId)
+        REFERENCES tblCompanyMaster(pCompId)
+        ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX IX_tblCompanyUserDevices_User_Token
+ON tblCompanyUserDevices (pCompId, Token);
+
+
+----------------------------
+
+
 ALTER TABLE [tblCompanyCountyRel]
 ADD CONSTRAINT FK_tblCompanyCountyRel_tblCompanyMaster_pCompId
 FOREIGN KEY (pCompId)
