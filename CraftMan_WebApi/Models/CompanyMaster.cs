@@ -248,6 +248,7 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertCompany(CompanyMaster _Company)
         {
+            int is24X7 = _Company.Is24X7 == null ? 0 : (_Company.Is24X7 == true ? 1 : 0);
 
             string qstr = " INSERT into tblCompanyMaster" +
                 " (" +
@@ -258,7 +259,8 @@ namespace CraftMan_WebApi.Models
                 "   VALUES('" + _Company.Username.Trim() + "', '" + _Company.Password + "', '" + _Company.Active + "', '" + _Company.LocationId + "', '" + _Company.MobileNumber + "', '" + _Company.ContactPerson +
                         "', '" + _Company.EmailId.Trim() + "'," + " getdate(), " + "'" + _Company.CompanyName.Trim() + "', '" + _Company.CompanyRegistrationNumber + "', '" + _Company.CompanyPresentation +
                         "', '" + _Company.CompetenceDescription + "', '" + _Company.CompanyReferences + "', '" + _Company.LogoImageName + "', '" + _Company.LogoImagePath + "', "
-                        + "1" //is24X7
+                        //+ "1" //is24X7
+                        + is24X7
                         +
                 ")";
 
