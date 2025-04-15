@@ -1,0 +1,113 @@
+ public class DeviceTokenModel
+ {
+     public int pCompId { get; set; }
+     public string Token { get; set; }  
+     public string Platform { get; set; } // "android" or "ios"
+ }
+
+
+
+--------------api/endpoint to save token-------------
+
+
+[ApiController]
+[Route("api/[controller]")]
+public class DeviceTokenController : ControllerBase
+{
+    [HttpPost]
+    [Route("SaveDeviceToken")]
+    public Response SaveDeviceToken([FromBody] DeviceTokenModel _DeviceTokenModel)
+    {
+        return DeviceTokenExtended.SaveNewDeviceToken(_DeviceTokenModel);
+    }
+
+}
+
+-------------------------
+
+
+
+namespace CraftMan_WebApi.Helper
+{
+    using Google.Apis.Auth.OAuth2;
+    using System.Net.Http.Headers;
+    using System.Text;
+    using System.Text.Json;
+
+    public class FirebaseNotificationService
+    {
+        private readonly IConfiguration _config;
+
+        public FirebaseNotificationService(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        public async Task SendNotificationAsync(List<string> tokens, string title, string body)
+        {
+            string projectId = _config["Firebase:ProjectId"];
+            string credentialsPath = _config["Firebase:CredentialsPath"];
+
+            // Load the GoogleCredential from file
+            var googleCredential = GoogleCredential
+                .FromFile(credentialsPath)
+                .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
+
+            // Get the access token
+            var accessToken = await googleCredential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            foreach (var token in tokens)
+            {
+                var payload = new
+                {
+                    message = new
+                    {
+                        token,
+                        notification = new
+                        {
+                            title,
+                            body
+                        }
+                    }
+                };
+
+                var jsonPayload = JsonSerializer.Serialize(payload);
+                var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync($"https://fcm.googleapis.com/v1/projects/{projectId}/messages:send", content);
+                string result = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"Notification sent to {token}: {response.StatusCode} - {result}");
+            }
+        }
+
+
+
+
+    }
+
+
+}
+
+----------------------- issue ticket code and notification send----
+
+[HttpPost]
+[Route("IssueTicket")]
+public async Task<Response> IssueTicket([FromForm] IssueTicket _IssueTicket)
+{
+    Response response = new Response();
+
+    response = IssueTicketExtended.IssueNewTicket(_IssueTicket);
+
+    List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(response.StatusCode);
+
+    if (tokenList.Any())
+    {
+        await _notificationService.SendNotificationAsync(tokenList, "New Job Card", "A new job card was created.");
+    }
+
+    return response;
+}
