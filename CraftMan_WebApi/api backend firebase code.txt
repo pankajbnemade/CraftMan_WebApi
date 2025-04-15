@@ -43,49 +43,29 @@ namespace CraftMan_WebApi.Helper
             _config = config;
         }
 
-        public async Task SendNotificationAsync(List<string> tokens, string title, string body)
-        {
-            string projectId = _config["Firebase:ProjectId"];
-            string credentialsPath = _config["Firebase:CredentialsPath"];
-
-            // Load the GoogleCredential from file
-            var googleCredential = GoogleCredential
-                .FromFile(credentialsPath)
-                .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
-
-            // Get the access token
-            var accessToken = await googleCredential.UnderlyingCredential.GetAccessTokenForRequestAsync();
-
+        public async Task SendNotificationAsync(List<string> tokens, string title, string body) {
             using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             foreach (var token in tokens)
             {
                 var payload = new
                 {
-                    message = new
-                    {
-                        token,
-                        notification = new
-                        {
-                            title,
-                            body
-                        }
-                    }
+                    to = token,
+                    title = title,
+                    body = body,
+                    sound = "default"
                 };
 
                 var jsonPayload = JsonSerializer.Serialize(payload);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync($"https://fcm.googleapis.com/v1/projects/{projectId}/messages:send", content);
-                string result = await response.Content.ReadAsStringAsync();
+                var response = await client.PostAsync("https://exp.host/--/api/v2/push/send", content);
+                var result = await response.Content.ReadAsStringAsync();
 
-                Console.WriteLine($"Notification sent to {token}: {response.StatusCode} - {result}");
+                Console.WriteLine($"?? Expo Push sent to {token}: {response.StatusCode} - {result}");
             }
         }
-
-
-
 
     }
 

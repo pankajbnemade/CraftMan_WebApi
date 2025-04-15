@@ -47,7 +47,8 @@ namespace CraftMan_WebApi.Models
 
             Response strReturn = new Response();
 
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, CountyId, MunicipalityId from tblIssueTicketMaster where   ToCraftmanType ='" + _IssueTicket.ToCraftmanType + "' and   ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
+            string qstr = @"select TicketId from tblIssueTicketMaster 
+                            where ToCraftmanType = '" + _IssueTicket.ToCraftmanType + "' and ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -537,10 +538,10 @@ namespace CraftMan_WebApi.Models
                 " SELECT CountyId, MunicipalityId " +
                 " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
                 " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
-                " INNER JOIN( " + 
+                " INNER JOIN( " +
                 " SELECT ServiceName " +
                 " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
-                " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " + 
+                " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " +
                 " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
                 " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
                 " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
@@ -697,6 +698,7 @@ namespace CraftMan_WebApi.Models
             string qstr;
             string serviceIdList;
             SqlDataReader reader;
+            List<string> tokenList = new();
 
             DBAccess db = new DBAccess();
 
@@ -776,31 +778,33 @@ namespace CraftMan_WebApi.Models
             reader.Close();
             reader.Dispose();
 
-            qstr = @" SELECT Id, pCompId, Token, Platform, RegisteredOn
+            if (companyIdList != "")
+            {
+                qstr = @" SELECT Id, pCompId, Token, Platform, RegisteredOn
                     FROM   tblCompanyUserDevices  
                     WHERE pCompId IN (" + companyIdList + ")";
 
-            reader = db.ReadDB(qstr);
+                reader = db.ReadDB(qstr);
 
-            //ArrayList DeviceTokenModelList = new ArrayList();
+                //ArrayList DeviceTokenModelList = new ArrayList();
 
-            List<string> tokenList = new();
 
-            while (reader.Read())
-            {
-                //DeviceTokenModel pDeviceTokenModel = new DeviceTokenModel();
+                while (reader.Read())
+                {
+                    //DeviceTokenModel pDeviceTokenModel = new DeviceTokenModel();
 
-                //pDeviceTokenModel.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
-                //pDeviceTokenModel.Token = reader["Token"] == DBNull.Value ? "" : (string)reader["Token"];
-                //pDeviceTokenModel.Platform = reader["Platform"] == DBNull.Value ? "" : (string)reader["Platform"];
+                    //pDeviceTokenModel.pCompId = reader["pCompId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pCompId"]);
+                    //pDeviceTokenModel.Token = reader["Token"] == DBNull.Value ? "" : (string)reader["Token"];
+                    //pDeviceTokenModel.Platform = reader["Platform"] == DBNull.Value ? "" : (string)reader["Platform"];
 
-                //DeviceTokenModelList.Add(pDeviceTokenModel);
+                    //DeviceTokenModelList.Add(pDeviceTokenModel);
 
-                tokenList.Add(reader["Token"] == DBNull.Value ? "" : (string)reader["Token"]);
+                    tokenList.Add(reader["Token"] == DBNull.Value ? "" : (string)reader["Token"]);
+                }
+
+                reader.Close();
+                reader.Dispose();
             }
-
-            reader.Close();
-            reader.Dispose();
 
             return tokenList;
         }
