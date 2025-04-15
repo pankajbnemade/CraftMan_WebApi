@@ -14,6 +14,7 @@ namespace CraftMan_WebApi.Models
     {
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
+        public string ServiceName_Swedish { get; set; }
         public IFormFile? ServiceImage { get; set; }
         public string? ImageName { get; set; }
         public string? ImagePath { get; set; }
@@ -24,7 +25,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT  ServiceId, ServiceName, ImageName, ImagePath  FROM  dbo.tblServiceMaster where ServiceId="
+            string qstr = " SELECT  ServiceId, ServiceName, ServiceName_Swedish, ImageName, ImagePath  FROM  dbo.tblServiceMaster where ServiceId="
                         + ServiceId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -37,6 +38,7 @@ namespace CraftMan_WebApi.Models
             {
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
                 pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
+                pServiceMaster.ServiceName_Swedish = reader["ServiceName_Swedish"] == DBNull.Value ? "" : (string)reader["ServiceName_Swedish"];
                 pServiceMaster.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pServiceMaster.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
 
@@ -71,7 +73,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT  ServiceId, ServiceName, ImageName, ImagePath FROM  dbo.tblServiceMaster";
+            string qstr = " SELECT  ServiceId, ServiceName, ServiceName_Swedish, ImageName, ImagePath FROM  dbo.tblServiceMaster";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -83,6 +85,7 @@ namespace CraftMan_WebApi.Models
 
                 pServiceMaster.ServiceId = Convert.ToInt32(reader["ServiceId"]);
                 pServiceMaster.ServiceName = reader["ServiceName"] == DBNull.Value ? "" : (string)reader["ServiceName"];
+                pServiceMaster.ServiceName_Swedish = reader["ServiceName_Swedish"] == DBNull.Value ? "" : (string)reader["ServiceName_Swedish"];
                 pServiceMaster.ImageName = reader["ImageName"] == DBNull.Value ? "" : (string)reader["ImageName"];
                 pServiceMaster.ImagePath = reader["ImagePath"] == DBNull.Value ? "" : (string)reader["ImagePath"];
 
@@ -158,7 +161,7 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ImageName, ImagePath)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
+                string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ServiceName_Swedish, ImageName, ImagePath)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ServiceName_Swedish + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
 
                 DBAccess db = new DBAccess();
                 int i = db.ExecuteNonQuery(qstr);
@@ -177,6 +180,7 @@ namespace CraftMan_WebApi.Models
             string qstr = " UPDATE dbo.tblServiceMaster " +
                             " SET  " +
                             "   ServiceName = '" + _Service.ServiceName + "', " +
+                            "   ServiceName_Swedish = '" + _Service.ServiceName_Swedish + "', " +
                             "   ImageName = " + (_Service.ImageName == "" ? "ImageName," : "'" + _Service.ImageName + "', ") +
                             "   ImagePath = " + (_Service.ImagePath == "" ? "ImagePath" : "'" + _Service.ImagePath + "'") +
                             "   WHERE " +
