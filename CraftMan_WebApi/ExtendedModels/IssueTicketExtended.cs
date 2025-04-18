@@ -4,6 +4,8 @@ using CraftMan_WebApi.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Collections;
+using System.Drawing.Imaging;
+using System.Drawing;
 namespace CraftMan_WebApi.ExtendedModels
 {
     public class IssueTicketExtended
@@ -74,23 +76,72 @@ namespace CraftMan_WebApi.ExtendedModels
                         foreach (var image in _IssueTicket.Images)
                         {
                             string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+                            string compressedImageName = Guid.NewGuid().ToString() + ".jpg"; // Save as JPEG
+                            string imagePath = Path.Combine(uploadFolder, compressedImageName);
 
-                            string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                            string imagePath = Path.Combine(uploadFolder, imageName);
-
-                            using (var stream = new FileStream(imagePath, FileMode.Create))
+                            using (var imageStream = image.OpenReadStream())
+                            using (var originalImage = Image.FromStream(imageStream))
                             {
-                                image.CopyTo(stream);
+                                // Resize logic
+                                int maxDimension = 1024;
+                                int newWidth = originalImage.Width;
+                                int newHeight = originalImage.Height;
+
+                                if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                                {
+                                    float ratioX = (float)maxDimension / originalImage.Width;
+                                    float ratioY = (float)maxDimension / originalImage.Height;
+                                    float ratio = Math.Min(ratioX, ratioY);
+
+                                    newWidth = (int)(originalImage.Width * ratio);
+                                    newHeight = (int)(originalImage.Height * ratio);
+                                }
+
+                                using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                                {
+                                    // Set JPEG compression
+                                    var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                        .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                                    var encoderParameters = new EncoderParameters(1);
+                                    encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // Adjust quality here
+
+                                    // Save as compressed JPEG
+                                    resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                }
                             }
 
-                            IssueTicketImage _IssueTicketImage = new IssueTicketImage();
-
-                            _IssueTicketImage.TicketId = _IssueTicket.TicketId;
-                            _IssueTicketImage.ImageName = originalName;
-                            _IssueTicketImage.ImagePath = imagePath;
+                            // Save image info to list
+                            IssueTicketImage _IssueTicketImage = new IssueTicketImage
+                            {
+                                TicketId = _IssueTicket.TicketId,
+                                ImageName = originalName,
+                                ImagePath = imagePath
+                            };
 
                             uploadedImages.Add(_IssueTicketImage);
                         }
+
+                        //foreach (var image in _IssueTicket.Images)
+                        //{
+                        //    string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+
+                        //    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                        //    string imagePath = Path.Combine(uploadFolder, imageName);
+
+                        //    using (var stream = new FileStream(imagePath, FileMode.Create))
+                        //    {
+                        //        image.CopyTo(stream);
+                        //    }
+
+                        //    IssueTicketImage _IssueTicketImage = new IssueTicketImage();
+
+                        //    _IssueTicketImage.TicketId = _IssueTicket.TicketId;
+                        //    _IssueTicketImage.ImageName = originalName;
+                        //    _IssueTicketImage.ImagePath = imagePath;
+
+                        //    uploadedImages.Add(_IssueTicketImage);
+                        //}
 
                         foreach (IssueTicketImage _IssueTicketImage in uploadedImages)
                         {
@@ -160,60 +211,113 @@ namespace CraftMan_WebApi.ExtendedModels
                         strReturn.StatusCode = 0;
                         strReturn.StatusMessage = "Company comment not updated. Current ticket status should be " + TicketStatus.Inprogress.ToString();
                     }
-                }
-
-                int i = IssueTicket.UpdateCompanyComment(_IssueTicketCompanyComment);
-
-                if (i > 0)
-                {
-                    strReturn.StatusCode = 1;
-                    strReturn.StatusMessage = "Comment updated successfully";
-
-                    if (_IssueTicketCompanyComment.Images != null && _IssueTicketCompanyComment.Images.Count > 0)
+                    else
                     {
-                        string uploadFolder = @"C:\CraftManImages\TicketImages";
+                        int i = IssueTicket.UpdateCompanyComment(_IssueTicketCompanyComment);
 
-                        if (!Directory.Exists(uploadFolder))
-                            Directory.CreateDirectory(uploadFolder);
-
-                        List<IssueTicketImage> uploadedImages = new List<IssueTicketImage>();
-
-                        foreach (var image in _IssueTicketCompanyComment.Images)
+                        if (i > 0)
                         {
-                            string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+                            strReturn.StatusCode = 1;
+                            strReturn.StatusMessage = "Comment updated successfully";
 
-                            string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                            string imagePath = Path.Combine(uploadFolder, imageName);
-
-                            using (var stream = new FileStream(imagePath, FileMode.Create))
+                            if (_IssueTicketCompanyComment.Images != null && _IssueTicketCompanyComment.Images.Count > 0)
                             {
-                                image.CopyTo(stream);
+                                string uploadFolder = @"C:\CraftManImages\TicketImages";
+
+                                if (!Directory.Exists(uploadFolder))
+                                    Directory.CreateDirectory(uploadFolder);
+
+                                List<IssueTicketImage> uploadedImages = new List<IssueTicketImage>();
+
+                                foreach (var image in _IssueTicketCompanyComment.Images)
+                                {
+                                    string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+                                    string compressedImageName = Guid.NewGuid().ToString() + ".jpg"; // Save all as JPG
+                                    string imagePath = Path.Combine(uploadFolder, compressedImageName);
+
+                                    using (var imageStream = image.OpenReadStream())
+                                    using (var originalImage = Image.FromStream(imageStream))
+                                    {
+                                        // Resize if larger than 1024px width
+                                        int maxDimension = 1024;
+                                        int newWidth = originalImage.Width;
+                                        int newHeight = originalImage.Height;
+
+                                        if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                                        {
+                                            float ratioX = (float)maxDimension / originalImage.Width;
+                                            float ratioY = (float)maxDimension / originalImage.Height;
+                                            float ratio = Math.Min(ratioX, ratioY);
+
+                                            newWidth = (int)(originalImage.Width * ratio);
+                                            newHeight = (int)(originalImage.Height * ratio);
+                                        }
+
+                                        using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                                        {
+                                            var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                                                .FirstOrDefault(c => c.FormatID == ImageFormat.Jpeg.Guid);
+
+                                            var encoderParameters = new EncoderParameters(1);
+                                            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // Compress to 60% quality
+
+                                            resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                        }
+                                    }
+
+                                    IssueTicketImage _IssueTicketImage = new IssueTicketImage
+                                    {
+                                        TicketId = _IssueTicketCompanyComment.TicketId,
+                                        ImageName = originalName,
+                                        ImagePath = imagePath
+                                    };
+
+                                    uploadedImages.Add(_IssueTicketImage);
+                                }
+
+
+                                //foreach (var image in _IssueTicketCompanyComment.Images)
+                                //{
+                                //    string originalName = Path.GetFileNameWithoutExtension(image.FileName);
+
+                                //    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                                //    string imagePath = Path.Combine(uploadFolder, imageName);
+
+                                //    using (var stream = new FileStream(imagePath, FileMode.Create))
+                                //    {
+                                //        image.CopyTo(stream);
+                                //    }
+
+                                //    IssueTicketImage _IssueTicketImage = new IssueTicketImage();
+
+                                //    _IssueTicketImage.TicketId = _IssueTicketCompanyComment.TicketId;
+                                //    _IssueTicketImage.ImageName = originalName;
+                                //    _IssueTicketImage.ImagePath = imagePath;
+
+                                //    uploadedImages.Add(_IssueTicketImage);
+                                //}
+
+                                foreach (IssueTicketImage _IssueTicketImage in uploadedImages)
+                                {
+                                    i = IssueTicket.InsertTicketWorkImage(_IssueTicketImage);
+
+                                    if (i == 0)
+                                    {
+                                        strReturn.StatusMessage = "Comment updated Successfully. But images are not uploaded.";
+                                    }
+                                }
                             }
 
-                            IssueTicketImage _IssueTicketImage = new IssueTicketImage();
-
-                            _IssueTicketImage.TicketId = _IssueTicketCompanyComment.TicketId;
-                            _IssueTicketImage.ImageName = originalName;
-                            _IssueTicketImage.ImagePath = imagePath;
-
-                            uploadedImages.Add(_IssueTicketImage);
                         }
-
-                        foreach (IssueTicketImage _IssueTicketImage in uploadedImages)
+                        else
                         {
-                            i = IssueTicket.InsertTicketWorkImage(_IssueTicketImage);
-
-                            if (i == 0)
-                            {
-                                strReturn.StatusMessage = "Comment updated Successfully. But images are not uploaded.";
-                            }
+                            strReturn.StatusMessage = "Comment not updated.";
                         }
                     }
-
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Comment not updated.";
+                    strReturn.StatusMessage = "Ticket not exists.";
                 }
             }
             catch (Exception ex)

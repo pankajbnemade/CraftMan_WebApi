@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.ComponentModel.Design;
 using System.Diagnostics.Metrics;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 
 namespace CraftMan_WebApi.ExtendedModels
@@ -171,9 +173,35 @@ namespace CraftMan_WebApi.ExtendedModels
                         string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
                         string imagePath = Path.Combine(uploadFolder, imageName);
 
-                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        using (var imageStream = _CompanyMaster.LogoImage.OpenReadStream())
+
+                        using (var originalImage = Image.FromStream(imageStream))
                         {
-                            _CompanyMaster.LogoImage.CopyTo(stream);
+                            // Resize logic if needed
+                            int maxDimension = 1024;
+                            int newWidth = originalImage.Width;
+                            int newHeight = originalImage.Height;
+
+                            if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            {
+                                float ratioX = (float)maxDimension / originalImage.Width;
+                                float ratioY = (float)maxDimension / originalImage.Height;
+                                float ratio = Math.Min(ratioX, ratioY);
+
+                                newWidth = (int)(originalImage.Width * ratio);
+                                newHeight = (int)(originalImage.Height * ratio);
+                            }
+
+                            using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            {
+                                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                    .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                                var encoderParameters = new EncoderParameters(1);
+                                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+
+                                resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                            }
                         }
 
                         _CompanyMaster.LogoImageName = originalName;
@@ -317,9 +345,35 @@ namespace CraftMan_WebApi.ExtendedModels
                     string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
                     string imagePath = Path.Combine(uploadFolder, imageName);
 
-                    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    using (var imageStream = _CompanyMaster.LogoImage.OpenReadStream())
+
+                    using (var originalImage = Image.FromStream(imageStream))
                     {
-                        _CompanyMaster.LogoImage.CopyTo(stream);
+                        // Resize logic if needed
+                        int maxDimension = 1024;
+                        int newWidth = originalImage.Width;
+                        int newHeight = originalImage.Height;
+
+                        if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                        {
+                            float ratioX = (float)maxDimension / originalImage.Width;
+                            float ratioY = (float)maxDimension / originalImage.Height;
+                            float ratio = Math.Min(ratioX, ratioY);
+
+                            newWidth = (int)(originalImage.Width * ratio);
+                            newHeight = (int)(originalImage.Height * ratio);
+                        }
+
+                        using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                        {
+                            var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                            var encoderParameters = new EncoderParameters(1);
+                            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+
+                            resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                        }
                     }
 
                     _CompanyMaster.LogoImageName = originalName;
