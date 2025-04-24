@@ -14,7 +14,7 @@
             _config = config;
         }
 
-        public async Task SendNotificationAsync(List<string> tokens, string title, string body)
+        public async Task SendNotificationAsync(List<string> tokens, string title, string body, int tiketId)
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -26,7 +26,8 @@
                     to = token,
                     title = title,
                     body = body,
-                    sound = "default"
+                    sound = "default",
+                    tiketId= tiketId
                 };
 
                 var jsonPayload = JsonSerializer.Serialize(payload);
