@@ -33,13 +33,13 @@ namespace CraftMan_WebApi.Controllers
 
             response = IssueTicketExtended.IssueNewTicket(_IssueTicket);
 
-            int tiketId = response.StatusCode;
+            int ticketId = response.StatusCode;
 
-            List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(tiketId);
+            List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(ticketId);
 
             if (tokenList.Any())
             {
-                await _notificationService.SendNotificationAsync(tokenList, "New Job Card", "A new job card was created.", tiketId);
+                await _notificationService.SendNotificationAsync(tokenList, "New Job Card", "A new job card was created.", ticketId);
             }
 
             return response;
