@@ -10,6 +10,6 @@ namespace CraftMan_WebApi.Models
     {
         public int UserId { get; set; }
         public int? ServiceId { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }

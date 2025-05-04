@@ -49,6 +49,17 @@ namespace CraftMan_WebApi.Controllers
             }
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("UpdateCompany")]
+        public Response UpdateCompany([FromForm] CompanyMasterUpdateModel _Company)
+        {
+            return Companymasterextended.UpdateCompany(_Company);
+        }
+
+
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -91,15 +102,6 @@ namespace CraftMan_WebApi.Controllers
             }
         }
 
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("UpdateCompany")]
-        public Response UpdateCompany([FromBody] CompanyMasterUpdateModel _Company)
-        {
-            return Companymasterextended.UpdateCompany(_Company);
-        }
 
 
         //[Authorize]

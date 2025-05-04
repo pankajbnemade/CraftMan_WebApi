@@ -46,17 +46,17 @@ namespace CraftMan_WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetTicketsByUser")]
-        public ArrayList GetTicketsByUser(IssueTicketForUserFilter filter)
+        [Route("GetTicket")]
+        public IssueTicket GetTicket(int TicketId)
         {
-            return IssueTicketExtended.GetTicketdetailsByUser(filter);
+            return IssueTicketExtended.GetTicketdetailByTicketId(TicketId);
         }
 
         [HttpGet]
-        [Route("GetTicket")]
-        public IssueTicket GetTicketByUser(int TicketId)
+        [Route("GetTicketsByUser")]
+        public ArrayList GetTicketsByUser([FromQuery] IssueTicketForUserFilter filter)
         {
-            return IssueTicketExtended.GetTicketdetailByTicketId(TicketId);
+            return IssueTicketExtended.GetTicketdetailsByUser(filter);
         }
 
         [HttpGet]

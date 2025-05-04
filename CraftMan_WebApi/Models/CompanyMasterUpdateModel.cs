@@ -8,7 +8,7 @@ namespace CraftMan_WebApi.Models
 {
     public class CompanyMasterUpdateModel
     {
-        public int? pCompId { get; set; }
+        public int pCompId { get; set; }
         public int? LocationId { get; set; }
         public string MobileNumber { get; set; }
         public string? ContactPerson { get; set; }

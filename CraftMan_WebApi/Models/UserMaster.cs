@@ -51,6 +51,9 @@ namespace CraftMan_WebApi.Models
                 pUserMaster.CreatedOn = reader["CreatedOn"] == DBNull.Value ? null : (DateTime)reader["CreatedOn"];
                 pUserMaster.UpdatedOn = reader["UpdatedOn"] == DBNull.Value ? null : (DateTime)reader["UpdatedOn"];
 
+                pUserMaster.CountyId = reader["CountyId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CountyId"]);
+                pUserMaster.MunicipalityId = reader["MunicipalityId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["MunicipalityId"]);
+
                 pUserMaster.CountyName = reader["CountyName"] == DBNull.Value ? "" : reader["CountyName"].ToString();
                 pUserMaster.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : reader["MunicipalityName"].ToString();
             }
@@ -129,7 +132,8 @@ namespace CraftMan_WebApi.Models
                             "   ContactPerson = '" + _User.ContactPerson + "', " +
                             "   EmailId = '" + _User.EmailId + "', " +
                             "   CountyId = " + _User.CountyId + ", " +
-                            "   MunicipalityId = " + _User.MunicipalityId +
+                            "   MunicipalityId = " + _User.MunicipalityId + ", " +
+                            "   UpdatedOn = getdate() " +
                             "   WHERE " +
                             "   pkey_UId = " + _User.UserId + "  ";
 

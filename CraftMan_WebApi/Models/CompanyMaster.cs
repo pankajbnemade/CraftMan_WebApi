@@ -292,16 +292,17 @@ namespace CraftMan_WebApi.Models
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
                             "   EmailId = '" + _Company.EmailId + "'," +
-                            "   Is24X7 = " + is24X7 +
+                            "   Is24X7 = " + is24X7 + "," +
                             "   CompanyName = '" + _Company.CompanyName + "'," +
                             "   CompanyRegistrationNumber = '" + _Company.CompanyRegistrationNumber + "'," +
                             "   CompanyPresentation = '" + _Company.CompanyPresentation + "'," +
                             "   CompetenceDescription = '" + _Company.CompetenceDescription + "'," +
                             "   CompanyReferences = '" + _Company.CompanyReferences + "'," +
-                            "   LogoImageName = " + (_Company.LogoImageName == "" ? "LogoImageName" : "'" + _Company.LogoImageName + "',") +
-                            "   LogoImagePath = " + (_Company.LogoImagePath == "" ? "LogoImagePath" : "'" + _Company.LogoImagePath + "'") +
+                            "   LogoImageName = " + (_Company.LogoImageName == "" ? "LogoImageName" : "'" + _Company.LogoImageName + "'") + ", " +
+                            "   LogoImagePath = " + (_Company.LogoImagePath == "" ? "LogoImagePath" : "'" + _Company.LogoImagePath + "'") + ", " +
+                            "   UpdatedOn = getdate() " +
                             "   WHERE " +
-                            "   AND  pCompId =" + _Company.pCompId;
+                            "    pCompId =" + _Company.pCompId;
 
             DBAccess db = new DBAccess();
 

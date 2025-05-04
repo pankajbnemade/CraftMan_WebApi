@@ -421,14 +421,19 @@ namespace CraftMan_WebApi.Models
                             " WHERE  tblUserMaster.pkey_UId = " + filter.UserId;
 
 
-            if (filter.ServiceId != null)
+            if (filter.ServiceId != null && filter.ServiceId != 0)
             {
                 ServiceMaster serviceMaster = ServiceMaster.GetServiceDetail(filter.ServiceId);
 
                 if (serviceMaster != null)
                 {
-                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%' " + serviceMaster.ServiceName + " '%' ";
+                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%" + serviceMaster.ServiceName + "%' ";
                 }
+            }
+
+            if (filter.Status != null && filter.Status != "")
+            {
+                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
             }
 
 
@@ -597,13 +602,13 @@ namespace CraftMan_WebApi.Models
                     " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
 
 
-            if (filter.ServiceId != null)
+            if (filter.ServiceId != null && filter.ServiceId != 0)
             {
                 ServiceMaster serviceMaster = ServiceMaster.GetServiceDetail(filter.ServiceId);
 
                 if (serviceMaster != null)
                 {
-                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%' " + serviceMaster.ServiceName + " '%' ";
+                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%" + serviceMaster.ServiceName + "%' ";
                 }
             }
 
