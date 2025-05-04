@@ -342,14 +342,12 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Invalid ticket details";
                 }
-
-                if (pIssueTicket.TicketId == 0)
+                else if (pIssueTicket.TicketId == 0)
                 {
                     strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Invalid ticket details";
                 }
-
-                if (Enum.IsDefined(typeof(TicketStatus), _IssueTicketUpdateStatus.Status) == false)
+                else if (Enum.IsDefined(typeof(TicketStatus), _IssueTicketUpdateStatus.Status) == false)
                 {
                     strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Ticket status not updated. Invalid Status " + _IssueTicketUpdateStatus.Status;
@@ -378,6 +376,13 @@ namespace CraftMan_WebApi.ExtendedModels
                     strReturn.StatusCode = 0;
                     strReturn.StatusMessage = "Ticket status not updated. Invalid CompanyId";
                 }
+                else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
+                     && IssueTicket.ValidateAcceptedOTP(_IssueTicketUpdateStatus) == false)
+                {
+                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Invalid OTP. Please check and try again.";
+                }
+
                 else if (TicketStatus.Inprogress.ToString() == _IssueTicketUpdateStatus.Status
                     && pIssueTicket.Status != TicketStatus.Accepted.ToString())
                 {

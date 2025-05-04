@@ -27,6 +27,7 @@ namespace CraftMan_WebApi.Models
         public int? ReviewStarRating { get; set; }
         public string? ReviewComment { get; set; }
         public string? CompanyComment { get; set; }
+        public int? AcceptedOTP { get; set; }
         public int? ClosingOTP { get; set; }
         public int? CompanyId { get; set; }
         public string? CompanyEmailId { get; set; }
@@ -72,8 +73,16 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                string qstr = " INSERT INTO tblIssueTicketMaster   (  ReportingPerson, ReportingDescription, OperationId, Status, ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId, CreatedOn) " +
-                    " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId + "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" + _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId + ", getdate()" + ")";
+                Random random = new Random();
+
+                int acceptedOTP = random.Next(1000, 10000);
+
+                string qstr = " INSERT INTO tblIssueTicketMaster   (ReportingPerson, ReportingDescription, OperationId, Status, " +
+                            " ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId, AcceptedOTP, CreatedOn) " +
+                            " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId +
+                            "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" +
+                            _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId +
+                            ", " + acceptedOTP + " ," + " getdate()" + ")";
 
                 DBAccess db = new DBAccess();
 
@@ -201,7 +210,31 @@ namespace CraftMan_WebApi.Models
 
             while (reader.Read())
             {
-                if (_IssueTicketUpdateStatus.ClosingOTP == Convert.ToInt32(reader["ClosingOTP"]) && Convert.ToInt32(reader["ClosingOTP"]) != 0)
+                if (_IssueTicketUpdateStatus.OTP == Convert.ToInt32(reader["ClosingOTP"]) && Convert.ToInt32(reader["ClosingOTP"]) != 0)
+                {
+                    return true;
+                }
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            return false;
+        }
+
+        public static Boolean ValidateAcceptedOTP(IssueTicketUpdateStatus _IssueTicketUpdateStatus)
+        {
+            DBAccess db = new DBAccess();
+
+            Response strReturn = new Response();
+
+            string qstr = " select ISNULL(AcceptedOTP, 0) AS AcceptedOTP from tblIssueTicketMaster where  TicketId=" + _IssueTicketUpdateStatus.TicketId;
+
+            SqlDataReader reader = db.ReadDB(qstr);
+
+            while (reader.Read())
+            {
+                if (_IssueTicketUpdateStatus.OTP == Convert.ToInt32(reader["AcceptedOTP"]) && Convert.ToInt32(reader["AcceptedOTP"]) != 0)
                 {
                     return true;
                 }

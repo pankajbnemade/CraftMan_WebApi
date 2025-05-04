@@ -11,7 +11,7 @@ namespace CraftMan_WebApi.Models
     {
         public int TicketId { get; set; }
         public string? Status { get; set; }
-        public int? ClosingOTP { get; set; }
+        public int? OTP { get; set; }
         public int? CompanyId { get; set; }
 
     }

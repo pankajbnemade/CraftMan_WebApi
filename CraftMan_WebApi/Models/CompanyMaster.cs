@@ -384,6 +384,60 @@ namespace CraftMan_WebApi.Models
                     }
                 }
 
+
+                //  --------------------
+
+                ArrayList CountyRelationList = CompanyCountyRelation.GetRelationDetailByCompany(Convert.ToInt32(pCompanyMaster.pCompId));
+
+                ArrayList CompanyServiceList = CompanyServices.GetServicesByCompany(Convert.ToInt32(pCompanyMaster.pCompId));
+
+                if (CompanyServiceList != null && CompanyServiceList.Count != 0)
+                {
+                    pCompanyMaster.ServiceIdList = CompanyServiceList.Cast<CompanyServices>()
+                                                  .Select(service => service.ServiceId.ToString())
+                                                  .Distinct()
+                                                  .ToArray();
+
+                    pCompanyMaster.ServiceList = CompanyServiceList.Cast<CompanyServices>().ToList();
+                }
+
+                if (CountyRelationList != null && CountyRelationList.Count != 0)
+                {
+                    pCompanyMaster.CountyIdList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                  .Select(relation => relation.CountyId.ToString())
+                                                  .Distinct()
+                                                  .ToArray();
+
+                    pCompanyMaster.MunicipalityIdList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                    .Where(w => w.MunicipalityId != 0 && w.MunicipalityId != null)
+                                                    .Select(relation => relation.MunicipalityId.ToString())
+                                                    .Distinct()
+                                                    .ToArray();
+
+                    pCompanyMaster.CountyList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                .Select(county => new CountyMaster()
+                                                {
+                                                    CountyId = county.CountyId,
+                                                    CountyName = county.CountyName
+                                                })
+                                                .Distinct()
+                                                .ToList();
+
+                    pCompanyMaster.MunicipalityList = CountyRelationList.Cast<CompanyCountyRelation>()
+                                                    .Where(w => w.MunicipalityId != 0)
+                                                    .Select(municipality => new MunicipalityMaster()
+                                                    {
+                                                        MunicipalityId = municipality.MunicipalityId == null ? 0 : Convert.ToInt32(municipality.MunicipalityId),
+                                                        MunicipalityName = municipality.MunicipalityName,
+                                                        CountyId = municipality.CountyId,
+                                                        CountyName = municipality.CountyName
+                                                    })
+                                                    .Distinct()
+                                                    .ToList();
+
+                    pCompanyMaster.CountyRelationList = CountyRelationList.Cast<CompanyCountyRelation>().Distinct().ToList();
+                }
+
                 CompanyMasterList.Add(pCompanyMaster);
             }
 
@@ -392,7 +446,6 @@ namespace CraftMan_WebApi.Models
 
             return CompanyMasterList;
         }
-
 
     }
 }
