@@ -38,6 +38,15 @@ namespace CraftMan_WebApi.Controllers
 
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("UpdateUser")]
+        public Response UpdateUser([FromBody] UserMasterUpdateModel _User)
+        {
+            return Usermasterextended.UpdateUser(_User);
+        }
+
 
         [HttpPost("ForgotPassword")]
         public IActionResult ForgotPassword([FromBody] string email)

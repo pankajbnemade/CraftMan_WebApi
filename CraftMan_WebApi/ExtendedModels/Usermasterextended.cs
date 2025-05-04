@@ -1,8 +1,8 @@
 ﻿
-using CraftMan_WebApi.Models; 
+using CraftMan_WebApi.Models;
 namespace CraftMan_WebApi.ExtendedModels
 {
-    public class Usermasterextended   
+    public class Usermasterextended
     {
         public static UserMaster GetUserDetail(string EmailId)
         {
@@ -17,13 +17,33 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static Response RegistrationForUser(UserMaster _User ) 
+        public static Response RegistrationForUser(UserMaster _User)
         {
-            try 
-            { 
-                Response strReturn = new Response();
-                 
-                return UserMaster.InsertUser( _User);
+            Response strReturn = new Response();
+
+            try
+            {
+                if (UserMaster.ValidateUser(_User).StatusCode > 0)
+                {
+                    strReturn.StatusMessage = "User already exists...";
+                    strReturn.StatusCode = 0;
+                }
+                else
+                {
+                    int i = UserMaster.InsertUser(_User);
+
+                    if (i > 0)
+                    {
+                        strReturn.StatusCode = i;
+                        strReturn.StatusMessage = "User Registered Successfully";
+                    }
+                    else
+                    {
+                        strReturn.StatusMessage = "User not registered";
+                    }
+                }
+
+                return strReturn;
             }
             catch (Exception ex)
             {
@@ -32,9 +52,10 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static Response LoginValidateForUser(LoginUser _User) {
+        public static Response LoginValidateForUser(LoginUser _User)
+        {
             try
-            {                
+            {
                 return UserMaster.LoginValidateForUser(_User);
             }
             catch (Exception ex)
@@ -43,6 +64,43 @@ namespace CraftMan_WebApi.ExtendedModels
                 throw new ApplicationException("An error occurred.", ex);
             }
         }
+
+
+        public static Response UpdateUser(UserMasterUpdateModel _User)
+        {
+            Response strReturn = new Response();
+
+            try
+            {
+                if (UserMaster.ValidateUserUpdate(_User).StatusCode > 0)
+                {
+                    strReturn.StatusMessage = "User already exists for emailId...";
+                    strReturn.StatusCode = 0;
+                }
+                else
+                {
+                    int i = UserMaster.UpdateUser(_User);
+
+                    if (i > 0)
+                    {
+                        strReturn.StatusCode = _User.UserId;
+                        strReturn.StatusMessage = "User updated successfully";
+                    }
+                    else
+                    {
+                        strReturn.StatusMessage = "User not updated";
+                    }
+                }
+
+                return strReturn;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
 
         public static Response GeneratePasswordResetToken(string email)
         {

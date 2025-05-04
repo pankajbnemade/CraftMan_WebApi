@@ -152,18 +152,16 @@ namespace CraftMan_WebApi.ExtendedModels
             Response strReturn = new Response();
             try
             {
-                if (_CompanyMaster.ValidateCompany(_CompanyMaster).StatusCode > 0)
+                if (CompanyMaster.ValidateCompany(_CompanyMaster).StatusCode > 0)
                 {
                     strReturn.StatusMessage = "Company already exists...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {
                     if (_CompanyMaster.LogoImage != null)
                     {
                         string uploadFolder = @"C:\CraftManImages\CompanyImages";
-
-                        Console.WriteLine(uploadFolder);
 
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
@@ -215,8 +213,6 @@ namespace CraftMan_WebApi.ExtendedModels
 
                     int i = CompanyMaster.InsertCompany(_CompanyMaster);//joblist added
 
-                    Console.WriteLine("InsertCompany");
-
                     if (i > 0)
                     {
                         _CompanyMaster.pCompId = i;
@@ -225,16 +221,8 @@ namespace CraftMan_WebApi.ExtendedModels
                         strReturn.StatusMessage = "Company Registered Successfully";
 
                         CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
-                        Console.WriteLine(_CompanyMaster.ServiceIdList);
-
-                        Console.WriteLine("InsertNewServices");
 
                         CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
-
-                        Console.WriteLine(_CompanyMaster.CountyIdList);
-                        Console.WriteLine(_CompanyMaster.MunicipalityIdList);
-                        Console.WriteLine("InsertNewRelations");
-
                     }
                     else
                     {
@@ -300,109 +288,120 @@ namespace CraftMan_WebApi.ExtendedModels
             return strReturn;
         }
 
-        public static Response UpdateActive(int companyId, string active)
+        //public static Response UpdateActive(int companyId, string active)
+        //{
+        //    Response strReturn = new Response();
+
+        //    try
+        //    {
+        //        int i = CompanyMaster.UpdateActive(companyId, active);
+
+        //        if (i > 0)
+        //        {
+        //            strReturn.StatusCode = companyId;
+        //            strReturn.StatusMessage = "Company active status updated successfully";
+        //        }
+        //        else
+        //        {
+        //            strReturn.StatusMessage = "Company active status not updated.";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ErrorLogger.LogError(ex);
+        //        throw new ApplicationException("An error occurred.", ex);
+        //    }
+
+        //    return strReturn;
+        //}
+
+        public static Response UpdateCompany(CompanyMasterUpdateModel _CompanyMaster)
         {
             Response strReturn = new Response();
 
             try
             {
-                int i = CompanyMaster.UpdateActive(companyId, active);
-
-                if (i > 0)
+                if (CompanyMaster.ValidateCompanyUpdate(_CompanyMaster).StatusCode > 0)
                 {
-                    strReturn.StatusCode = companyId;
-                    strReturn.StatusMessage = "Company active status updated successfully";
+                    strReturn.StatusMessage = "Company already exists for emailId...";
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Company active status not updated.";
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.LogError(ex);
-                throw new ApplicationException("An error occurred.", ex);
-            }
-
-            return strReturn;
-        }
-
-        public static Response UpdateCompany(CompanyMaster _CompanyMaster)
-        {
-            Response strReturn = new Response();
-
-            try
-            {
-                if (_CompanyMaster.LogoImage != null)
-                {
-                    string uploadFolder = @"C:\CraftManImages\CompanyImages";
-
-                    if (!Directory.Exists(uploadFolder))
-                        Directory.CreateDirectory(uploadFolder);
-
-                    string originalName = Path.GetFileNameWithoutExtension(_CompanyMaster.LogoImage.FileName);
-
-                    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
-                    string imagePath = Path.Combine(uploadFolder, imageName);
-
-                    using (var imageStream = _CompanyMaster.LogoImage.OpenReadStream())
-
-                    using (var originalImage = Image.FromStream(imageStream))
+                    if (_CompanyMaster.LogoImage != null)
                     {
-                        // Resize logic if needed
-                        int maxDimension = 1024;
-                        int newWidth = originalImage.Width;
-                        int newHeight = originalImage.Height;
+                        string uploadFolder = @"C:\CraftManImages\CompanyImages";
 
-                        if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                        if (!Directory.Exists(uploadFolder))
+                            Directory.CreateDirectory(uploadFolder);
+
+                        string originalName = Path.GetFileNameWithoutExtension(_CompanyMaster.LogoImage.FileName);
+
+                        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_CompanyMaster.LogoImage.FileName);
+                        string imagePath = Path.Combine(uploadFolder, imageName);
+
+                        using (var imageStream = _CompanyMaster.LogoImage.OpenReadStream())
+
+                        using (var originalImage = Image.FromStream(imageStream))
                         {
-                            float ratioX = (float)maxDimension / originalImage.Width;
-                            float ratioY = (float)maxDimension / originalImage.Height;
-                            float ratio = Math.Min(ratioX, ratioY);
+                            // Resize logic if needed
+                            int maxDimension = 1024;
+                            int newWidth = originalImage.Width;
+                            int newHeight = originalImage.Height;
 
-                            newWidth = (int)(originalImage.Width * ratio);
-                            newHeight = (int)(originalImage.Height * ratio);
+                            if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            {
+                                float ratioX = (float)maxDimension / originalImage.Width;
+                                float ratioY = (float)maxDimension / originalImage.Height;
+                                float ratio = Math.Min(ratioX, ratioY);
+
+                                newWidth = (int)(originalImage.Width * ratio);
+                                newHeight = (int)(originalImage.Height * ratio);
+                            }
+
+                            using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            {
+                                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                    .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                                var encoderParameters = new EncoderParameters(1);
+                                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+
+                                resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                            }
                         }
 
-                        using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
-                        {
-                            var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                                .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
-
-                            var encoderParameters = new EncoderParameters(1);
-                            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
-
-                            resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
-                        }
+                        _CompanyMaster.LogoImageName = originalName;
+                        _CompanyMaster.LogoImagePath = imagePath;
+                    }
+                    else
+                    {
+                        _CompanyMaster.LogoImageName = "";
+                        _CompanyMaster.LogoImagePath = "";
                     }
 
-                    _CompanyMaster.LogoImageName = originalName;
-                    _CompanyMaster.LogoImagePath = imagePath;
+                    int i = CompanyMaster.UpdateCompany(_CompanyMaster);
+
+                    if (i > 0)
+                    {
+                        CompanyServices.DeleteServices(Convert.ToInt32(_CompanyMaster.pCompId));
+
+                        CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
+
+                        CompanyCountyRelationExtended.DeleteRelations(Convert.ToInt32(_CompanyMaster.pCompId));
+                        CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
+
+                        strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
+                        strReturn.StatusMessage = "Company updated successfully";
+
+                    }
+                    else
+                    {
+                        strReturn.StatusMessage = "Company not registered";
+                    }
+
                 }
-                else
-                {
-                    _CompanyMaster.LogoImageName = "";
-                    _CompanyMaster.LogoImagePath = "";
-                }
 
-                int i = CompanyMaster.UpdateCompany(_CompanyMaster);
-
-                if (i > 0)
-                {
-                    strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
-                    strReturn.StatusMessage = "Company updated successfully";
-
-                    CompanyServices.DeleteServices(Convert.ToInt32(_CompanyMaster.pCompId));
-
-                    CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
-
-                    CompanyCountyRelationExtended.DeleteRelations(Convert.ToInt32(_CompanyMaster.pCompId));
-                    CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
-                }
-                else
-                {
-                    strReturn.StatusMessage = "Company not registered";
-                }
             }
             catch (Exception ex)
             {

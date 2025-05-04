@@ -212,24 +212,32 @@ namespace CraftMan_WebApi.Models
             return cnt;
         }
 
-        public Response ValidateCompany(CompanyMaster _Company)
+        public static Response ValidateCompany(CompanyMaster _Company)
         {
             string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') or upper(Username)= upper('" + _Company.Username + "')";
 
             DBAccess db = new DBAccess();
+
             return db.validate(qstr);
         }
+
+        public static Response ValidateCompanyUpdate(CompanyMasterUpdateModel _Company)
+        {
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') and pCompId != " + _Company.pCompId;
+
+            DBAccess db = new DBAccess();
+
+            return db.validate(qstr);
+        }
+
 
         public static Response LoginValidateForCompanyUser(LoginComp _User)
         {
             Response strReturn = new Response();
 
-            strReturn.StatusMessage = "Invalid User";
-            strReturn.StatusCode = 1;
-
             DBAccess db = new DBAccess();
 
-            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _User.EmailId.Trim() + "') and upper(Password)= upper('" + _User.Password + "')";
+            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _User.EmailId.Trim() + "') and Password= '" + _User.Password + "'";
 
             strReturn.StatusCode = db.ExecuteScalar(qstr);
 
@@ -241,7 +249,10 @@ namespace CraftMan_WebApi.Models
 
                 strReturn.JWTToken = token;
             }
-            else { strReturn.StatusMessage = "Invalid User!"; }
+            else
+            {
+                strReturn.StatusMessage = "Invalid User!";
+            }
 
             return strReturn;
         }
@@ -264,8 +275,6 @@ namespace CraftMan_WebApi.Models
                         +
                 ")";
 
-            Console.WriteLine(qstr);
-
             DBAccess db = new DBAccess();
 
             int i = db.ExecuteScalar(qstr);
@@ -273,21 +282,25 @@ namespace CraftMan_WebApi.Models
             return i;
         }
 
-        public static int UpdateCompany(CompanyMaster _Company)
+        public static int UpdateCompany(CompanyMasterUpdateModel _Company)
         {
+            int is24X7 = _Company.Is24X7 == null ? 0 : (_Company.Is24X7 == true ? 1 : 0);
+
             string qstr = " UPDATE tblCompanyMaster " +
                             " SET  " +
                             "   LocationId = " + _Company.LocationId + "," +
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
+                            "   EmailId = '" + _Company.EmailId + "'," +
+                            "   Is24X7 = " + is24X7 +
                             "   CompanyName = '" + _Company.CompanyName + "'," +
                             "   CompanyRegistrationNumber = '" + _Company.CompanyRegistrationNumber + "'," +
                             "   CompanyPresentation = '" + _Company.CompanyPresentation + "'," +
                             "   CompetenceDescription = '" + _Company.CompetenceDescription + "'," +
-                            "   CompanyReferences = '" + _Company.CompanyReferences + "'," + "   LogoImageName = " + (_Company.LogoImageName == "" ? "LogoImageName," : "'" + _Company.LogoImageName + "', ") +
+                            "   CompanyReferences = '" + _Company.CompanyReferences + "'," +
+                            "   LogoImageName = " + (_Company.LogoImageName == "" ? "LogoImageName" : "'" + _Company.LogoImageName + "',") +
                             "   LogoImagePath = " + (_Company.LogoImagePath == "" ? "LogoImagePath" : "'" + _Company.LogoImagePath + "'") +
                             "   WHERE " +
-                            "   UPPER(EmailId) = UPPER('" + _Company.EmailId.Trim() + "') " +
                             "   AND  pCompId =" + _Company.pCompId;
 
             DBAccess db = new DBAccess();
@@ -295,17 +308,17 @@ namespace CraftMan_WebApi.Models
             return db.ExecuteNonQuery(qstr);
         }
 
-        public static int UpdateActive(int companyId, string active)
-        {
-            string qstr = " UPDATE tblCompanyMaster " +
-                            " SET  " +
-                            " Active = " + active +
-                            " WHERE  pCompId = " + companyId;
+        //public static int UpdateActive(int companyId, string active)
+        //{
+        //    string qstr = " UPDATE tblCompanyMaster " +
+        //                    " SET  " +
+        //                    " Active = " + active +
+        //                    " WHERE  pCompId = " + companyId;
 
-            DBAccess db = new DBAccess();
+        //    DBAccess db = new DBAccess();
 
-            return db.ExecuteNonQuery(qstr);
-        }
+        //    return db.ExecuteNonQuery(qstr);
+        //}
 
         public static int UpdateCompanyIs24X7(int companyId, bool is24X7)
         {

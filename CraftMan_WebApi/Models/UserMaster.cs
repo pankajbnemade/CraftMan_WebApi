@@ -70,7 +70,7 @@ namespace CraftMan_WebApi.Models
 
             DBAccess db = new DBAccess();
 
-            string qstr = "select pkey_UId from dbo.tblUserMaster where Password='" + _User.Password + "' and Active='" + _User.Active + "' and   upper(EmailId)=upper('" + _User.EmailId.Trim() + "')  ";
+            string qstr = "select pkey_UId from dbo.tblUserMaster where Password='" + _User.Password + "' and upper(EmailId)=upper('" + _User.EmailId.Trim() + "')  ";
 
             strReturn.StatusCode = db.ExecuteScalar(qstr);
 
@@ -87,37 +87,58 @@ namespace CraftMan_WebApi.Models
             return strReturn;
         }
 
-        public static Response InsertUser(UserMaster _User)
+        public static Response ValidateUser(UserMaster _User)
         {
-            Response strReturn = new Response();
-            string qstr = "select Password from dbo.tblUserMaster where upper(EmailId)=upper('" + _User.EmailId.Trim() + "') or upper(Username)=upper('" + _User.Username.Trim() + "')";
+            string qstr = "select pkey_UId from dbo.tblUserMaster where upper(EmailId)=upper('" + _User.EmailId.Trim() + "') or upper(Username)=upper('" + _User.Username.Trim() + "')";
+
             DBAccess db = new DBAccess();
-            if (db.validate(qstr).StatusCode > 0)
-            {
-                strReturn.StatusMessage = "User already exists...";
-                strReturn.StatusCode = 1;
-            }
-            else
-            {
-                qstr = " INSERT into dbo.tblUserMaster(Username,Password,Active,LocationId,MobileNumber,ContactPerson,EmailId,CreatedOn, CountyId, MunicipalityId)     " +
+
+            return db.validate(qstr);
+        }
+
+        public static Response ValidateUserUpdate(UserMasterUpdateModel _User)
+        {
+            string qstr = "select pkey_UId from dbo.tblUserMaster where upper(EmailId) = upper('" + _User.EmailId.Trim() + "') and pkey_UId != " + _User.UserId ;
+
+            DBAccess db = new DBAccess();
+
+            return db.validate(qstr);
+        }
+
+        public static int InsertUser(UserMaster _User)
+        {
+            DBAccess db = new DBAccess();
+
+            string qstr = " INSERT into dbo.tblUserMaster(Username,Password,Active,LocationId,MobileNumber,ContactPerson,EmailId,CreatedOn, CountyId, MunicipalityId)     " +
                     " VALUES('" + _User.Username.Trim() + "','" + _User.Password + "','" + _User.Active + "','" + _User.LocationId + "','" + _User.MobileNumber + "','"
                     + _User.ContactPerson + "','" + _User.EmailId.Trim() + "', getdate()"
                     + "," + _User.CountyId + "," + _User.MunicipalityId
                     + ")";
 
-                int i = db.ExecuteScalar(qstr);
+            int i = db.ExecuteScalar(qstr);
 
-                if (i > 0)
-                {
-                    strReturn.StatusCode = i;
-                    strReturn.StatusMessage = "User Registered Successfully";
-                }
-                else
-                { strReturn.StatusMessage = "User not registered"; }
-            }
-
-            return strReturn;
+            return i;
         }
+
+        public static int UpdateUser(UserMasterUpdateModel _User)
+        {
+            string qstr = " UPDATE tblUserMaster " +
+                            " SET  " +
+                            "   LocationId = " + _User.LocationId + ", " +
+                            "   MobileNumber = '" + _User.MobileNumber + "', " +
+                            "   ContactPerson = '" + _User.ContactPerson + "', " +
+                            "   EmailId = '" + _User.EmailId + "', " +
+                            "   CountyId = " + _User.CountyId + ", " +
+                            "   MunicipalityId = " + _User.MunicipalityId +
+                            "   WHERE " +
+                            "   pkey_UId = " + _User.UserId + "  ";
+
+            DBAccess db = new DBAccess();
+
+            return db.ExecuteNonQuery(qstr);
+        }
+
+
 
     }
 }

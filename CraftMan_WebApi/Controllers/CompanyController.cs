@@ -91,37 +91,16 @@ namespace CraftMan_WebApi.Controllers
             }
         }
 
-        ////[Authorize]
-        //[HttpGet]
-        //[Route("GetCompanyJobList")]
-        //public string[] GetCompanyJobList(string Username)
-        //{
-        //    return Companymasterextended.GetCompanyDetail(Username).JobList;
-        //}
 
-        ////[Authorize]
-        //[HttpGet]
-        //[Route("GetTotalJobRequest")]
-        //public int GetTotalJobRequest(string Username)
-        //{
-        //    return Companymasterextended.GetTotalcnt(Username);
-        //}
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("UpdateCompany")]
+        public Response UpdateCompany([FromBody] CompanyMasterUpdateModel _Company)
+        {
+            return Companymasterextended.UpdateCompany(_Company);
+        }
 
-        ////[Authorize]
-        //[HttpGet]
-        //[Route("GetCompanyEmpDetail")]
-        //public ArrayList GetCompanyEmpDetail(string Username)
-        //{
-        //    return Companymasterextended.GetCompEmployeeList(Username);
-        //}
-
-        ////[Authorize]
-        //[HttpGet]
-        //[Route("GetActivecountnoofcraftsman")]
-        //public int GetCompanyEmpDetailcnt(string Username)
-        //{
-        //    return Companymasterextended.GetCompEmployeeList(Username).Count;
-        //}
 
         //[Authorize]
         [HttpPost]
