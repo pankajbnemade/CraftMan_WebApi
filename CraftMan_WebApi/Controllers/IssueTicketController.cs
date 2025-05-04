@@ -47,9 +47,9 @@ namespace CraftMan_WebApi.Controllers
 
         [HttpGet]
         [Route("GetTicketsByUser")]
-        public ArrayList GetTicketsByUser(string Username)
+        public ArrayList GetTicketsByUser(IssueTicketForUserFilter filter)
         {
-            return IssueTicketExtended.GetTicketdetailsByUser(Username);
+            return IssueTicketExtended.GetTicketdetailsByUser(filter);
         }
 
         [HttpGet]

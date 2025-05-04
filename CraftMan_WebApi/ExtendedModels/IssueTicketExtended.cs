@@ -10,11 +10,11 @@ namespace CraftMan_WebApi.ExtendedModels
 {
     public class IssueTicketExtended
     {
-        public static ArrayList GetTicketdetailsByUser(string _user)
+        public static ArrayList GetTicketdetailsByUser(IssueTicketForUserFilter filter)
         {
             try
             {
-                return IssueTicket.GetTicketsByUser(_user);
+                return IssueTicket.GetTicketsByUser(filter);
             }
             catch (Exception ex)
             {

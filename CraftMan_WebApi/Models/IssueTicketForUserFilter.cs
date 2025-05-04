@@ -6,11 +6,9 @@ using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace CraftMan_WebApi.Models
 {
-    public class IssueTicketForCompanyFilter
+    public class IssueTicketForUserFilter
     {
-        public int CompanyId { get; set; }
-        public int? CountyId { get; set; }
-        public int? MunicipalityId { get; set; }
+        public int UserId { get; set; }
         public int? ServiceId { get; set; }
         public string Status { get; set; }
     }

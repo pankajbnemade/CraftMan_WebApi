@@ -400,7 +400,7 @@ namespace CraftMan_WebApi.Models
 
         }
 
-        public static ArrayList GetTicketsByUser(string _User)
+        public static ArrayList GetTicketsByUser(IssueTicketForUserFilter filter)
         {
             ArrayList IssueTicketList = new ArrayList();
 
@@ -418,10 +418,21 @@ namespace CraftMan_WebApi.Models
                             " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
                             " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
                             " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
-                            " where  upper(ReportingPerson) = upper('" + _User.Trim() + "')   ";
+                            " WHERE  tblUserMaster.pkey_UId = " + filter.UserId;
+
+
+            if (filter.ServiceId != null)
+            {
+                ServiceMaster serviceMaster = ServiceMaster.GetServiceDetail(filter.ServiceId);
+
+                if (serviceMaster != null)
+                {
+                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%' " + serviceMaster.ServiceName + " '%' ";
+                }
+            }
+
+
             SqlDataReader reader = db.ReadDB(qstr);
-
-
 
             while (reader.Read())
             {
@@ -560,6 +571,7 @@ namespace CraftMan_WebApi.Models
             ArrayList IssueTicketList = new ArrayList();
 
             DBAccess db = new DBAccess();
+
             Response strReturn = new Response();
 
             string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
@@ -584,6 +596,17 @@ namespace CraftMan_WebApi.Models
                 " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
                     " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
 
+
+            if (filter.ServiceId != null)
+            {
+                ServiceMaster serviceMaster = ServiceMaster.GetServiceDetail(filter.ServiceId);
+
+                if (serviceMaster != null)
+                {
+                    qstr = qstr + " AND tblIssueTicketMaster.ToCraftmanType like '%' " + serviceMaster.ServiceName + " '%' ";
+                }
+            }
+
             if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
             {
                 qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
@@ -593,6 +616,8 @@ namespace CraftMan_WebApi.Models
             {
                 qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND isnull(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) ";
             }
+
+            //-------------------
 
             SqlDataReader reader = db.ReadDB(qstr);
 
