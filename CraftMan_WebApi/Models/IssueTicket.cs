@@ -255,7 +255,7 @@ namespace CraftMan_WebApi.Models
             string qstr = "select tblIssueTicketMaster.TicketId, tblIssueTicketMaster.ReportingPerson, tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
                             " tblIssueTicketMaster.ReportingDescription,tblIssueTicketMaster.Status,tblIssueTicketMaster.ToCraftmanType,tblIssueTicketMaster.Pincode, " +
                             " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
-                            " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
+                            " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
                             " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
                             " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
                             " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
@@ -287,6 +287,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.ReviewStarRating = reader["ReviewStarRating"] == DBNull.Value ? null : Convert.ToInt32(reader["ReviewStarRating"]);
                 pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
                 pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
+                pIssueTicket.AcceptedOTP = reader["AcceptedOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["AcceptedOTP"]);
                 pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
 
                 pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
@@ -408,7 +409,7 @@ namespace CraftMan_WebApi.Models
 
             string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, " +
                             " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId,  tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
-                            " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
+                            " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
                             " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
                             " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
                             " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
@@ -441,6 +442,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.ReviewStarRating = reader["ReviewStarRating"] == DBNull.Value ? null : Convert.ToInt32(reader["ReviewStarRating"]);
                 pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
                 pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
+                pIssueTicket.AcceptedOTP = reader["AcceptedOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["AcceptedOTP"]);
                 pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
 
                 pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
@@ -562,7 +564,7 @@ namespace CraftMan_WebApi.Models
 
             string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
                 " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
-                " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, ClosingOTP, " +
+                " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
                 " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
                 " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
                 " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
@@ -612,6 +614,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.ReviewStarRating = reader["ReviewStarRating"] == DBNull.Value ? null : Convert.ToInt32(reader["ReviewStarRating"]);
                 pIssueTicket.ReviewComment = reader["ReviewComment"] == DBNull.Value ? "" : reader["ReviewComment"].ToString();
                 pIssueTicket.CompanyComment = reader["CompanyComment"] == DBNull.Value ? "" : reader["CompanyComment"].ToString();
+                pIssueTicket.AcceptedOTP = reader["AcceptedOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["AcceptedOTP"]);
                 pIssueTicket.ClosingOTP = reader["ClosingOTP"] == DBNull.Value ? null : Convert.ToInt32(reader["ClosingOTP"]);
 
                 pIssueTicket.CompanyId = reader["CompanyId"] == DBNull.Value ? null : Convert.ToInt32(reader["CompanyId"]);
