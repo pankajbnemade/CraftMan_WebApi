@@ -431,9 +431,13 @@ namespace CraftMan_WebApi.Models
                 }
             }
 
-            if (filter.Status != null && filter.Status != "")
+
+            if (filter.Status != null && filter.Status != "" )
             {
-                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
+                if (filter.Status.ToUpper() != "ALL")
+                {
+                    qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
+                }
             }
 
 
