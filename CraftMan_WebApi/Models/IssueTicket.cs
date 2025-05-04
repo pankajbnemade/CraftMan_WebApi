@@ -777,13 +777,12 @@ namespace CraftMan_WebApi.Models
             reader.Close();
             reader.Dispose();
 
-
             qstr = @" SELECT	DISTINCT tblCompanyMaster.pCompId 
                     FROM   tblCompanyMaster  
                     INNER JOIN tblCompanyServices ON tblCompanyMaster.pCompId = tblCompanyServices.pCompId  
                     INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId  
                     INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId  
-                    AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR tblCompanyCountyRel.MunicipalityId = 0)  
+                    AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR isnull(tblCompanyCountyRel.MunicipalityId, 0) = 0)  
                     WHERE tblUserMaster.pkey_UId = " + userId.ToString();
 
             if (serviceIdList != "")
