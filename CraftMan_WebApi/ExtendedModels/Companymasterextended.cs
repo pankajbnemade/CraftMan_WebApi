@@ -95,11 +95,11 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
-        public static ArrayList GetCompany24X7ForUser(Int32 userId)
+        public static ArrayList GetCompany24X7ForUser(Int32 userId, int? serviceId)
         {
             try
             {
-                return CompanyMaster.GetCompany24X7ForUser(userId);
+                return CompanyMaster.GetCompany24X7ForUser(userId, serviceId);
             }
             catch (Exception ex)
             {

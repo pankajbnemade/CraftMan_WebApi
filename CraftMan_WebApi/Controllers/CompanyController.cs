@@ -116,9 +116,9 @@ namespace CraftMan_WebApi.Controllers
         //[Authorize]
         [HttpGet]
         [Route("GetCompany24X7ForUser")]
-        public ArrayList GetCompany24X7ForUser(Int32 userId)
+        public ArrayList GetCompany24X7ForUser(Int32 userId, int? serviceId)
         {
-            return Companymasterextended.GetCompany24X7ForUser(userId);
+            return Companymasterextended.GetCompany24X7ForUser(userId, serviceId);
         }
 
         //[Authorize]

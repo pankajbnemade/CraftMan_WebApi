@@ -333,24 +333,30 @@ namespace CraftMan_WebApi.Models
             return db.ExecuteNonQuery(qstr);
         }
 
-        public static ArrayList GetCompany24X7ForUser(Int32 userId)
+        public static ArrayList GetCompany24X7ForUser(int userId, int? serviceId)
         {
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT DISTINCT	tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType, " +
-                        " tblCompanyMaster.pCompId, tblCompanyMaster.LocationId, tblCompanyMaster.MobileNumber, tblCompanyMaster.ContactPerson,  " +
-                        " tblCompanyMaster.EmailId, tblCompanyMaster.CreatedOn, tblCompanyMaster.UpdatedOn, tblCompanyMaster.CompanyName,  " +
-                        " tblCompanyMaster.CompanyRegistrationNumber, tblCompanyMaster.CompanyPresentation, tblCompanyMaster.Logotype,  " +
-                        " tblCompanyMaster.CompetenceDescription, tblCompanyMaster.CompanyReferences, tblCompanyMaster.JobList,  " +
-                        " tblCompanyMaster.LogoImageName, tblCompanyMaster.LogoImagePath, tblCompanyMaster.PasswordResetToken, " +
-                        " tblCompanyMaster.ResetTokenExpiry, tblCompanyMaster.Is24X7, tblCompanyCountyRel.CountyId, tblCompanyCountyRel.MunicipalityId " +
-                        " FROM   tblCompanyMaster " +
-                        " INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId " +
-                        " INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId " +
-                        " AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR tblCompanyCountyRel.MunicipalityId = 0) " +
-                        " WHERE tblUserMaster.pkey_UId = " + userId.ToString() +
-                        " AND ISNULL(tblCompanyMaster.Is24X7, 1) = 1";
+            string qstr = @" SELECT DISTINCT    tblCompanyMaster.Username, tblCompanyMaster.Password, tblCompanyMaster.Active, tblCompanyMaster.UserType,  
+                                tblCompanyMaster.pCompId, tblCompanyMaster.LocationId, tblCompanyMaster.MobileNumber, tblCompanyMaster.ContactPerson,   
+                                tblCompanyMaster.EmailId, tblCompanyMaster.CreatedOn, tblCompanyMaster.UpdatedOn, tblCompanyMaster.CompanyName,   
+                                tblCompanyMaster.CompanyRegistrationNumber, tblCompanyMaster.CompanyPresentation, tblCompanyMaster.Logotype,   
+                                tblCompanyMaster.CompetenceDescription, tblCompanyMaster.CompanyReferences, tblCompanyMaster.JobList,   
+                                tblCompanyMaster.LogoImageName, tblCompanyMaster.LogoImagePath, tblCompanyMaster.PasswordResetToken,  
+                                tblCompanyMaster.ResetTokenExpiry, tblCompanyMaster.Is24X7, tblCompanyCountyRel.CountyId, tblCompanyCountyRel.MunicipalityId
+                            FROM   tblCompanyMaster
+                            LEFT OUTER JOIN tblCompanyServices ON tblCompanyMaster.pCompId = tblCompanyServices.pCompId
+                            INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId
+                            INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId
+                            AND (tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR tblCompanyCountyRel.MunicipalityId = 0)
+                            WHERE tblUserMaster.pkey_UId = " + userId.ToString() +
+                            " AND ISNULL(tblCompanyMaster.Is24X7, 1) = 1";
+
+            if (serviceId != null && serviceId != 0)
+            {
+                qstr = qstr + "AND ISNULL(tblCompanyServices.ServiceId, 0) = " + serviceId.ToString();
+            }
 
             SqlDataReader reader = db.ReadDB(qstr);
 
