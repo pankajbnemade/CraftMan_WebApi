@@ -291,7 +291,7 @@ namespace CraftMan_WebApi.Models
                             "   LocationId = " + _Company.LocationId + "," +
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
-                            "   EmailId = '" + _Company.EmailId + "'," +
+                            //"   EmailId = '" + _Company.EmailId + "'," +
                             "   Is24X7 = " + is24X7 + "," +
                             "   CompanyName = '" + _Company.CompanyName + "'," +
                             "   CompanyRegistrationNumber = '" + _Company.CompanyRegistrationNumber + "'," +

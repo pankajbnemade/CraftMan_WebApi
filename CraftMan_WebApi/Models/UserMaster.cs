@@ -130,7 +130,7 @@ namespace CraftMan_WebApi.Models
                             "   LocationId = " + _User.LocationId + ", " +
                             "   MobileNumber = '" + _User.MobileNumber + "', " +
                             "   ContactPerson = '" + _User.ContactPerson + "', " +
-                            "   EmailId = '" + _User.EmailId + "', " +
+                            //"   EmailId = '" + _User.EmailId + "', " +
                             "   CountyId = " + _User.CountyId + ", " +
                             "   MunicipalityId = " + _User.MunicipalityId + ", " +
                             "   UpdatedOn = getdate() " +
