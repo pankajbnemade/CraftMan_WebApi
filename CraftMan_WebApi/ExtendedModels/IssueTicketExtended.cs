@@ -426,5 +426,19 @@ namespace CraftMan_WebApi.ExtendedModels
             }
         }
 
+
+        public static ArrayList GetCompanyListForTicket(List<string> tokenList)
+        {
+            try
+            {
+                return IssueTicket.GetCompanyListForTicket(tokenList);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+                throw new ApplicationException("An error occurred.", ex);
+            }
+        }
+
     }
 }

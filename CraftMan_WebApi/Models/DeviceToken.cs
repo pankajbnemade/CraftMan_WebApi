@@ -11,7 +11,8 @@ namespace CraftMan_WebApi.Models
 
             Response strReturn = new Response();
 
-            string qstr = " select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "' and pCompId = " + _DeviceTokenModel.pCompId.ToString() ;
+            //string qstr = " select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "' and pCompId = " + _DeviceTokenModel.pCompId.ToString() ;
+            string qstr = "select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "'" ;
 
             SqlDataReader reader = db.ReadDB(qstr);
 

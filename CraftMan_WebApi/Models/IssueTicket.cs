@@ -432,7 +432,7 @@ namespace CraftMan_WebApi.Models
             }
 
 
-            if (filter.Status != null && filter.Status != "" )
+            if (filter.Status != null && filter.Status != "")
             {
                 if (filter.Status.ToUpper() != "ALL")
                 {
@@ -877,6 +877,47 @@ namespace CraftMan_WebApi.Models
 
             return tokenList;
         }
+
+
+
+        public static ArrayList GetCompanyListForTicket(List<string> tokenList)
+        {
+            string qstr;
+
+            SqlDataReader reader;
+
+            DBAccess db = new DBAccess();
+
+            string result = string.Join(",", tokenList.Select(t => $"'{t}'"));
+
+            qstr = @" select	tblCompanyMaster.pCompId, tblCompanyMaster.CompanyName, 
+                    tblCompanyMaster.EmailId, tblCompanyUserDevices.Token, tblCompanyUserDevices.Platform
+                    from	tblCompanyMaster 
+                    inner join tblCompanyUserDevices on tblCompanyUserDevices.pCompId = tblCompanyMaster.pCompId
+                    WHERE	tblCompanyUserDevices.Token in (" + result + ") ";
+
+            reader = db.ReadDB(qstr);
+
+            ArrayList arrayList = new ArrayList();  
+
+            while (reader.Read())
+            {
+                arrayList.Add(new
+                {
+                    pCompId = reader["pCompId"],
+                    CompanyName = reader["CompanyName"],
+                    EmailId = reader["EmailId"],
+                    Token = reader["Token"],
+                    Platform = reader["Platform"],
+                });
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            return arrayList;
+        }
+
 
 
     }

@@ -13,7 +13,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (DeviceToken.ValidateToken(_DeviceTokenModel) == true)
                 {
                     strReturn.StatusMessage = "Token already registered...";
-                    strReturn.StatusCode = 1;
+                    strReturn.StatusCode = 0;
                 }
                 else
                 {

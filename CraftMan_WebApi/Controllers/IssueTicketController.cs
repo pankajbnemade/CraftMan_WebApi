@@ -87,5 +87,24 @@ namespace CraftMan_WebApi.Controllers
             return IssueTicketExtended.UpdateTicketStatus(_IssueTicketUpdateStatus);
         }
 
+
+
+
+        //Temp for testing
+
+        [HttpGet]
+        [Route("GetCompanyListForTicket")]
+        public ArrayList GetCompanyListForTicket(int ticketId)
+        {
+            List<string> tokenList = IssueTicketExtended.GetCompanyDeviceTokenList(ticketId);
+
+            if (tokenList == null || tokenList.Count == 0)
+            {
+                return new ArrayList(); 
+            }
+
+            return IssueTicketExtended.GetCompanyListForTicket(tokenList);
+        }
+
     }
 }
