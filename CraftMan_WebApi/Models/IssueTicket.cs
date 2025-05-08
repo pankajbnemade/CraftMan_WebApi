@@ -594,9 +594,10 @@ namespace CraftMan_WebApi.Models
                 " SELECT CountyId, MunicipalityId " +
                 " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
                 " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
-                " INNER JOIN( " +
+                " INNER JOIN ( " +
                 " SELECT ServiceName " +
-                " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
+                " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId " +
+                " WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
                 " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " +
                 " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
                 " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
@@ -604,6 +605,29 @@ namespace CraftMan_WebApi.Models
                 " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
                 " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
                     " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
+
+
+            if (filter.Status == null)
+            {
+                filter.Status = "";
+            }
+
+
+            if (filter.Status == "" || filter.Status.ToUpper() == "ALL")
+            {
+                qstr = qstr + " AND ( ISNULL(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " " 
+                            + " OR  UPPER(tblIssueTicketMaster.Status) = '" + TicketStatus.Created.ToString().ToUpper() + "' )";
+            }
+            else if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
+            {
+                qstr = qstr + " AND ( UPPER(tblIssueTicketMaster.Status) = '" + filter.Status.ToUpper() + "' "
+                            + " AND ISNULL(tblIssueTicketMaster.CompanyId, 0) = 0 )";
+            }
+            else
+            {
+                qstr = qstr + " AND ( UPPER(tblIssueTicketMaster.Status) = '" + filter.Status.ToUpper() + "' "
+                            + " AND ISNULL(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) ";
+            }
 
 
             if (filter.ServiceId != null && filter.ServiceId != 0)
@@ -616,15 +640,6 @@ namespace CraftMan_WebApi.Models
                 }
             }
 
-            if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
-            {
-                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "'))";
-            }
-
-            if (filter.Status.ToString().ToUpper() != TicketStatus.Created.ToString().ToUpper())
-            {
-                qstr = qstr + " AND (upper(tblIssueTicketMaster.Status) = upper('" + filter.Status + "') AND isnull(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " ) ";
-            }
 
             //-------------------
 
@@ -898,7 +913,7 @@ namespace CraftMan_WebApi.Models
 
             reader = db.ReadDB(qstr);
 
-            ArrayList arrayList = new ArrayList();  
+            ArrayList arrayList = new ArrayList();
 
             while (reader.Read())
             {

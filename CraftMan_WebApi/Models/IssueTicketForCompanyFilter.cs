@@ -12,6 +12,6 @@ namespace CraftMan_WebApi.Models
         public int? CountyId { get; set; }
         public int? MunicipalityId { get; set; }
         public int? ServiceId { get; set; }
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }
