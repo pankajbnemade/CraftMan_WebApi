@@ -107,6 +107,22 @@ REFERENCES tblIssueTicketMaster(TicketId);
 
 go
 
+ALTER TABLE tblIssueTicketMaster
+ADD CONSTRAINT FK_tblIssueTicketMaster_tblCountyMaster_CountyId
+FOREIGN KEY (CountyId)
+REFERENCES tblCountyMaster(CountyId);
+
+
+go
+
+
+ALTER TABLE tblIssueTicketMaster
+ADD CONSTRAINT FK_tblIssueTicketMaster_tblMunicipalityMaster_MunicipalityId
+FOREIGN KEY (MunicipalityId)
+REFERENCES tblMunicipalityMaster(MunicipalityId);
+
+go
+
 ALTER TABLE tblIssueTicketWorkImages
 ALTER COLUMN TicketId int;
 
