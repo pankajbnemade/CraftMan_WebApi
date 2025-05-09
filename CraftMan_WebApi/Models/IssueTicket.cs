@@ -583,28 +583,51 @@ namespace CraftMan_WebApi.Models
 
             Response strReturn = new Response();
 
-            string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
-                " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
-                " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
-                " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
-                " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
-                " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
-                " FROM tblIssueTicketMaster " +
-                " INNER JOIN( " +
-                " SELECT CountyId, MunicipalityId " +
-                " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
-                " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
-                " INNER JOIN ( " +
-                " SELECT ServiceName " +
-                " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId " +
-                " WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
-                " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " +
-                " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
-                " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
-                " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
-                " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
-                " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
-                    " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
+            //string qstr = " SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode, " +
+            //    " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
+            //    " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
+            //    " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
+            //    " tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName, " +
+            //    " tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username" +
+            //    " FROM tblIssueTicketMaster " +
+            //    " INNER JOIN( " +
+            //    " SELECT CountyId, MunicipalityId " +
+            //    " FROM tblCompanyCountyRel  WHERE tblCompanyCountyRel.pCompId = " + filter.CompanyId + " ) AS tRel " +
+            //    " ON tRel.CountyId = tblIssueTicketMaster.CountyId AND tRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId " +
+            //    " INNER JOIN ( " +
+            //    " SELECT ServiceName " +
+            //    " FROM tblCompanyServices INNER JOIN tblServiceMaster on tblServiceMaster.ServiceId = tblCompanyServices.ServiceId " +
+            //    " WHERE tblCompanyServices.pCompId = " + filter.CompanyId + ") AS tServices " +
+            //    " ON tblIssueTicketMaster.ToCraftmanType like '%' + tServices.ServiceName + '%' " +
+            //    " LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId " +
+            //    " LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
+            //    " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
+            //    " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
+            //    " WHERE (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )" +
+            //        " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
+
+
+            string qstr = @" SELECT DISTINCT TicketId, ReportingPerson, Address, City, ReportingDescription, Status,ToCraftmanType,Pincode,  
+                                tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn,  
+                                tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP,  
+                                tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName,  
+                                tblIssueTicketMaster.CompanyId, tblCompanyMaster.EmailId as CompanyEmailId, tblCompanyMaster.MobileNumber as CompanyMobileNumber, tblCompanyMaster.CompanyName,  
+                                tblUserMaster.pkey_UId AS UserId, tblUserMaster.EmailId AS UserEmailId, tblUserMaster.MobileNumber AS UserMobileNumber, tblUserMaster.Username
+                        FROM tblIssueTicketMaster
+                        INNER JOIN tblCompanyCountyRel ON tblCompanyCountyRel.CountyId = tblIssueTicketMaster.CountyId 
+                                                        AND ( tblCompanyCountyRel.MunicipalityId = tblIssueTicketMaster.MunicipalityId OR ISNULL(tblCompanyCountyRel.MunicipalityId, 0) = 0 )
+                        INNER JOIN tblServiceMaster ON tblIssueTicketMaster.ToCraftmanType like '%' + tblServiceMaster.ServiceName + '%'
+                        INNER JOIN tblCompanyServices ON tblServiceMaster.ServiceId = tblCompanyServices.ServiceId
+                        LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId
+                        LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId
+                        LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId
+                        LEFT OUTER JOIN tblUserMaster ON UPPER(tblUserMaster.Username) = UPPER(tblIssueTicketMaster.ReportingPerson)  ";
+
+            qstr = qstr + " WHERE "
+                        + " tblCompanyCountyRel.pCompId = " + filter.CompanyId
+                        + " AND tblCompanyServices.pCompId = " + filter.CompanyId
+                        + " AND (" + (filter.CountyId == null ? 0 : filter.CountyId) + " = 0 OR tblIssueTicketMaster.CountyId = " + (filter.CountyId == null ? 0 : filter.CountyId) + " )"
+                        + " AND (" + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " = 0 OR tblIssueTicketMaster.MunicipalityId = " + (filter.MunicipalityId == null ? 0 : filter.MunicipalityId) + " )";
 
 
             if (filter.Status == null)
@@ -812,30 +835,39 @@ namespace CraftMan_WebApi.Models
             reader.Dispose();
 
 
-            int userId = 0;
+            //int userId = 0;
 
-            qstr = @" select  tblUserMaster.pkey_UId
-                    from	tblIssueTicketMaster
-                    LEFT OUTER JOIN tblUserMaster ON tblIssueTicketMaster.ReportingPerson = tblUserMaster.Username
-                    where tblIssueTicketMaster.TicketId = " + TicketId;
+            //qstr = @" select  tblUserMaster.pkey_UId
+            //        from	tblIssueTicketMaster
+            //        LEFT OUTER JOIN tblUserMaster ON tblIssueTicketMaster.ReportingPerson = tblUserMaster.Username
+            //        where tblIssueTicketMaster.TicketId = " + TicketId;
 
-            reader = db.ReadDB(qstr);
+            //reader = db.ReadDB(qstr);
 
-            while (reader.Read())
-            {
-                userId = reader["pkey_UId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pkey_UId"]);
-            }
+            //while (reader.Read())
+            //{
+            //    userId = reader["pkey_UId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["pkey_UId"]);
+            //}
 
-            reader.Close();
-            reader.Dispose();
+            //reader.Close();
+            //reader.Dispose();
+
+            //qstr = @" SELECT	DISTINCT tblCompanyMaster.pCompId 
+            //        FROM   tblCompanyMaster  
+            //        INNER JOIN tblCompanyServices ON tblCompanyMaster.pCompId = tblCompanyServices.pCompId  
+            //        INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId  
+            //        INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId  
+            //        AND (tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR isnull(tblCompanyCountyRel.MunicipalityId, 0) = 0)  
+            //        WHERE tblUserMaster.pkey_UId = " + userId.ToString();
+
 
             qstr = @" SELECT	DISTINCT tblCompanyMaster.pCompId 
                     FROM   tblCompanyMaster  
                     INNER JOIN tblCompanyServices ON tblCompanyMaster.pCompId = tblCompanyServices.pCompId  
                     INNER JOIN tblCompanyCountyRel ON tblCompanyMaster.pCompId = tblCompanyCountyRel.pCompId  
-                    INNER JOIN tblUserMaster ON tblUserMaster.CountyId = tblCompanyCountyRel.CountyId  
-                    AND(tblUserMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR isnull(tblCompanyCountyRel.MunicipalityId, 0) = 0)  
-                    WHERE tblUserMaster.pkey_UId = " + userId.ToString();
+                    INNER JOIN tblIssueTicketMaster ON tblIssueTicketMaster.CountyId = tblCompanyCountyRel.CountyId  
+                    AND (tblIssueTicketMaster.MunicipalityId = tblCompanyCountyRel.MunicipalityId OR isnull(tblCompanyCountyRel.MunicipalityId, 0) = 0)  
+                    WHERE tblIssueTicketMaster.TicketId = " + TicketId.ToString();
 
             if (serviceIdList != "")
             {
