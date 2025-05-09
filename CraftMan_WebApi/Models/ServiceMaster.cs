@@ -14,7 +14,7 @@ namespace CraftMan_WebApi.Models
     {
         public int ServiceId { get; set; }
         public string ServiceName { get; set; }
-        public string ServiceName_Swedish { get; set; }
+        public string? ServiceName_Swedish { get; set; }
         public IFormFile? ServiceImage { get; set; }
         public string? ImageName { get; set; }
         public string? ImagePath { get; set; }
@@ -161,7 +161,8 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ServiceName_Swedish, ImageName, ImagePath)  VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ServiceName_Swedish + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
+                string qstr = " INSERT into dbo.tblServiceMaster(ServiceName, ServiceName_Swedish, ImageName, ImagePath)  " +
+                    " VALUES('" + _Service.ServiceName + "'" + ",'" + _Service.ServiceName_Swedish + "'" + ",'" + _Service.ImageName + "','" + _Service.ImagePath + "') ";
 
                 DBAccess db = new DBAccess();
                 int i = db.ExecuteNonQuery(qstr);

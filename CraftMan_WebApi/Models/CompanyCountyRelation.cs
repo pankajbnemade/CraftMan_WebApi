@@ -52,7 +52,7 @@ namespace CraftMan_WebApi.Models
         public Response ValidateInsertRelation(CompanyCountyRelation _CompanyCountyRelation)
         {
             string qstr = " select pCompId from tblCompanyCountyRel " +
-                        " where tblCompanyCountyRel.pCompId=" + _CompanyCountyRelation.pCompId +
+                        " where tblCompanyCountyRel.pCompId = " + _CompanyCountyRelation.pCompId +
                         " and tblCompanyCountyRel.CountyId = " + _CompanyCountyRelation.CountyId +
                         " and tblCompanyCountyRel.MunicipalityId = " + _CompanyCountyRelation.MunicipalityId;
 
@@ -65,8 +65,12 @@ namespace CraftMan_WebApi.Models
         {
             _CompanyCountyRelation.MunicipalityId = _CompanyCountyRelation.MunicipalityId == 0 ? null : _CompanyCountyRelation.MunicipalityId;
 
+            string municipalityVal = _CompanyCountyRelation.MunicipalityId.HasValue
+                        ? _CompanyCountyRelation.MunicipalityId.Value.ToString()
+                        : "NULL";
+
             string qstr = " INSERT into tblCompanyCountyRel(pCompId, CountyId, MunicipalityId)  " +
-                            " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.CountyId + "," + _CompanyCountyRelation.MunicipalityId + ") ";
+                            " VALUES(" + _CompanyCountyRelation.pCompId + "," + _CompanyCountyRelation.CountyId + "," + municipalityVal + ") ";
 
             DBAccess db = new DBAccess();
 
@@ -91,7 +95,11 @@ namespace CraftMan_WebApi.Models
                 {
                     relation.MunicipalityId = relation.MunicipalityId == 0 ? null : relation.MunicipalityId;
 
-                    string values = $"({Convert.ToInt32(relation.pCompId)}, {Convert.ToInt32(relation.CountyId)}, {Convert.ToInt32(relation.MunicipalityId)})";
+                    string municipalityVal = relation.MunicipalityId.HasValue
+                        ? relation.MunicipalityId.Value.ToString()
+                        : "NULL";
+
+                    string values = $"({relation.pCompId}, {relation.CountyId}, {municipalityVal})";
                     valuesList.Add(values);
                 }
 

@@ -20,7 +20,7 @@ namespace CraftMan_WebApi.Models
             string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.CountyId, tblMunicipalityMaster.MunicipalityName, tblCountyMaster.CountyName " +
                 " FROM  dbo.tblMunicipalityMaster " +
                 " LEFT OUTER JOIN  dbo.tblCountyMaster ON dbo.tblMunicipalityMaster.CountyId = dbo.tblCountyMaster.CountyId" +
-                " where MunicipalityId="
+                " where MunicipalityId = "
                         + MunicipalityId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);

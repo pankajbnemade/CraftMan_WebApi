@@ -23,7 +23,7 @@ namespace CraftMan_WebApi.Models
                 DBAccess db = new DBAccess();
 
                 string qstr = @"INSERT INTO tblErrorLogs (MethodName, ErrorMessage, StackTrace, LogDate) 
-                                 VALUES ('" + methodName + "', '" + ex.Message.Replace("'","") + "' , '" + ex.StackTrace.Replace("'", "") + "', GETDATE())";
+                                 VALUES ('" + methodName + "', '" + ex.Message.Replace("'", "") + "' , '" + ex.StackTrace.Replace("'", "") + "', GETDATE())";
 
                 db.ExecuteNonQuery(qstr);
             }
@@ -44,6 +44,38 @@ namespace CraftMan_WebApi.Models
                 $"{DateTime.Now}: Error in LogError Method - {logEx.Message}{Environment.NewLine}");
             }
         }
+
+
+        public static void LogErrorMethod(string methodName, string value)
+        {
+            try
+            {
+                DBAccess db = new DBAccess();
+
+                string qstr = @"INSERT INTO tblErrorLogs (MethodName, ErrorMessage, StackTrace, LogDate) 
+                                 VALUES ('" + methodName + "', '" + value + "' , '" + value + "', GETDATE())";
+
+                db.ExecuteNonQuery(qstr);
+            }
+            catch (Exception logEx)
+            {
+                //string logFilePath = _webHostEnvironment != null
+                //? Path.Combine(_webHostEnvironment.WebRootPath, "logs", "error_log.txt")
+                //: "error_log.txt";
+
+                //Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
+
+                //File.AppendAllText(logFilePath,
+                //$"{DateTime.Now}: Error in LogError Method - {logEx.Message}{Environment.NewLine}");
+
+                Directory.CreateDirectory(Path.GetDirectoryName(@"C:\ErrorLogs\"));
+
+                System.IO.File.AppendAllText(@"C:\ErrorLogs\error_log.txt",
+                $"{DateTime.Now}: Error in LogError Method - {logEx.Message}{Environment.NewLine}");
+            }
+        }
+
+
     }
 
 }

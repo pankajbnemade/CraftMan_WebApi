@@ -43,7 +43,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
             string qstr = " SELECT  tblCompanyMaster.*  " +
-                            " FROM  tblCompanyMaster where upper(EmailId) = upper('" + EmailId + "')  ";
+                        " FROM  tblCompanyMaster where upper(EmailId) = upper('" + EmailId + "')  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
             var pCompanyMaster = new CompanyMaster();
@@ -120,17 +120,17 @@ namespace CraftMan_WebApi.Models
 
             if (countyId != null && countyId != 0)
             {
-                qstr = qstr + " AND tblCompanyCountyRel.CountyId = " + countyId;
+                qstr = qstr + " AND ISNULL(tblCompanyCountyRel.CountyId, 0) = " + countyId;
             }
 
             if (municipalityId != null && municipalityId != 0)
             {
-                qstr = qstr + " AND tblCompanyCountyRel.MunicipalityId = " + municipalityId;
+                qstr = qstr + " AND ISNULL(tblCompanyCountyRel.MunicipalityId, 0) = " + municipalityId;
             }
 
             if (serviceId != null && serviceId != 0)
             {
-                qstr = qstr + " AND tblCompanyServices.ServiceId = " + serviceId;
+                qstr = qstr + " AND ISNULL(tblCompanyServices.ServiceId, 0) = " + serviceId;
             }
 
             SqlDataReader reader = db.ReadDB(qstr);

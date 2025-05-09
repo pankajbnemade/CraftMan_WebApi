@@ -82,7 +82,7 @@ namespace CraftMan_WebApi.Models
                     {
                         string ServiceId = Id.Trim().Trim('"');
 
-                        string values = $"({Convert.ToInt32(CompanyId)}, {Convert.ToInt32(ServiceId)})";
+                        string values = $"({CompanyId}, {ServiceId})";
                         valuesList.Add(values);
                     }
 

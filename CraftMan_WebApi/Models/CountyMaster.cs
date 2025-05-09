@@ -18,8 +18,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = " SELECT  CountyId, CountyName FROM  dbo.tblCountyMaster where CountyId="
-                        + CountyId.ToString() + "  ";
+            string qstr = " SELECT  CountyId, CountyName FROM  dbo.tblCountyMaster where CountyId = " + CountyId.ToString() + "  ";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -121,7 +120,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
 
             Response strReturn = new Response();
-            
+
             string qstr = " select CountyName from dbo.tblCountyMaster where upper(CountyName) = upper('" + _County.CountyName + "') and CountyId != " + _County.CountyId.ToString() + "";
 
             SqlDataReader reader = db.ReadDB(qstr);

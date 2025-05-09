@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Org.BouncyCastle.Asn1.X509;
 
 
 namespace CraftMan_WebApi.ExtendedModels
@@ -56,39 +57,54 @@ namespace CraftMan_WebApi.ExtendedModels
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
 
+                        string extension = Path.GetExtension(_ServiceMaster.ServiceImage.FileName).ToLowerInvariant();
                         string originalName = Path.GetFileNameWithoutExtension(_ServiceMaster.ServiceImage.FileName);
 
                         string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_ServiceMaster.ServiceImage.FileName);
                         string imagePath = Path.Combine(uploadFolder, imageName);
 
                         using (var imageStream = _ServiceMaster.ServiceImage.OpenReadStream())
-
-                        using (var originalImage = Image.FromStream(imageStream))
                         {
-                            // Resize logic if needed
-                            int maxDimension = 1024;
-                            int newWidth = originalImage.Width;
-                            int newHeight = originalImage.Height;
-
-                            if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            if (extension == ".svg")
                             {
-                                float ratioX = (float)maxDimension / originalImage.Width;
-                                float ratioY = (float)maxDimension / originalImage.Height;
-                                float ratio = Math.Min(ratioX, ratioY);
-
-                                newWidth = (int)(originalImage.Width * ratio);
-                                newHeight = (int)(originalImage.Height * ratio);
+                                // Just save the SVG as-is
+                                using (var fileStream = File.Create(imagePath))
+                                {
+                                    imageStream.CopyTo(fileStream);
+                                }
                             }
-
-                            using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            else
                             {
-                                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                                    .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 
-                                var encoderParameters = new EncoderParameters(1);
-                                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+                                using (var originalImage = Image.FromStream(imageStream))
+                                {
+                                    // Resize logic if needed
+                                    int maxDimension = 1024;
+                                    int newWidth = originalImage.Width;
+                                    int newHeight = originalImage.Height;
 
-                                resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                    if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                                    {
+                                        float ratioX = (float)maxDimension / originalImage.Width;
+                                        float ratioY = (float)maxDimension / originalImage.Height;
+                                        float ratio = Math.Min(ratioX, ratioY);
+
+                                        newWidth = (int)(originalImage.Width * ratio);
+                                        newHeight = (int)(originalImage.Height * ratio);
+                                    }
+
+                                    using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                                    {
+                                        var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                            .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                                        var encoderParameters = new EncoderParameters(1);
+                                        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+
+                                        resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                    }
+                                }
+                            
                             }
                         }
 
@@ -148,39 +164,55 @@ namespace CraftMan_WebApi.ExtendedModels
                         if (!Directory.Exists(uploadFolder))
                             Directory.CreateDirectory(uploadFolder);
 
+                        string extension = Path.GetExtension(_ServiceMaster.ServiceImage.FileName).ToLowerInvariant();
+
                         string originalName = Path.GetFileNameWithoutExtension(_ServiceMaster.ServiceImage.FileName);
 
                         string imageName = Guid.NewGuid().ToString() + Path.GetExtension(_ServiceMaster.ServiceImage.FileName);
                         string imagePath = Path.Combine(uploadFolder, imageName);
 
                         using (var imageStream = _ServiceMaster.ServiceImage.OpenReadStream())
-
-                        using (var originalImage = Image.FromStream(imageStream))
                         {
-                            // Resize logic if needed
-                            int maxDimension = 1024;
-                            int newWidth = originalImage.Width;
-                            int newHeight = originalImage.Height;
-
-                            if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            if (extension == ".svg")
                             {
-                                float ratioX = (float)maxDimension / originalImage.Width;
-                                float ratioY = (float)maxDimension / originalImage.Height;
-                                float ratio = Math.Min(ratioX, ratioY);
-
-                                newWidth = (int)(originalImage.Width * ratio);
-                                newHeight = (int)(originalImage.Height * ratio);
+                                // Just save the SVG as-is
+                                using (var fileStream = File.Create(imagePath))
+                                {
+                                    imageStream.CopyTo(fileStream);
+                                }
                             }
-
-                            using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            else
                             {
-                                var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                                    .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 
-                                var encoderParameters = new EncoderParameters(1);
-                                encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+                                using (var originalImage = Image.FromStream(imageStream))
+                                {
+                                    // Resize logic if needed
+                                    int maxDimension = 1024;
+                                    int newWidth = originalImage.Width;
+                                    int newHeight = originalImage.Height;
 
-                                resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                    if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                                    {
+                                        float ratioX = (float)maxDimension / originalImage.Width;
+                                        float ratioY = (float)maxDimension / originalImage.Height;
+                                        float ratio = Math.Min(ratioX, ratioY);
+
+                                        newWidth = (int)(originalImage.Width * ratio);
+                                        newHeight = (int)(originalImage.Height * ratio);
+                                    }
+
+                                    using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                                    {
+                                        var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                                            .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+
+                                        var encoderParameters = new EncoderParameters(1);
+                                        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+
+                                        resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                                    }
+                                }
+
                             }
                         }
 
