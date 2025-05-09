@@ -35,7 +35,7 @@ namespace CraftMan_WebApi.Models
 
                 pCompanyCountyRelation.pCompId = Convert.ToInt32(reader["pCompId"]);
                 pCompanyCountyRelation.CountyId = Convert.ToInt32(reader["CountyId"]);
-                pCompanyCountyRelation.MunicipalityId = reader["MunicipalityId"] == null ? null : Convert.ToInt32(reader["MunicipalityId"]);
+                pCompanyCountyRelation.MunicipalityId = reader["MunicipalityId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["MunicipalityId"]);
                 pCompanyCountyRelation.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
                 pCompanyCountyRelation.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
                 pCompanyCountyRelation.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];

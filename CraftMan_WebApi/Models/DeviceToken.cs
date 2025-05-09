@@ -33,17 +33,6 @@ namespace CraftMan_WebApi.Models
         {
             try
             {
-                try
-                {
-                    string value = (_DeviceTokenModel.pCompId == null ? "" : "pCompId : " + _DeviceTokenModel.pCompId.ToString())
-                            + (_DeviceTokenModel.Token == null ? "" : " Token : " + _DeviceTokenModel.Token)
-                            + (_DeviceTokenModel.Platform == null ? "" : " Platform : " + _DeviceTokenModel.Platform);
-
-                    ErrorLogger.LogErrorMethod("SaveNewDeviceToken", value);
-                }
-                catch (Exception ex)
-                {
-                }
 
                 string qstr = " INSERT into tblCompanyUserDevices(pCompId, Token, Platform, RegisteredOn)  " +
                     " VALUES(" + _DeviceTokenModel.pCompId + ",'" + _DeviceTokenModel.Token + "','" + _DeviceTokenModel.Platform + "', getdate()) ";

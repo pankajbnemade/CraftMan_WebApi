@@ -21,9 +21,16 @@ namespace CraftMan_WebApi.Models
 
         public static int InsertIssueTicketChat(IssueTicketChat _IssueTicketChat)
         {
+            _IssueTicketChat.CompanyId = _IssueTicketChat.CompanyId == 0 ? null : _IssueTicketChat.CompanyId;
+            _IssueTicketChat.UserId = _IssueTicketChat.UserId == 0 ? null : _IssueTicketChat.UserId;
+
+            string companyIdVal = _IssueTicketChat.CompanyId.HasValue ? _IssueTicketChat.CompanyId.Value.ToString() : "NULL";
+
+            string userIdVal = _IssueTicketChat.UserId.HasValue ? _IssueTicketChat.UserId.Value.ToString() : "NULL";
+
             var qstr = "INSERT INTO tblIssueTicketChat (TicketId, CompanyId, UserId, Message, ChatDateTime) " +
-                    "VALUES ('" + _IssueTicketChat.TicketId + "','" + _IssueTicketChat.CompanyId +
-                    "','" + _IssueTicketChat.UserId + "','" + _IssueTicketChat.Message +
+                    "VALUES (" + _IssueTicketChat.TicketId + "," + companyIdVal +
+                    "," + userIdVal + ",'" + _IssueTicketChat.Message +
                     "',GETDATE())";
 
             DBAccess db = new DBAccess();
@@ -56,8 +63,8 @@ namespace CraftMan_WebApi.Models
                 pIssueTicketChat.ChatId = Convert.ToInt32(reader["ChatId"]);
                 pIssueTicketChat.ChatDateTime = (DateTime)reader["ChatDateTime"];
                 pIssueTicketChat.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicketChat.CompanyId = Convert.ToInt32(reader["CompanyId"]);
-                pIssueTicketChat.UserId = Convert.ToInt32(reader["UserId"]);
+                pIssueTicketChat.CompanyId = reader["CompanyId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicketChat.UserId = reader["UserId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["UserId"]);
                 pIssueTicketChat.Message = (string)(reader["Message"] == DBNull.Value ? "" : reader["Message"]);
                 pIssueTicketChat.CompanyUserName = (string)(reader["CompanyUserName"] == DBNull.Value ? "" : reader["CompanyUserName"]);
                 pIssueTicketChat.UserName = (string)(reader["UserName"] == DBNull.Value ? "" : reader["UserName"]);
@@ -92,7 +99,7 @@ namespace CraftMan_WebApi.Models
                 var pIssueTicketChat = new IssueTicketChat();
 
                 pIssueTicketChat.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicketChat.CompanyId = Convert.ToInt32(reader["CompanyId"]);
+                pIssueTicketChat.CompanyId = reader["CompanyId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CompanyId"]);
                 pIssueTicketChat.CompanyUserName = (string)(reader["CompanyUserName"] == DBNull.Value ? "" : reader["CompanyUserName"]);
 
                 pIssueTicketList.Add(pIssueTicketChat);

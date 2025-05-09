@@ -42,7 +42,7 @@ namespace CraftMan_WebApi.ExtendedModels
                                                       .ToArray();
 
                         pCompanyMaster.MunicipalityIdList = CountyRelationList.Cast<CompanyCountyRelation>()
-                                                        .Where(w => w.MunicipalityId != 0)
+                                                        .Where(w => w.MunicipalityId != 0 && w.MunicipalityId != null)
                                                         .Select(relation => relation.MunicipalityId.ToString())
                                                         .Distinct()
                                                         .ToArray();
@@ -57,7 +57,7 @@ namespace CraftMan_WebApi.ExtendedModels
                                                     .ToList();
 
                         pCompanyMaster.MunicipalityList = CountyRelationList.Cast<CompanyCountyRelation>()
-                                                        .Where(w => w.MunicipalityId != 0)
+                                                        .Where(w => w.MunicipalityId != 0 && w.MunicipalityId != null)
                                                         .Select(municipality => new MunicipalityMaster()
                                                         {
                                                             MunicipalityId = municipality.MunicipalityId == null ? 0 : Convert.ToInt32(municipality.MunicipalityId),
