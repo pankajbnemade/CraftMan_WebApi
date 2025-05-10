@@ -10,7 +10,6 @@ namespace CraftMan_WebApi.ExtendedModels
 
             try
             {
-
                 try
                 {
                     string value = (_DeviceTokenModel.pCompId == null ? "" : "pCompId : " + _DeviceTokenModel.pCompId.ToString())
@@ -25,8 +24,8 @@ namespace CraftMan_WebApi.ExtendedModels
 
                 if (DeviceToken.ValidateToken(_DeviceTokenModel) == true)
                 {
-                    strReturn.StatusMessage = "Token already registered...";
-                    strReturn.StatusCode = 0;
+                    strReturn.StatusMessage = "Token already registered. No need to register again.";
+                    strReturn.StatusCode = 1;
                 }
                 else
                 {

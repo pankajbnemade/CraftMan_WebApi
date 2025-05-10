@@ -1,6 +1,7 @@
 ﻿using CraftMan_WebApi.DataAccessLayer;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel.Design;
 
 namespace CraftMan_WebApi.Models
 {
@@ -10,12 +11,16 @@ namespace CraftMan_WebApi.Models
         {
             DBAccess db = new DBAccess();
 
+            SqlDataReader reader;
+
             Response strReturn = new Response();
 
-            //string qstr = " select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "' and pCompId = " + _DeviceTokenModel.pCompId.ToString() ;
-            string qstr = "select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "'";
+            string qstr;
 
-            SqlDataReader reader = db.ReadDB(qstr);
+            qstr = " select Id from tblCompanyUserDevices where IsValid = 1 AND Token = '" + _DeviceTokenModel.Token + "' and pCompId = " + _DeviceTokenModel.pCompId.ToString();
+            //string qstr = "select Id from tblCompanyUserDevices where Token = '" + _DeviceTokenModel.Token + "'";
+
+            reader = db.ReadDB(qstr);
 
             while (reader.Read())
             {
@@ -24,6 +29,34 @@ namespace CraftMan_WebApi.Models
 
             reader.Close();
             reader.Dispose();
+
+
+            /// check if for other company exists the token and update to valid = false
+
+
+            qstr = " select Id from tblCompanyUserDevices where IsValid = 1 AND Token = '" + _DeviceTokenModel.Token + "' and pCompId != " + _DeviceTokenModel.pCompId.ToString();
+
+            reader = db.ReadDB(qstr);
+
+            bool flag = false;
+
+            while (reader.Read())
+            {
+                flag = true;
+            }
+
+            reader.Close();
+            reader.Dispose();
+
+            if (flag)
+            {
+                qstr = " UPDATE tblCompanyUserDevices " +
+                        " SET  " +
+                        " IsValid = 0"  +
+                        " WHERE IsValid = 1 AND Token = '" + _DeviceTokenModel.Token + "'";
+
+                db.ExecuteNonQuery(qstr);
+            }
 
             return false;
         }

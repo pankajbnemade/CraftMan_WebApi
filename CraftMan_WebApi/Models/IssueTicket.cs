@@ -897,8 +897,8 @@ namespace CraftMan_WebApi.Models
             if (companyIdList != "")
             {
                 qstr = @" SELECT Id, pCompId, Token, Platform, RegisteredOn
-                    FROM   tblCompanyUserDevices  
-                    WHERE pCompId IN (" + companyIdList + ")";
+                    FROM    tblCompanyUserDevices  
+                    WHERE   tblCompanyUserDevices.IsValid = 1 AND   tblCompanyUserDevices.pCompId IN (" + companyIdList + ")";
 
                 reader = db.ReadDB(qstr);
 
@@ -941,7 +941,7 @@ namespace CraftMan_WebApi.Models
                     tblCompanyMaster.EmailId, tblCompanyUserDevices.Token, tblCompanyUserDevices.Platform
                     from	tblCompanyMaster 
                     inner join tblCompanyUserDevices on tblCompanyUserDevices.pCompId = tblCompanyMaster.pCompId
-                    WHERE	tblCompanyUserDevices.Token in (" + result + ") ";
+                    WHERE tblCompanyUserDevices.IsValid = 1 AND	tblCompanyUserDevices.Token in (" + result + ") ";
 
             reader = db.ReadDB(qstr);
 
