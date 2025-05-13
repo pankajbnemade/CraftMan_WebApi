@@ -121,13 +121,17 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = "  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.MunicipalityName, " +
-                        " tblMunicipalityMaster.CountyId, tblCompanyCountyRel.pCompId, tblCountyMaster.CountyName " +
-                        " FROM  tblMunicipalityMaster " +
-                        " INNER JOIN tblCompanyCountyRel ON tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId " +
-                        " LEFT OUTER JOIN  dbo.tblCountyMaster ON dbo.tblMunicipalityMaster.CountyId = dbo.tblCountyMaster.CountyId" +
-                        " where (tblMunicipalityMaster.CountyId=" + CountyId.ToString() + " or  0 = " + CountyId.ToString() + ") " +
-                        " and tblCompanyCountyRel.pCompId = " + CompanyId + " ";
+            string qstr = @"  SELECT  tblMunicipalityMaster.MunicipalityId, tblMunicipalityMaster.MunicipalityName,  
+                            tblMunicipalityMaster.CountyId, tblCompanyCountyRel.pCompId, tblCountyMaster.CountyName
+                            FROM  tblCompanyCountyRel
+                            INNER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblCompanyCountyRel.CountyId
+                            INNER JOIN tblMunicipalityMaster 
+                                ON (
+									tblCountyMaster.CountyId = tblMunicipalityMaster.CountyId 
+									AND  (tblCompanyCountyRel.MunicipalityId = tblMunicipalityMaster.MunicipalityId OR tblCompanyCountyRel.MunicipalityId IS NULL)
+								)" +
+                        " WHERE (tblCompanyCountyRel.CountyId=" + CountyId.ToString() + " OR  0 = " + CountyId.ToString() + ") " +
+                        " AND tblCompanyCountyRel.pCompId = " + CompanyId + " ";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
