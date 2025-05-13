@@ -65,47 +65,47 @@ namespace CraftMan_WebApi.ExtendedModels
 
                         using (var imageStream = _ServiceMaster.ServiceImage.OpenReadStream())
                         {
-                            if (extension == ".svg")
+                            //if (extension == ".svg")
+                            //{
+                            // Just save the SVG as-is
+                            using (var fileStream = File.Create(imagePath))
                             {
-                                // Just save the SVG as-is
-                                using (var fileStream = File.Create(imagePath))
-                                {
-                                    imageStream.CopyTo(fileStream);
-                                }
+                                imageStream.CopyTo(fileStream);
                             }
-                            else
-                            {
+                            //}
+                            //else
+                            //{
 
-                                using (var originalImage = Image.FromStream(imageStream))
-                                {
-                                    // Resize logic if needed
-                                    int maxDimension = 1024;
-                                    int newWidth = originalImage.Width;
-                                    int newHeight = originalImage.Height;
+                            //    using (var originalImage = Image.FromStream(imageStream))
+                            //    {
+                            //        // Resize logic if needed
+                            //        int maxDimension = 1024;
+                            //        int newWidth = originalImage.Width;
+                            //        int newHeight = originalImage.Height;
 
-                                    if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
-                                    {
-                                        float ratioX = (float)maxDimension / originalImage.Width;
-                                        float ratioY = (float)maxDimension / originalImage.Height;
-                                        float ratio = Math.Min(ratioX, ratioY);
+                            //        if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            //        {
+                            //            float ratioX = (float)maxDimension / originalImage.Width;
+                            //            float ratioY = (float)maxDimension / originalImage.Height;
+                            //            float ratio = Math.Min(ratioX, ratioY);
 
-                                        newWidth = (int)(originalImage.Width * ratio);
-                                        newHeight = (int)(originalImage.Height * ratio);
-                                    }
+                            //            newWidth = (int)(originalImage.Width * ratio);
+                            //            newHeight = (int)(originalImage.Height * ratio);
+                            //        }
 
-                                    using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
-                                    {
-                                        var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                                            .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+                            //        using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            //        {
+                            //            var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                            //                .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 
-                                        var encoderParameters = new EncoderParameters(1);
-                                        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+                            //            var encoderParameters = new EncoderParameters(1);
+                            //            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
 
-                                        resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
-                                    }
-                                }
-                            
-                            }
+                            //            resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                            //        }
+                            //    }
+
+                            //}
                         }
 
                         _ServiceMaster.ImageName = originalName;
@@ -173,47 +173,47 @@ namespace CraftMan_WebApi.ExtendedModels
 
                         using (var imageStream = _ServiceMaster.ServiceImage.OpenReadStream())
                         {
-                            if (extension == ".svg")
+                            //if (extension == ".svg")
+                            //{
+                            // Just save the SVG as-is
+                            using (var fileStream = File.Create(imagePath))
                             {
-                                // Just save the SVG as-is
-                                using (var fileStream = File.Create(imagePath))
-                                {
-                                    imageStream.CopyTo(fileStream);
-                                }
+                                imageStream.CopyTo(fileStream);
                             }
-                            else
-                            {
+                            //}
+                            //else
+                            //{
 
-                                using (var originalImage = Image.FromStream(imageStream))
-                                {
-                                    // Resize logic if needed
-                                    int maxDimension = 1024;
-                                    int newWidth = originalImage.Width;
-                                    int newHeight = originalImage.Height;
+                            //    using (var originalImage = Image.FromStream(imageStream))
+                            //    {
+                            //        // Resize logic if needed
+                            //        int maxDimension = 1024;
+                            //        int newWidth = originalImage.Width;
+                            //        int newHeight = originalImage.Height;
 
-                                    if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
-                                    {
-                                        float ratioX = (float)maxDimension / originalImage.Width;
-                                        float ratioY = (float)maxDimension / originalImage.Height;
-                                        float ratio = Math.Min(ratioX, ratioY);
+                            //        if (originalImage.Width > maxDimension || originalImage.Height > maxDimension)
+                            //        {
+                            //            float ratioX = (float)maxDimension / originalImage.Width;
+                            //            float ratioY = (float)maxDimension / originalImage.Height;
+                            //            float ratio = Math.Min(ratioX, ratioY);
 
-                                        newWidth = (int)(originalImage.Width * ratio);
-                                        newHeight = (int)(originalImage.Height * ratio);
-                                    }
+                            //            newWidth = (int)(originalImage.Width * ratio);
+                            //            newHeight = (int)(originalImage.Height * ratio);
+                            //        }
 
-                                    using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
-                                    {
-                                        var jpegEncoder = ImageCodecInfo.GetImageDecoders()
-                                            .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
+                            //        using (var resizedImage = new Bitmap(originalImage, new Size(newWidth, newHeight)))
+                            //        {
+                            //            var jpegEncoder = ImageCodecInfo.GetImageDecoders()
+                            //                .FirstOrDefault(codec => codec.FormatID == ImageFormat.Jpeg.Guid);
 
-                                        var encoderParameters = new EncoderParameters(1);
-                                        encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
+                            //            var encoderParameters = new EncoderParameters(1);
+                            //            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 60L); // 60% quality
 
-                                        resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
-                                    }
-                                }
+                            //            resizedImage.Save(imagePath, jpegEncoder, encoderParameters);
+                            //        }
+                            //    }
 
-                            }
+                            //}
                         }
 
                         _ServiceMaster.ImageName = originalName;

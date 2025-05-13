@@ -35,11 +35,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     if (i > 0)
                     {
                         strReturn.StatusCode = i;
-                        strReturn.StatusMessage = "User Registered Successfully";
+                        strReturn.StatusMessage = "User Registered Successfully.";
                     }
                     else
                     {
-                        strReturn.StatusMessage = "User not registered";
+                        strReturn.StatusMessage = "User not registered.";
                     }
                 }
 
@@ -84,11 +84,11 @@ namespace CraftMan_WebApi.ExtendedModels
                     if (i > 0)
                     {
                         strReturn.StatusCode = _User.UserId;
-                        strReturn.StatusMessage = "User updated successfully";
+                        strReturn.StatusMessage = "User updated successfully.";
                     }
                     else
                     {
-                        strReturn.StatusMessage = "User not updated";
+                        strReturn.StatusMessage = "User not updated.";
                     }
                 }
 

@@ -62,7 +62,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     _IssueTicket.TicketId = i;
 
                     strReturn.StatusCode = i;
-                    strReturn.StatusMessage = "Issue Registered Successfully";
+                    strReturn.StatusMessage = "Job request registered successfully.";
 
                     if (_IssueTicket.Images != null && _IssueTicket.Images.Count > 0)
                     {
@@ -149,14 +149,14 @@ namespace CraftMan_WebApi.ExtendedModels
 
                             if (i == 0)
                             {
-                                strReturn.StatusMessage = "Issue Registered Successfully. But images are not uploaded.";
+                                strReturn.StatusMessage = "Job request registered successfully. But images are not uploaded.";
                             }
                         }
                     }
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Issue not registered.This may be because of user registering same issue again";
+                    strReturn.StatusMessage = "Not registered. This may be because of user registering same request again.";
                 }
 
             }
@@ -180,11 +180,11 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (i > 0)
                 {
                     strReturn.StatusCode = 1;
-                    strReturn.StatusMessage = "Ticket star rating updated successfully";
+                    strReturn.StatusMessage = "Star rating updated successfully.";
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Ticket star rating not updated.";
+                    strReturn.StatusMessage = "Star rating not updated.";
                 }
             }
             catch (Exception ex)
@@ -209,7 +209,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     if (pIssueTicket.Status != TicketStatus.Inprogress.ToString())
                     {
                         strReturn.StatusCode = 0;
-                        strReturn.StatusMessage = "Company comment not updated. Current ticket status should be " + TicketStatus.Inprogress.ToString();
+                        strReturn.StatusMessage = "Comment not updated. Current job request status should be " + TicketStatus.Inprogress.ToString() + ".";
                     }
                     else
                     {
@@ -317,7 +317,7 @@ namespace CraftMan_WebApi.ExtendedModels
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Ticket not exists.";
+                    strReturn.StatusMessage = "Record not exists.";
                 }
             }
             catch (Exception ex)
@@ -340,17 +340,17 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (pIssueTicket == null)
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Invalid ticket details";
+                    strReturn.StatusMessage = "Invalid details.";
                 }
                 else if (pIssueTicket.TicketId == 0)
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Invalid ticket details";
+                    strReturn.StatusMessage = "Invalid details.";
                 }
                 else if (Enum.IsDefined(typeof(TicketStatus), _IssueTicketUpdateStatus.Status) == false)
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Invalid Status " + _IssueTicketUpdateStatus.Status;
+                    strReturn.StatusMessage = "Status not updated. Invalid Status " + _IssueTicketUpdateStatus.Status + ".";
                 }
                 else if (TicketStatus.Completed.ToString() == _IssueTicketUpdateStatus.Status
                      && IssueTicket.ValidateClosingOTP(_IssueTicketUpdateStatus) == false)
@@ -362,19 +362,19 @@ namespace CraftMan_WebApi.ExtendedModels
                     && pIssueTicket.Status != TicketStatus.Inprogress.ToString())
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Inprogress.ToString();
+                    strReturn.StatusMessage = "Status not updated. Current status should be " + TicketStatus.Inprogress.ToString() + ".";
                 }
                 else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
                     && pIssueTicket.Status != TicketStatus.Created.ToString())
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Created.ToString();
+                    strReturn.StatusMessage = "Status not updated. Current status should be " + TicketStatus.Created.ToString() + ".";
                 }
                 else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
                     && (_IssueTicketUpdateStatus.CompanyId == 0 || _IssueTicketUpdateStatus.CompanyId == null))
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Invalid CompanyId";
+                    strReturn.StatusMessage = "Status not updated. Invalid partner.";
                 }
                 else if (TicketStatus.Accepted.ToString() == _IssueTicketUpdateStatus.Status
                      && IssueTicket.ValidateAcceptedOTP(_IssueTicketUpdateStatus) == false)
@@ -387,7 +387,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     && pIssueTicket.Status != TicketStatus.Accepted.ToString())
                 {
                     strReturn.StatusCode = 0;
-                    strReturn.StatusMessage = "Ticket status not updated. Current ticket status should be " + TicketStatus.Accepted.ToString();
+                    strReturn.StatusMessage = "Status not updated. Current status should be " + TicketStatus.Accepted.ToString() + ".";
                 }
                 else
                 {
@@ -396,7 +396,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     if (i > 0)
                     {
                         strReturn.StatusCode = 1;
-                        strReturn.StatusMessage = "Status updated successfully";
+                        strReturn.StatusMessage = "Status updated successfully.";
                     }
                     else
                     {

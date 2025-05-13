@@ -39,7 +39,7 @@ namespace CraftMan_WebApi.Controllers
 
             if (tokenList.Any())
             {
-                await _notificationService.SendNotificationAsync(tokenList, "New Job Card", "A new job card was created.", ticketId);
+                await _notificationService.SendNotificationAsync(tokenList, "New Job Request", "A new job request was created.", ticketId);
             }
 
             return response;

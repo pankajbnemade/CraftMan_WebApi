@@ -154,7 +154,7 @@ namespace CraftMan_WebApi.ExtendedModels
             {
                 if (CompanyMaster.ValidateCompany(_CompanyMaster).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "Company already exists...";
+                    strReturn.StatusMessage = "Already exists...";
                     strReturn.StatusCode = 0;
                 }
                 else
@@ -218,7 +218,7 @@ namespace CraftMan_WebApi.ExtendedModels
                         _CompanyMaster.pCompId = i;
 
                         strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
-                        strReturn.StatusMessage = "Company Registered Successfully";
+                        strReturn.StatusMessage = "Registered Successfully.";
 
                         CompanyServices.InsertNewServices(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.ServiceIdList);
 
@@ -226,7 +226,7 @@ namespace CraftMan_WebApi.ExtendedModels
                     }
                     else
                     {
-                        strReturn.StatusMessage = "Company not registered";
+                        strReturn.StatusMessage = "Not registered.";
                     }
                 }
             }
@@ -272,11 +272,11 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (i > 0)
                 {
                     strReturn.StatusCode = companyId;
-                    strReturn.StatusMessage = "Company Is24X7 status updated successfully";
+                    strReturn.StatusMessage = "Is24X7 status updated successfully.";
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Company Is24X7 status not updated.";
+                    strReturn.StatusMessage = "Is24X7 status not updated.";
                 }
             }
             catch (Exception ex)
@@ -323,7 +323,7 @@ namespace CraftMan_WebApi.ExtendedModels
             {
                 if (CompanyMaster.ValidateCompanyUpdate(_CompanyMaster).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "Company already exists for emailId...";
+                    strReturn.StatusMessage = "Already exists for emailId...";
                     strReturn.StatusCode = 0;
                 }
                 else
@@ -392,12 +392,12 @@ namespace CraftMan_WebApi.ExtendedModels
                         CompanyCountyRelationExtended.InsertNewRelations(Convert.ToInt32(_CompanyMaster.pCompId), _CompanyMaster.CountyIdList, _CompanyMaster.MunicipalityIdList);
 
                         strReturn.StatusCode = Convert.ToInt32(_CompanyMaster.pCompId);
-                        strReturn.StatusMessage = "Company updated successfully";
+                        strReturn.StatusMessage = "Updated successfully.";
 
                     }
                     else
                     {
-                        strReturn.StatusMessage = "Company not registered";
+                        strReturn.StatusMessage = "Not registered";
                     }
 
                 }

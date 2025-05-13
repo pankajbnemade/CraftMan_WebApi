@@ -25,7 +25,7 @@ namespace CraftMan_WebApi.ExtendedModels
             {
                 if (_CompanyCountyRelation.ValidateInsertRelation(_CompanyCountyRelation).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "Company relation already exists...";
+                    strReturn.StatusMessage = "Partner relation already exists...";
                     strReturn.StatusCode = 1;
                 }
                 else
@@ -35,10 +35,10 @@ namespace CraftMan_WebApi.ExtendedModels
                     if (i > 0)
                     {
                         strReturn.StatusCode = 1;
-                        strReturn.StatusMessage = "Company relation added successfully";
+                        strReturn.StatusMessage = "Partner relation added successfully";
                     }
                     else
-                    { strReturn.StatusMessage = "Company relation not added."; }
+                    { strReturn.StatusMessage = "Partner relation not added."; }
                 }
             }
             catch (Exception ex)
@@ -119,11 +119,11 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (i > 0)
                 {
                     strReturn.StatusCode = 1;
-                    strReturn.StatusMessage = "Company relation deleted successfully";
+                    strReturn.StatusMessage = "Partner relation deleted successfully";
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Company relation not deleted. This May be relation not exists...";
+                    strReturn.StatusMessage = "Partner relation not deleted. This May be relation not exists...";
                 }
             }
             catch (Exception ex)
@@ -146,11 +146,11 @@ namespace CraftMan_WebApi.ExtendedModels
                 if (i > 0)
                 {
                     strReturn.StatusCode = 1;
-                    strReturn.StatusMessage = "Company relation deleted successfully";
+                    strReturn.StatusMessage = "Partner relation deleted successfully";
                 }
                 else
                 {
-                    strReturn.StatusMessage = "Company relation not deleted. This May be relation not exists...";
+                    strReturn.StatusMessage = "Partner relation not deleted. This May be relation not exists...";
                 }
             }
             catch (Exception ex)
