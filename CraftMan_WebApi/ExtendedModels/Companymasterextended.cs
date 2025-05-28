@@ -323,7 +323,7 @@ namespace CraftMan_WebApi.ExtendedModels
             {
                 if (CompanyMaster.ValidateCompanyUpdate(_CompanyMaster).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "Already exists for emailId...";
+                    strReturn.StatusMessage = "Already exists for emailId / User name...";
                     strReturn.StatusCode = 0;
                 }
                 else

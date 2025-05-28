@@ -10,6 +10,7 @@ namespace CraftMan_WebApi.Models
     {
         public int pCompId { get; set; }
         public int? LocationId { get; set; }
+        public string Username { get; set; }
         public string MobileNumber { get; set; }
         public string? ContactPerson { get; set; }
         public string EmailId { get; set; }

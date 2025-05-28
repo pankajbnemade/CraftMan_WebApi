@@ -39,6 +39,7 @@ namespace CraftMan_WebApi.Models
                 pCompanyCountyRelation.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
                 pCompanyCountyRelation.CountyName = reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"];
                 pCompanyCountyRelation.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "" : (string)reader["MunicipalityName"];
+                //pCompanyCountyRelation.MunicipalityName = reader["MunicipalityName"] == DBNull.Value ? "All Municipality for " + (reader["CountyName"] == DBNull.Value ? "" : (string)reader["CountyName"]) : (string)reader["MunicipalityName"];
 
                 CountyRelationList.Add(pCompanyCountyRelation);
             }

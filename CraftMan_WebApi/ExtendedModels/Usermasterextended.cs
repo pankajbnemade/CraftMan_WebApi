@@ -74,7 +74,7 @@ namespace CraftMan_WebApi.ExtendedModels
             {
                 if (UserMaster.ValidateUserUpdate(_User).StatusCode > 0)
                 {
-                    strReturn.StatusMessage = "User already exists for emailId...";
+                    strReturn.StatusMessage = "User already exists for emailId / User name...";
                     strReturn.StatusCode = 0;
                 }
                 else

@@ -101,7 +101,12 @@ namespace CraftMan_WebApi.Models
 
         public static Response ValidateUserUpdate(UserMasterUpdateModel _User)
         {
-            string qstr = "select pkey_UId from dbo.tblUserMaster where upper(EmailId) = upper('" + _User.EmailId.Trim() + "') and pkey_UId != " + _User.UserId ;
+            string qstr = @"select pkey_UId from dbo.tblUserMaster "
+                            + " where pkey_UId != " + _User.UserId +
+                            " AND ( "
+                            + " UPPER(EmailId) = UPPER('" + _User.EmailId.Trim() + "')  "
+                            + " OR UPPER(Username) = UPPER('" + _User.Username.Trim() + "')  "
+                            + " ) ";
 
             DBAccess db = new DBAccess();
 
@@ -130,6 +135,7 @@ namespace CraftMan_WebApi.Models
                             "   LocationId = " + _User.LocationId + ", " +
                             "   MobileNumber = '" + _User.MobileNumber + "', " +
                             "   ContactPerson = '" + _User.ContactPerson + "', " +
+                            "   Username = '" + _User.Username + "'," +
                             //"   EmailId = '" + _User.EmailId + "', " +
                             "   CountyId = " + _User.CountyId + ", " +
                             "   MunicipalityId = " + _User.MunicipalityId + ", " +

@@ -223,7 +223,12 @@ namespace CraftMan_WebApi.Models
 
         public static Response ValidateCompanyUpdate(CompanyMasterUpdateModel _Company)
         {
-            string qstr = " select pCompId from tblCompanyMaster where upper(EmailId) = upper('" + _Company.EmailId.Trim() + "') and pCompId != " + _Company.pCompId;
+            string qstr = " select pCompId from tblCompanyMaster " 
+                            + " where pCompId != " + _Company.pCompId +
+                            " AND ( "
+                            + " UPPER(EmailId) = UPPER('" + _Company.EmailId.Trim() + "')  "
+                            + " OR UPPER(Username) = UPPER('" + _Company.Username.Trim() + "')  "
+                            + " ) ";
 
             DBAccess db = new DBAccess();
 
@@ -291,6 +296,7 @@ namespace CraftMan_WebApi.Models
                             "   LocationId = " + _Company.LocationId + "," +
                             "   MobileNumber = '" + _Company.MobileNumber + "'," +
                             "   ContactPerson = '" + _Company.ContactPerson + "'," +
+                            "   Username = '" + _Company.Username + "'," +
                             //"   EmailId = '" + _Company.EmailId + "'," +
                             "   Is24X7 = " + is24X7 + "," +
                             "   CompanyName = '" + _Company.CompanyName + "'," +

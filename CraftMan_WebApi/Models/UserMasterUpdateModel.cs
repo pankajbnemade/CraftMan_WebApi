@@ -7,8 +7,7 @@ namespace CraftMan_WebApi.Models
 {
     public class UserMasterUpdateModel
     {
-        //public string Username { get; set; }
-        //public string Password { get; set; }
+        public string Username { get; set; }
         public int UserId { get; set; } // Primary key
         public int? LocationId { get; set; } // Nullable integer
         public string MobileNumber { get; set; }
