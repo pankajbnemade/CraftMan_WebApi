@@ -10,7 +10,7 @@ namespace CraftMan_WebApi.Models
     public class IssueTicket
     {
         public int TicketId { get; set; }
-        public string ReportingPerson { get; set; }
+        //public string ReportingPerson { get; set; }
         public string ReportingDescription { get; set; }
         public int OperationId { get; set; }
         public string Status { get; set; }
@@ -33,7 +33,7 @@ namespace CraftMan_WebApi.Models
         public string? CompanyEmailId { get; set; }
         public string? CompanyName { get; set; }
         public string? CompanyMobileNumber { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public string? UserEmailId { get; set; }
         public string? UserName { get; set; }
         public string? UserMobileNumber { get; set; }
@@ -49,7 +49,7 @@ namespace CraftMan_WebApi.Models
             Response strReturn = new Response();
 
             string qstr = @"select TicketId from tblIssueTicketMaster 
-                            where ToCraftmanType = '" + _IssueTicket.ToCraftmanType + "' and ReportingPerson='" + _IssueTicket.ReportingPerson + "'   ";
+                            where ToCraftmanType = '" + _IssueTicket.ToCraftmanType + "' and UserId=" + _IssueTicket.UserId + "   ";
 
             SqlDataReader reader = db.ReadDB(qstr);
 
@@ -77,9 +77,9 @@ namespace CraftMan_WebApi.Models
 
                 int acceptedOTP = random.Next(1000, 10000);
 
-                string qstr = " INSERT INTO tblIssueTicketMaster   (ReportingPerson, ReportingDescription, OperationId, Status, " +
+                string qstr = " INSERT INTO tblIssueTicketMaster   (UserId,ReportingPerson, ReportingDescription, OperationId, Status, " +
                             " ToCraftmanType, Address, City, Pincode, CountyId, MunicipalityId, AcceptedOTP, CreatedOn) " +
-                            " VALUES ( '" + _IssueTicket.ReportingPerson.Trim() + "', '" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId +
+                            " VALUES ( " + _IssueTicket.UserId + ", '','" + _IssueTicket.ReportingDescription + "', '" + _IssueTicket.OperationId +
                             "','" + _IssueTicket.Status + "','" + _IssueTicket.ToCraftmanType + "','" + _IssueTicket.Address + "','" + _IssueTicket.City + "','" +
                             _IssueTicket.Pincode + "'," + _IssueTicket.CountyId + "," + _IssueTicket.MunicipalityId +
                             ", " + acceptedOTP + " ," + " getdate()" + ")";
@@ -252,7 +252,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = "select tblIssueTicketMaster.TicketId, tblIssueTicketMaster.ReportingPerson, tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
+            string qstr = "select tblIssueTicketMaster.TicketId,  tblIssueTicketMaster.Address, tblIssueTicketMaster.City, " +
                             " tblIssueTicketMaster.ReportingDescription,tblIssueTicketMaster.Status,tblIssueTicketMaster.ToCraftmanType,tblIssueTicketMaster.Pincode, " +
                             " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId, tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
                             " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
@@ -263,7 +263,7 @@ namespace CraftMan_WebApi.Models
                             " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
                             " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
                             " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
-                            " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
+                            " LEFT OUTER JOIN tblUserMaster ON tblUserMaster.pkey_UId = tblIssueTicketMaster.UserId " +
                         " where  TicketId = " + TicketId + "   ";
 
             SqlDataReader reader = db.ReadDB(qstr);
@@ -273,7 +273,7 @@ namespace CraftMan_WebApi.Models
             while (reader.Read())
             {
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                //pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
                 pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
                 pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
                 pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
@@ -295,7 +295,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
                 pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
 
-                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserId = Convert.ToInt32(reader["UserId"]);
                 pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
                 pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
                 pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
@@ -407,7 +407,7 @@ namespace CraftMan_WebApi.Models
             DBAccess db = new DBAccess();
             Response strReturn = new Response();
 
-            string qstr = "select TicketId,ReportingPerson,Address,City, ReportingDescription,Status,ToCraftmanType,Pincode, " +
+            string qstr = "select TicketId, Address, City, ReportingDescription,Status,ToCraftmanType,Pincode, " +
                             " tblIssueTicketMaster.CountyId, tblIssueTicketMaster.MunicipalityId,  tblIssueTicketMaster.CreatedOn, tblIssueTicketMaster.UpdatedOn, " +
                             " tblIssueTicketMaster.ReviewComment, tblIssueTicketMaster.ReviewStarRating, tblIssueTicketMaster.CompanyComment, AcceptedOTP, ClosingOTP, " +
                             " tblCountyMaster.CountyName, tblMunicipalityMaster.MunicipalityName, " +
@@ -417,8 +417,8 @@ namespace CraftMan_WebApi.Models
                             " LEFT OUTER JOIN tblCountyMaster ON tblCountyMaster.CountyId = tblIssueTicketMaster.CountyId " +
                             " LEFT OUTER JOIN tblMunicipalityMaster ON tblMunicipalityMaster.MunicipalityId = tblIssueTicketMaster.MunicipalityId" +
                             " LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId " +
-                            " LEFT OUTER JOIN tblUserMaster ON upper(tblUserMaster.Username) = upper(tblIssueTicketMaster.ReportingPerson) " +
-                            " WHERE  tblUserMaster.pkey_UId = " + filter.UserId;
+                            " LEFT OUTER JOIN tblUserMaster ON tblUserMaster.pkey_UId = tblIssueTicketMaster.UserId " +
+                            " WHERE  tblIssueTicketMaster.UserId = " + filter.UserId;
 
 
             if (filter.ServiceId != null && filter.ServiceId != 0)
@@ -448,7 +448,7 @@ namespace CraftMan_WebApi.Models
                 var pIssueTicket = new IssueTicket();
 
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                //pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
                 pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
                 pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
                 pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
@@ -470,7 +470,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
                 pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
 
-                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserId = Convert.ToInt32(reader["UserId"]);
                 pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
                 pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
                 pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
@@ -621,7 +621,7 @@ namespace CraftMan_WebApi.Models
                         LEFT OUTER JOIN tblCountyMaster ON tblIssueTicketMaster.CountyId = tblCountyMaster.CountyId
                         LEFT OUTER JOIN tblMunicipalityMaster ON tblIssueTicketMaster.MunicipalityId = tblMunicipalityMaster.MunicipalityId
                         LEFT OUTER JOIN tblCompanyMaster ON tblCompanyMaster.pCompId = tblIssueTicketMaster.CompanyId
-                        LEFT OUTER JOIN tblUserMaster ON UPPER(tblUserMaster.Username) = UPPER(tblIssueTicketMaster.ReportingPerson)  ";
+                        LEFT OUTER JOIN tblUserMaster ON tblUserMaster.pkey_UId = tblIssueTicketMaster.UserId ";
 
             qstr = qstr + " WHERE "
                         + " tblCompanyCountyRel.pCompId = " + filter.CompanyId
@@ -635,10 +635,9 @@ namespace CraftMan_WebApi.Models
                 filter.Status = "";
             }
 
-
             if (filter.Status == "" || filter.Status.ToUpper() == "ALL")
             {
-                qstr = qstr + " AND ( ISNULL(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " " 
+                qstr = qstr + " AND ( ISNULL(tblIssueTicketMaster.CompanyId, 0) = " + filter.CompanyId + " "
                             + " OR  UPPER(tblIssueTicketMaster.Status) = '" + TicketStatus.Created.ToString().ToUpper() + "' )";
             }
             else if (filter.Status.ToString().ToUpper() == TicketStatus.Created.ToString().ToUpper())
@@ -672,7 +671,7 @@ namespace CraftMan_WebApi.Models
             {
                 var pIssueTicket = new IssueTicket();
                 pIssueTicket.TicketId = Convert.ToInt32(reader["TicketId"]);
-                pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
+                //pIssueTicket.ReportingPerson = reader["ReportingPerson"] == DBNull.Value ? "" : (string)reader["ReportingPerson"];
                 pIssueTicket.ReportingDescription = reader["ReportingDescription"] == DBNull.Value ? "" : (string)reader["ReportingDescription"];
                 pIssueTicket.Status = reader["Status"] == DBNull.Value ? "" : (string)reader["Status"];
                 pIssueTicket.Address = reader["Address"] == DBNull.Value ? "" : (string)reader["Address"];
@@ -694,7 +693,7 @@ namespace CraftMan_WebApi.Models
                 pIssueTicket.CompanyEmailId = reader["CompanyEmailId"] == DBNull.Value ? "" : (string)reader["CompanyEmailId"];
                 pIssueTicket.CompanyName = reader["CompanyName"] == DBNull.Value ? "" : (string)reader["CompanyName"];
 
-                pIssueTicket.UserId = reader["UserId"] == DBNull.Value ? null : Convert.ToInt32(reader["UserId"]);
+                pIssueTicket.UserId = Convert.ToInt32(reader["UserId"]);
                 pIssueTicket.UserMobileNumber = reader["UserMobileNumber"] == DBNull.Value ? "" : (string)reader["UserMobileNumber"];
                 pIssueTicket.UserEmailId = reader["UserEmailId"] == DBNull.Value ? "" : (string)reader["UserEmailId"];
                 pIssueTicket.UserName = reader["UserName"] == DBNull.Value ? "" : (string)reader["UserName"];
